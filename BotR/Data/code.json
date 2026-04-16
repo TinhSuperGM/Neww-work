@@ -1,0 +1,38 @@
+{
+    "panther_vilage": {
+        "gold": 2000,
+        "used": 7,
+        "max_use": null,
+        "expires": null
+    },
+    "miniupdate": {
+        "gold": 1000,
+        "used": 10,
+        "max_use": null,
+        "expires": null
+    },
+    "Sryyforerror": {
+        "gold": 2000,
+        "used": 7,
+        "max_use": null,
+        "expires": null
+    },
+    "bigupdate": {
+        "gold": 3000,
+        "used": 11,
+        "max_use": null,
+        "expires": null
+    },
+    "free10": {
+        "gold": 5000,
+        "used": 10,
+        "max_use": 10,
+        "expires": null
+    },
+    "test": {
+        "gold": 1,
+        "used": 3,
+        "max_use": null,
+        "expires": 1775923623
+    }
+}

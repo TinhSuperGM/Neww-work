@@ -1,0 +1,56 @@
+{
+    "1394566298356285550": {
+        "auction_channel_id": 1488783737641504829,
+        "leaderboard_channel_id": 1488894217479651418,
+        "leaderboard_message_couple": 1490212870003228803,
+        "leaderboard_message_love": 1491210975259656255,
+        "leaderboard_message_waifu": 1492343428909105333,
+        "leaderboard_message_gold": 1490214401570111642,
+        "roll_waifu_channel_id": 1489094159485767840,
+        "roll_waifu_message_id": 1491767557428875374
+    },
+    "1351517761238597645": {
+        "auction_channel_id": 1492398656115052674,
+        "leaderboard_channel_id": 1492398376908488795,
+        "leaderboard_message_couple": 1492403860105465886,
+        "leaderboard_message_love": 1492403871539269642,
+        "leaderboard_message_waifu": 1492403857261723838,
+        "leaderboard_message_gold": 1492403853964869735,
+        "roll_waifu_channel_id": 1492397434721144962,
+        "roll_waifu_message_id": 1492400479416877217,
+        "shop_channel_id": 1492397847986045052,
+        "leaderboard_page_gold": 0
+    },
+    "1459158741784985725": {
+        "auction_channel_id": 1459544674753581250,
+        "leaderboard_channel_id": 1459544131817832561,
+        "leaderboard_message_gold": 1491656457706405948,
+        "leaderboard_message_waifu": 1491656458780151912,
+        "leaderboard_message_couple": 1491656459879190618,
+        "leaderboard_message_love": 1491656461481152622
+    },
+    "1465088538591891623": {
+        "auction_channel_id": 1491040366864896181,
+        "roll_waifu_channel_id": 1491764711023181824,
+        "roll_waifu_message_id": 1491767217103175820,
+        "shop_channel_id": 1491764711023181824
+    },
+    "1492409190407209132": {
+        "roll_waifu_channel_id": 1492410231311962123,
+        "roll_waifu_message_id": 1492410255819407453,
+        "shop_channel_id": 1492410290183077919,
+        "auction_channel_id": 1492410317920145470,
+        "leaderboard_channel_id": 1492410349209653268,
+        "leaderboard_message_gold": 1492411419856076821,
+        "leaderboard_message_waifu": 1492411420988543077,
+        "leaderboard_message_couple": 1492411422112616498,
+        "leaderboard_message_love": 1492411423005872259
+    },
+    "1492410984361492544": {
+        "leaderboard_channel_id": 1492410985460269220,
+        "leaderboard_message_gold": 1492411424440451192,
+        "leaderboard_message_waifu": 1492411425530970154,
+        "leaderboard_message_couple": 1492411426495533076,
+        "leaderboard_message_love": 1492411428253077545
+    }
+}

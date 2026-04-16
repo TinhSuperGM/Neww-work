@@ -1,0 +1,62 @@
+{
+    "1257617565409083427": {
+        "partner": "851471646870732800",
+        "since": "2026-04-02",
+        "points": 235,
+        "pending_break": false,
+        "break_time": null,
+        "break_initiator": null
+    },
+    "851471646870732800": {
+        "partner": "1257617565409083427",
+        "since": "2026-04-02",
+        "points": 235,
+        "pending_break": false,
+        "break_time": null,
+        "break_initiator": null
+    },
+    "1481718591589191763": {
+        "partner": "1067405040710590484",
+        "since": "2026-04-05",
+        "points": 10,
+        "pending_break": false,
+        "break_time": null
+    },
+    "1067405040710590484": {
+        "partner": "1481718591589191763",
+        "since": "2026-04-05",
+        "points": 10,
+        "pending_break": false,
+        "break_time": null
+    },
+    "1166722225966157874": {
+        "partner": "1340391807900582039",
+        "since": "2026-04-05",
+        "points": 35,
+        "pending_break": false,
+        "break_time": null
+    },
+    "1340391807900582039": {
+        "partner": "1166722225966157874",
+        "since": "2026-04-05",
+        "points": 35,
+        "pending_break": false,
+        "break_time": null
+    },
+    "1220291333982257255": {
+        "partner": "810876072568160318",
+        "since": "2026-04-06",
+        "points": 410,
+        "pending_break": false,
+        "break_time": null,
+        "break_initiator": null
+    },
+    "810876072568160318": {
+        "partner": "1220291333982257255",
+        "since": "2026-04-06",
+        "points": 410,
+        "pending_break": false,
+        "break_time": null,
+        "break_initiator": null
+    }
+}

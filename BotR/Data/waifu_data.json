@@ -1,0 +1,1658 @@
+{
+    "doraemon": {
+        "name": "Doraemon",
+        "rank": "limited",
+        "quantity": 100,
+        "claimed": 2,
+        "Bio": "Doraemon là chú mèo máy đến từ thế kỷ 22, được gửi về quá khứ để giúp Nobita cải thiện tương lai. Cậu có chiếc túi thần kỳ chứa nhiều bảo bối, luôn tốt bụng và hay giúp đỡ bạn bè.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488370812544225280/images.jpg?ex=69cc88d6&is=69cb3756&hm=9131f690fbc592f7956b5d05292e668c336784c115f576ff1efacfa60f2dc5d9&"
+    },
+    "zero_two": {
+        "name": "Zero Two",
+        "rank": "limited",
+        "quantity": 100,
+        "claimed": 2,
+        "Bio": "Cô gái lai người–Klaxosaur, mạnh mẽ và bí ẩn. Zero Two luôn khao khát trở thành con người thật sự, đồng thời gắn bó sâu sắc với Hiro.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488496655430058176/Zero_Two.png?ex=69ccfe09&is=69cbac89&hm=845eb9812ceb75501afb148cd3bfbf1956ae0b487dd6de4507abe02da0e31495"
+    },
+    "kurumi_tokisaki": {
+        "name": "Kurumi Tokisaki",
+        "rank": "limited",
+        "quantity": 100,
+        "claimed": 2,
+        "Bio": "Tinh linh nguy hiểm với khả năng thao túng thời gian. Kurumi có vẻ ngoài quyến rũ nhưng ẩn chứa mục tiêu bí mật và quá khứ phức tạp.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1490205087686201384/images.png?ex=69d33523&is=69d1e3a3&hm=0f733335814355929fdfbdbb7f0370eb1f601148724364b1b3ba987bf12057ac"
+    },
+    "mikasa_ackerman": {
+        "name": "Mikasa Ackerman",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ chiến binh mạnh mẽ thuộc Quân Trinh Sát, nổi tiếng với kỹ năng chiến đấu vượt trội. Mikasa lạnh lùng, ít nói nhưng rất trung thành, luôn bảo vệ Eren và những người cô yêu quý.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488401201249652856/Z.png?ex=69cca523&is=69cb53a3&hm=103e3135317f2b2122f256bafa90cf2241bf5d929ddc72cfec34d4ecaf87f4ec"
+    },
+    "rem": {
+        "name": "Rem",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Hầu gái quỷ trung thành, dịu dàng nhưng mạnh mẽ. Rem luôn hết lòng bảo vệ Subaru và sẵn sàng hy sinh vì người mình yêu.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488401425762488360/9k.png?ex=69cca559&is=69cb53d9&hm=0c2b8e36c9fc19ddafaf49ae95d60adfbb651202abbbf5bb6983510973292194"
+    },
+    "sung_jin_woo": {
+        "name": "Sung Jin-Woo",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 1,
+        "Bio": "Sung Jin-Woo khởi đầu là một thợ săn hạng E yếu ớt, người phải mạo hiểm mạng sống trong các hầm ngục thấp nhất để kiếm tiền trang trải viện phí cho mẹ. Sau một biến cố kinh hoàng tại Hầm ngục kép, anh trở thành Người chơi duy nhất có khả năng thăng cấp sức mạnh vô hạn thông qua Hệ thống. Với khả năng điều khiển Quân đoàn bóng tối hùng mạnh và ý chí sắt đá, Jin-Woo đã đơn độc gánh vác vận mệnh của nhân loại, vượt qua ranh giới giữa sự sống và cái chết để trở thành vị thần bóng tối tối cao, bảo vệ thế giới khỏi sự xâm lăng của các Hoàng đế.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1490715799512551464/Sung-Jin-Woo-solo-leveling-1024x576.png?ex=69d510c6&is=69d3bf46&hm=425aff3c2977e86fde57fc696e8f208511589a8198c1ad4dce134e77b73c3f6b"
+    },
+    "asuna_yuuki": {
+        "name": "Asuna Yuuki",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kiếm sĩ tài năng trong thế giới ảo, mạnh mẽ và quyết đoán. Asuna là người đồng hành quan trọng của Kirito.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488401650195632138/9k.png?ex=69cca58e&is=69cb540e&hm=91e6b111b7980b7940117274c2a1c6c36f59044264080ddcaa8e088739edb485"
+    },
+    "nezuko_kamado": {
+        "name": "Nezuko Kamado",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Em gái của Tanjiro, biến thành quỷ nhưng vẫn giữ được nhân tính. Nezuko luôn chiến đấu để bảo vệ gia đình.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488401793883832460/9k.png?ex=69cca5b0&is=69cb5430&hm=d78d271d8f937563e1bdf65052e2f961ae88d64b987a76db5306a58307755eff"
+    },
+    "monkey_d_luffy": {
+        "name": "Monkey D. Luffy",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Thuyền trưởng Mũ Rơm, sở hữu năng lực cao su từ Trái Ác Quỷ Gomu Gomu. Vui vẻ, dũng cảm, luôn bảo vệ đồng đội và theo đuổi giấc mơ trở thành Vua Hải Tặc.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1489052012221042840/images_7.jpg?ex=69cf0340&is=69cdb1c0&hm=716f5a18b396f5ae7b36608a573aaf31592c228480c45ae6ddf4f966ae80087c&"
+    },
+    "makima": {
+        "name": "Makima",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nhân vật bí ẩn với quyền lực lớn, thao túng tâm lý người khác. Makima có mục tiêu sâu xa và đầy nguy hiểm.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488401967855177768/9k.png?ex=69cca5da&is=69cb545a&hm=9fbdef302b78b1632d8729b55b7db26c01f8a9b2e488485ea0d5b1875250fcd5"
+    },
+    "uzumaki_naruto": {
+        "name": "Uzumaki Naruto",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 1,
+        "Bio": "Uzumaki Naruto là một ninja của làng Lá và là Jinchuriki của Cửu Vĩ Kurama. Mồ côi cha mẹ từ sớm và lớn lên trong sự kỳ thị của dân làng, Naruto đã dùng ý chí kiên định và lòng vị tha để thay đổi số phận, biến thù thành bạn và bảo vệ thế giới ninja khỏi sự hủy diệt. Với tuyệt kỹ Rasengan và triết lý không bao giờ rút lại lời nói, anh đã đi từ một học sinh cá biệt trở thành Hokage đệ Thất, vị anh hùng được toàn thể giới ninja kính trọng.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1490943378903400682/Z.png?ex=69d5e4b9&is=69d49339&hm=69d9eb4a3fd59af83ee5fcd3efc837c68e2c20b3c2055f1b85f9efe43470b75b"
+    },
+    "marin_kitagawa": {
+        "name": "Marin Kitagawa",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": " Nữ sinh năng động, yêu thích cosplay. Marin cởi mở, vui vẻ và luôn theo đuổi đam mê của mình.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488402319170076784/9k.png?ex=69cca62e&is=69cb54ae&hm=ee2371b43b2b694eb4e7a660b0ccf9d6240716b3eb7ef7450dc1f1ea6204ec77"
+    },
+    "kaguya_shinomiya": {
+        "name": "Kaguya Shinomiya",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Tiểu thư tài giỏi nhưng kiêu hãnh. Kaguya luôn đấu trí trong tình yêu với Miyuki.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488402577505783918/9k.png?ex=69cca66b&is=69cb54eb&hm=1bc53278cd85af7b9ffd40d1f1b18164f298f6ae8a28a1cd8b939e661678efda"
+    },
+    "mai_sakurajima": {
+        "name": "Mai Sakurajima",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ diễn viên nổi tiếng, điềm tĩnh và trưởng thành. Mai phải đối mặt với hiện tượng kỳ lạ khiến cô bị “lãng quên”.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488402914929279137/images.png?ex=69cca6bc&is=69cb553c&hm=a7e5f5bca87f6a764964b6d178fa3c2a5d4adf463437cf1652e185a47d3abe19"
+    },
+    "ryomen_sukuna": {
+        "name": "Ryomen Sukuna",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": " là Nguyền Vương tàn bạo trong Jujutsu Kaisen. Hắn sở hữu sức mạnh áp đảo từ thời Heian, tái sinh qua vật chứa Itadori Yuji. Sukuna nổi tiếng với lãnh địa Phục Ma Ngự Trù Tử và những nhát chém vô hình.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1490001877776207972/2Q.png?ex=69d277e2&is=69d12662&hm=9b0823a9307ac502b65d82d7bfa7a4429d00640be2f8d5137602659fc698d3e8"
+    },
+    "satoru_gojo": {
+        "name": "Gojo Satoru",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": " là chú thuật sư mạnh nhất thế giới trong Jujutsu Kaisen. Anh sở hữu Vô Hạ Hạn và Lục Nhãn, nổi bật với mái tóc trắng và đôi mắt xanh rực rỡ. Gojo là thầy giáo tận tâm nhưng đầy ngạo nghễ.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1490003637710229684/images.png?ex=69d27986&is=69d12806&hm=112f021f88adf0cf93aa89a634ad4801e5cb3b4c2d95e8a838b431a501c9fddf"
+    },
+    "son_goku": {
+        "name": "Son Goku",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 1,
+        "Bio": "Son Goku là một chiến binh Saiyan vĩ đại, người đã dành cả đời để rèn luyện và bảo vệ hòa bình cho Trái Đất cũng như toàn vũ trụ. Khởi đầu từ một cậu bé đuôi khỉ mồ côi, nhờ nỗ lực không ngừng nghỉ và ý chí kiên cường, anh đã liên tục phá vỡ các giới hạn của bản thân, đạt đến những cấp độ sức mạnh thần thánh như Ultra Instinct. Tuyệt kỹ Kamehameha và Spirit Bomb của anh đã trở thành biểu tượng bất diệt, truyền cảm hứng cho hàng triệu khán giả về tinh thần chiến đấu quật cường và lòng bao dung.",
+        "image": "https://cdn.discordapp.com/attachments/1489997855283482806/1490005682819301436/wp11510193.png?ex=69d27b6d&is=69d129ed&hm=0388516f59a2914aea62a56f34a75133c9e681b709bcc34d8a93e38c38c7dc04"
+    },
+    "rimuru_tempest": {
+        "name": "Rimuru Tempest",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 1,
+        "Bio": "là nhân vật chính của Slime Datta Ken. Từ một nhân viên văn phòng tái sinh thành Slime, anh trở thành Ma Vương sở hữu sức mạnh vô hạn như Bạo Thực Vương Beelzebuth và Thông Tuệ Vương Raphael.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1490005816856678501/2Q.png?ex=69d27b8d&is=69d12a0d&hm=ef1bed81c0cb2bfd43a73a8abe855406d223ba6566cf3f1fa47a6e1b76ff492e"
+    },
+    "yor_forger": {
+        "name": "Yor Forger",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sát thủ bí mật với vỏ bọc người vợ hiền. Yor vừa vụng về vừa đáng yêu trong cuộc sống gia đình giả.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488403075562737684/su-that-nang-yor-forger-8.png?ex=69cca6e2&is=69cb5562&hm=dcfe58b7e6b9705ba79dbcebb03c5061b60b63ebb19f3c27eb03e0589d89cbdf"
+    },
+    "uchiha_sasuke": {
+        "name": "Uchiha Sasuke",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Uchiha Sasuke là hậu duệ cuối cùng của tộc Uchiha trong Naruto. Mang huyết kế giới hạn Sharingan và Rinnegan, anh đi từ hành trình phục thù anh trai đến bảo vệ thế giới nhẫn giả từ trong bóng tối.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490229304255058051/cf0514d7aaa81aade171df8d0b324b06.png?ex=69d34bb1&is=69d1fa31&hm=c9da6c116664c8407d3bd8c7c3a4e57f12eb630cb69e7347ff6587983ad82aa7"
+    },
+    "boa_hancock": {
+        "name": "Boa Hancock",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": " Nữ hoàng hải tặc xinh đẹp, kiêu ngạo nhưng có trái tim yếu mềm, đặc biệt dành cho Luffy.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488403360993251479/Z.png?ex=69cca726&is=69cb55a6&hm=5537d723e8db5010f6da6c569cbc8c8c5be9497465787d3fd243c7ab965d8c4d"
+    },
+    "shinobu_kocho": {
+        "name": "Shinobu Kocho",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Trụ cột côn trùng, nhẹ nhàng nhưng nguy hiểm. Shinobu dùng độc để tiêu diệt quỷ.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488403631844626442/9k.png?ex=69cca767&is=69cb55e7&hm=6c8ab85fba67fc7c6b10c0e028af949a38dafd85024d79e9a7df8ef6485c00af"
+    },
+    "hinata_hyuga": {
+        "name": "Hinata Hyuga",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Trưởng nữ tộc Hyuga, sở hữu Bạch Nhãn. Ban đầu nhút nhát, nhờ Naruto trở nên mạnh mẽ. Sử dụng Nhu Quyền, thầm thương Naruto, trở thành vợ anh, mẹ của Boruto và Himawari.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1491418764573675570/9k.png?ex=69d79f76&is=69d64df6&hm=95af0405c60360cb7394a157698cec141c19db0362ad4402a5e8e7ef9f09cb56"
+    },
+    "uchiha_itachi": {
+        "name": "Uchiha Itachi",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 1,
+        "Bio": "Uchiha Itachi là một thiên tài lỗi lạc của làng Lá, người đã chọn con đường cô độc và mang danh tội đồ để bảo vệ hòa bình cho làng và tương lai cho em trai mình. Với đôi mắt Mangekyo Sharingan đầy quyền năng, anh đã sống cả đời trong bóng tối, che giấu sự thật về cuộc thảm sát gia tộc để gánh chịu mọi sự căm ghét. Hành trình của Itachi không chỉ là câu chuyện về một Ninja tài ba mà còn là minh chứng cho sự hy sinh thầm lặng vô bờ bến, khẳng định lý tưởng: một Shinigami thực thụ là người bảo vệ hòa bình từ trong bóng tối.",
+        "image": "https://cdn.discordapp.com/attachments/1489997855283482806/1490011415220846743/aba9541af87c77f5c8b2c4b96a89b264.png?ex=69d280c4&is=69d12f44&hm=4e46d7b326aa8bf957a50fa2e878f7d4176fbb35864a640910421781375733d9"
+    },
+    "violet_evergarden": {
+        "name": "Violet Evergarden",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cựu binh trở thành “búp bê ký ức”, học cách hiểu cảm xúc và ý nghĩa của tình yêu.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488403790003441824/Z.png?ex=69cca78c&is=69cb560c&hm=92e552221e76205f51cebc0a386a613b6c51a26308af7644cc29bdc74c580ba8"
+    },
+    "cyrene": {
+        "name": "Cyrene",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cyrene là Lệnh sứ Ký Ức, hậu duệ Aedes Elysiae tại Amphoreus. Với sức mạnh triệu hồi Demiurge, cô bảo vệ ký ức nhân loại và hỗ trợ đồng đội Hậu Duệ Chrysos bằng khả năng đóng băng mạnh mẽ.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490214730810396882/FB_IMG_1773663761085.jpg?ex=69d33e1e&is=69d1ec9e&hm=aedfcf01539798e20e466e51eba0250e3969ce3009bf7ca4c632e32369705e66"
+    },
+    "kiana_khaslana": {
+        "name": "Kiana Khaslana",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kiana Kaslana (K-423) là bản sao kết hợp giữa gene nhà Kaslana và Luật Giả Hư Không Sirin. Từng là nữ sinh vụng về tại Học viện St. Freya, cô đã vượt qua bóng tối nội tâm để trở thành Luật Giả Finality, phong ấn Honkai trên Mặt Trăng để bảo vệ thế giới.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490224818677743677/FB_IMG_1775367571176.jpg?ex=69d34783&is=69d1f603&hm=f2594adcadedb6cba2f2b66874b87d9b86e53f2b2f08b8f2e5e03b5434eb2e82"
+    },
+    "kurosaki_ichigo": {
+        "name": "Kurosaki Ichigo",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "là trụ cột Big 3 anime, là Tử thần tạm thời nổi tiếng với vẻ ngoài ngầu, tóc cam đặc trưng. Anh sở hữu lai lịch phức tạp: con của Tử thần Isshin và Quincy Masaki, mang sức mạnh Hollow.",
+        "image": "https://cdn.discordapp.com/attachments/1491338002616549499/1494204425244246217/images.png?ex=69e1c1cf&is=69e0704f&hm=a967314378dd74bd5e80dd7f1733999c84bf0345d76badca321751453deeaeee"
+    },
+    "rias_gremory": {
+        "name": "Rias Gremory",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Ác quỷ quý tộc mạnh mẽ, xinh đẹp. Rias là người dẫn dắt và bảo vệ Issei.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488404084083003562/9k.png?ex=69cca7d2&is=69cb5652&hm=2c72b73272a7541e4ce78c36814a6cb9e133b1d39cc271eda84e3f05a8736965"
+    },
+    "luno": {
+        "name": "Luno",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Iuno (Wuthering Waves) là nữ tế lễ hệ Phong, sử dụng Găng tay. Cô sở hữu sức mạnh từ mặt trăng và sứa, chuyên hỗ trợ đồng đội bằng cách hồi máu, tạo khiên và cường hóa sát thương trọng kích mạnh mẽ.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490224820154011819/FB_IMG_1775367612794.jpg?ex=69d34784&is=69d1f604&hm=f6f68bf6bcacfcbd4d41d3f1ef1b47a2167437d1563cb7d1a75a8400e47ba8e9&"
+    },
+    "erza_scarlet": {
+        "name": "Erza Scarlet",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": " Pháp sư giáp trụ mạnh mẽ, nghiêm khắc nhưng giàu tình cảm. Erza luôn bảo vệ hội Fairy Tail.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488404437834666145/2Q.png?ex=69cca827&is=69cb56a7&hm=28367065248c71228debf96c948303d0c739c17a295eded30fb6e83c2186eb41"
+    },
+    "chisa": {
+        "name": "Chisa",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Chisa là sinh viên Học viện Startorch tại Amphoreus, hệ Diệt Vong, sử dụng trọng đao dạng kéo. Cô có vẻ ngoài điềm tĩnh, sở hữu khả năng phân tích cấu trúc vạn vật để tìm ra điểm yếu của kẻ thù.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490223887450112173/FB_IMG_1775367431778.jpg?ex=69d346a5&is=69d1f525&hm=ef70ec36bb6c029469fddae268c154c33d05f5d6f48a7601c80ce7cea8191f57"
+    },
+    "nami": {
+        "name": "Nami",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Hoa tiêu tài năng, thông minh và yêu tiền. Nami có quá khứ khó khăn nhưng rất trung thành với đồng đội.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488404574921293964/2Q.png?ex=69cca847&is=69cb56c7&hm=e881ddd2a2cfb3ce66d4e11a0feedae529a2bddaa4643717fb7278da5d8cd792"
+    },
+    "emilia": {
+        "name": "Emilia",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": " Bán elf tốt bụng, trong sáng. Emilia luôn cố gắng chứng minh bản thân và giúp đỡ người khác.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488404722988613642/9k.png?ex=69cca86b&is=69cb56eb&hm=fa9dac32a23af14b99b419c43af93547e17f728490b0cb37f46680a21ac6fd16"
+    },
+    "megumin": {
+        "name": "Megumin",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Pháp sư nổ tung hứng thú, dễ thương, nổi bật trong Konosuba.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489185347333128213/images.png?ex=69cf7f6e&is=69ce2dee&hm=21c4b85dd00799a9aa217543afdf2d121639c65725ad4511c13c9f0b9f7ebe46"
+    },
+    "kurisu_makise": {
+        "name": "Kurisu Makise",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Makise Kurisu là nữ chính trong Steins;Gate. Cô là một thiên tài thần kinh học 18 tuổi, thành viên Lab 004. Với tính cách tsundere điển hình, cô vừa nghiêm túc vừa là một otaku ngầm trên @channel.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489186829591908382/images.png?ex=69cf80cf&is=69ce2f4f&hm=05a06db05e20fff76fd14b4a3af54eec1e44a4e80ed60f8c4866d89675848710"
+    },
+    "kanna_kamui": {
+        "name": "Kanna Kamui",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kanna trông điềm tĩnh nhưng giàu cảm xúc. Dù trưởng thành hơn tuổi, cô bé có thể thô tục khi giận. Kanna thích ngủ trưa và cực kỳ phàm ăn, sẵn sàng ăn mọi thứ từ côn trùng đến cá.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490348104711405719/images_13.jpg?ex=69d3ba55&is=69d268d5&hm=3565c25deac023946153776aff35543524fedcc711dc8de6c1aa85ce11864497&"
+    },
+    "power": {
+        "name": "Power",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Quỷ mạnh mẽ, lém lỉnh, hài hước trong Chainsaw Man.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489187640522707056/2Q.png?ex=69cf8191&is=69ce3011&hm=55a2ea60b07810ae83d7b50dea168b1b1e9a50d6c2f81d501ee36cfa4eb449ec"
+    },
+    "echidna": {
+        "name": "Echidna",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ hoàng thông minh, bí ẩn, nổi bật trong Re:Zero.hinata_hyuga – Dịu dàng, kiên cường, tiến bộ vượt bậc trong Naruto.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489187965493317732/download_1.jfif?ex=69cf81de&is=69ce305e&hm=dfdea1943bb1a7597fc593000086f1b0333aef45486985f6294ac4ddba97c9a6"
+    },
+    "akame": {
+        "name": "Akame",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sát thủ lạnh lùng, mạnh mẽ và quyết đoán trong Akame ga Kill.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489188180434616350/images.png?ex=69cf8211&is=69ce3091&hm=bc4f6ea890994ad5695aff2adff3f46c33f8a6a9163d5c847e0d9ddb5c34d926"
+    },
+    "akeno_himejima": {
+        "name": "Akeno Himejima",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Pháp sư sét quyến rũ, vừa dịu dàng vừa nguy hiểm. Akeno trung thành với Rias.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489188304594141194/9k.png?ex=69cf822f&is=69ce30af&hm=1d15fa0c8629db58de1a8c6d812509b4873b7cf2a7c5175c4fcf2c384d5af25e"
+    },
+    "kid_goku": {
+        "name": "Son Goku (Kid)",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cậu bé ngây thơ, mạnh mẽ với chiếc đuôi khỉ và gậy Như Ý. Goku luôn khao khát trở nên mạnh hơn, yêu thích ăn uống và chiến đấu, sẵn sàng bảo vệ bạn bè trước mọi nguy hiểm.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1490582766134235167/HD-wallpaper-kid-goku-nameku-anime-ball-dragon-dragonballz-kidgoku-super.jpg?ex=69d494e1&is=69d34361&hm=99c749afb2f902a33d104c515fd3c677a5dc85f90238e341fb4a38ff877868e8&"
+    },
+    "vegeta": {
+        "name": "Vegeta",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 1,
+        "Bio": "Vegeta là Hoàng tử của tộc người Saiyan, một chiến binh mang trong mình sự kiêu hãnh ngút trời và ý chí vươn lên mãnh liệt. Xuất phát điểm là một kẻ phản diện tàn nhẫn, anh đã trải qua một hành trình chuộc lỗi đầy cảm xúc để trở thành trụ cột bảo vệ Trái Đất. Dù luôn coi Goku là đối thủ lớn nhất đời mình, Vegeta đã chứng minh bản sắc riêng thông qua trạng thái Ultra Ego, khẳng định rằng sức mạnh chân chính đến từ việc chấp nhận bản ngã và bảo vệ những người thân yêu.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1491059326972985404/Z.png?ex=69d650b6&is=69d4ff36&hm=c5cc95ade9b84b3320ca0c65f5db9c9dd0236fba9c9a7eac75bb42d58d973889"
+    },
+    "sosuke_aizen": {
+        "name": "Sosuke Aizen",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 1,
+        "Bio": "Sōsuke Aizen là cựu Đội trưởng Đội 5 trong Bleach, nổi tiếng với trí tuệ thiên tài, vẻ ngoài điềm tĩnh và sự phản bội chấn động Soul Society. Là phản diện chính giai đoạn đầu, hắn mưu mô chiếm đoạt Hōgyoku để lật đổ Linh Vương. Aizen sở hữu thanh kiếm Kyōka Suigetsu với khả năng Hoàn toàn Thôi miên (Kanzen Saimin) thao túng giác quan, cùng sức mạnh siêu phàm, bất tử.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1490009912640803009/Z.png?ex=69d27f5e&is=69d12dde&hm=3d979b2e84a0ae3b3b00cec42491dfcd59f17364d57b5096ffe61387c57a79f0"
+    },
+    "lucy_heartfilia": {
+        "name": "Lucy Heartfilia",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Pháp sư Fairy Tail giàu lòng nhân hậu, thông minh và vui vẻ.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489188477903048805/images.png?ex=69cf8258&is=69ce30d8&hm=3eebd84f867ed4988c10780e5df40be91ebf3e95a3eef7106c6bb991f7505651"
+    },
+    "chizuru_mizuhara": {
+        "name": "Chizuru Mizuhara",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ sinh xinh đẹp, thông minh, giữ nhiều bí mật trong Rent-A-Girlfriend.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489188609750990858/9k.png?ex=69cf8278&is=69ce30f8&hm=2706421f719f6a0d98f5b9d159f3adfc14ef6f71cdd70b3d99a4b9be05803565"
+    },
+    "taiga_aisaka": {
+        "name": "Taiga Aisaka",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Bé cọp nhỏ, mạnh mẽ nhưng dễ thương, nổi bật trong Toradora!.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489188954082119873/9k.png?ex=69cf82ca&is=69ce314a&hm=68be6e57891a10d4d204cf4e6363ccf8d6ea74ef3488aba8c5edc3d638cdb58c"
+    },
+    "saber": {
+        "name": "Saber",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kiêu hãnh, dũng cảm, chiến binh huyền thoại trong Fate/stay night.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489189288338788434/images.png?ex=69cf831a&is=69ce319a&hm=53cd75c72aa3ca0a1c878828b454c9ddf303e36dc1685183a4359d24392a4e0f"
+    },
+    "tingyun": {
+        "name": "Tingyun",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Tingyun là cô gái hồ ly khéo miệng, đại diện Sở Thiên Bách trên Xianzhou Luofu. Cô giỏi giao tiếp, xây dựng quan hệ thương mại. Bị Phantylia hại chết, sau được Ruan Mei cứu và trở thành Fugue.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490224821097726013/FB_IMG_1775367653045.jpg?ex=69d34784&is=69d1f604&hm=cfabe268d7b5b7917a88821f6d6f4b888747db0131c5247e0fa1e349c47721bb&"
+    },
+    "rin_tohsaka": {
+        "name": "Rin Tohsaka",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Pháp sư kiêu kỳ, thông minh và nghiêm túc trong Fate series.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489189419058466956/9k.png?ex=69cf8339&is=69ce31b9&hm=afbe4ed723bd478a9a790847bc4f132bc48c228fd5cd31af95891225deb246c8"
+    },
+    "miku_nakano": {
+        "name": "Miku Nakano",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Thích yên tĩnh, âm nhạc là đam mê, nổi bật trong The Quintessential Quintuplets.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489189573035819129/Z.png?ex=69cf835e&is=69ce31de&hm=6ec98ed88e84e851db93c6e99d4dd478d88b79e2090203289c9d08ab5c4ab761"
+    },
+    "nino_nakano": {
+        "name": "Nino Nakano",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nổi bật cá tính, hơi nóng tính nhưng đáng yêu trong The Quintessential Quintuplets.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489189821049212959/Z.png?ex=69cf8399&is=69ce3219&hm=033a0773496fd1d6fb470db30208436e9ea493c5c370d171e67192afa59f5c7b"
+    },
+    "itsuki_nakano": {
+        "name": "Itsuki Nakano",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Tinh tế, ham học hỏi, yêu thích lịch sử trong The Quintessential Quintuplets.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489192038661623868/2Q.png?ex=69cf85a9&is=69ce3429&hm=2f0eeea56d9bae3cb59b9d67cbae402128dade624dec255cb535c77d2ec45473"
+    },
+    "yotsuba_nakano": {
+        "name": "Yotsuba Nakano",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Vui vẻ, năng lượng, luôn lạc quan, đáng yêu.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489192183004397699/9k.png?ex=69cf85cc&is=69ce344c&hm=edfec928493dae08f03688fb391a0edd847708fc9246480358eccf9fc64d7892"
+    },
+    "ichika_nakano": {
+        "name": "Ichika Nakano",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "là chị cả trong gia đình năm chị em sinh năm nhà Nakano. Cô sở hữu vẻ ngoài sắc sảo, mái tóc ngắn cá tính và theo đuổi sự nghiệp diễn viên chuyên nghiệp. Dù mang vẻ ngoài trưởng thành, cô luôn khao khát được yêu thương.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1494204074256760844/2Q.png?ex=69e1c17c&is=69e06ffc&hm=703482905b7fd52da49a1b1e623b21c4c130d352eafe7e221f211f2d8bc48148"
+    },
+    "ram": {
+        "name": "Ram",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nhân viên tận tâm, lạnh lùng nhưng có tình cảm sâu sắc trong Re:Zero.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489193172809809940/images.png?ex=69cf86b8&is=69ce3538&hm=6e955e656f944712e229156ee18fb1dc4214a1b2e0dc397d325fe51ea7bbd516"
+    },
+    "esdeath": {
+        "name": "Esdeath",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ tướng mạnh mẽ, lạnh lùng, nổi bật trong Akame ga Kill.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489193327122190336/2Q.png?ex=69cf86dd&is=69ce355d&hm=b41b47f454fb22cc93b87580b247046befa57df2cba140e50d8e63281fe829ad"
+    },
+    "sakura_haruno": {
+        "name": "Sakura Haruno",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": " Ninja y thuật mạnh mẽ, từ yếu đuối trở nên kiên cường. Sakura luôn nỗ lực để bảo vệ đồng đội.",
+        "image": "https://cdn.discordapp.com/attachments/1460798775571251332/1488405078791688252/9k.png?ex=69cca8c0&is=69cb5740&hm=87686348aa8aab23c033918c821f5f67a282d22175dba50ef8908254a8667a0c"
+    },
+    "ino_yamanaka": {
+        "name": "Ino Yamanaka",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Ninja nhạy bén, thông minh, đáng yêu trong Naruto.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489193466406899813/images.png?ex=69cf86fe&is=69ce357e&hm=c29cc810e998b60d14d364d785db971e3c42da037aff50506197ceb718b8ffdb"
+    },
+    "chitoge_kirisaki": {
+        "name": "Chitoge Kirisaki",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ sinh mạnh mẽ, cá tính, nổi bật trong Nisekoi.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489193713795334407/images.png?ex=69cf8739&is=69ce35b9&hm=9d35f30b78b1939224d592a6f8160e8f01fd18b65b0b21eb82508d166eeed4e0"
+    },
+    "Eren_Yeager": {
+        "name": "Eren Yeager",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 1,
+        "Bio": "Eren Yeager là nhân vật chính của loạt phim Attack on Titan, một thanh niên sinh ra ở quận Shiganshina, khao khát tự do sau bức tường. Sau khi chứng kiến mẹ bị Titan ăn thịt, Eren gia nhập Quân đoàn Trinh sát (hạng 5 khóa 104) và sở hữu sức mạnh của Titan Tấn công, Thủy tổ, cùng Búa Chiến. Từ một anh hùng, Eren trở thành phản anh hùng thực hiện diệt chủng toàn cầu để bảo vệ quê hương, trước khi bị Mikasa giết chết.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1491061289701867592/2Q.png?ex=69d6528a&is=69d5010a&hm=0555761fcd86bf044d26992c3879206b70147138bfac2dced0b8849ba5b4d24f"
+    },
+    "onodera_kosaki": {
+        "name": "Onodera Kosaki",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Dịu dàng, dễ thương, trung thành trong Nisekoi.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489193863103909899/2Q.png?ex=69cf875c&is=69ce35dc&hm=1735cc503b62edbdb7e3b1d52218e7f5d7c8c87efd30f4671aa9c777f1d91676"
+    },
+    "yui_yuigahama": {
+        "name": "Yui Yuigahama",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Hòa đồng, thân thiện, luôn tạo không khí vui vẻ trong Oregairu.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489193977973444758/2Q.png?ex=69cf8778&is=69ce35f8&hm=b20c286513da199c70e50a14573f6a99321d63d8f11175dbee343807e2485c9f"
+    },
+    "iroha_isshiki": {
+        "name": "Iroha Isshiki",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ sinh đáng yêu, tinh nghịch trong My Teen Romantic Comedy.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489194122119086202/images.png?ex=69cf879a&is=69ce361a&hm=58f43a22c8e01266464855ad814b957d8a2f364a4e8739eaaf857b949633e15c"
+    },
+    "shino_asada": {
+        "name": "Shino Asada",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô bé “Sinon” xạ thủ giỏi, kiên cường trong Sword Art Online.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489194396195885127/images.png?ex=69cf87db&is=69ce365b&hm=b09caacbffd2afbd747fc4c0ad0758db891105df8cec286d2af4f1c99bd6c2a2"
+    },
+    "silica": {
+        "name": "Silica",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nhân vật nhỏ nhắn, dũng cảm trong Sword Art Online.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489194588961902622/Z.png?ex=69cf8809&is=69ce3689&hm=d6501ebe527eaf170ee93d34b86ef3e99157300d0dc4c5ba2a358f93d437dbc5"
+    },
+    "lizbeth": {
+        "name": "Lizbeth",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Thợ rèn chăm chỉ, trung thành, dễ thương trong Sword Art Online.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489194871259533333/9k.png?ex=69cf884d&is=69ce36cd&hm=1496f0eeb2814220a07e5e248e6fd13d3bdf8010d2758be8e691b57902e9d369"
+    },
+    "tsubaki_nakatsukasa": {
+        "name": "Tsubaki Nakatsukasa",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kiêu hãnh, mạnh mẽ, sát cánh cùng đồng đội trong Soul Eater.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489195049412591636/images.png?ex=69cf8877&is=69ce36f7&hm=4d113a4ea2eb25c15dce6b0c6b5281e944c402ca25420df5e7d2a5de63a15355"
+    },
+    "maka_albarn": {
+        "name": "Maka Albarn",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ thợ săn quỷ chăm chỉ, thông minh và dũng cảm.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489195238600736788/images.png?ex=69cf88a4&is=69ce3724&hm=cd36d7dd41cfb70c3dc6b6310e2f857eca2ee3661c5a1fcb4c286c253a0755c9"
+    },
+    "michael_kaiser": {
+        "name": "Michael Kaiser",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 1,
+        "Bio": "Michael Kaiser là tiền đạo thần đồng người Đức, thành viên Thế hệ mới 11 (New Generation 11) và là át chủ bài của đội Bastard München trong manga/anime Blue Lock. Anh nổi tiếng với kỹ năng sút bóng Kaiser Impact siêu tốc, tính cách cao ngạo, độc hại, và là đối thủ chính của Isagi Yoichi tại Neo Egoist League.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1490011910547046410/images.png?ex=69d2813a&is=69d12fba&hm=db56f391b43d4ef5235a5b6909e163e7efbe4cce9e2b724d54891f4416b3e00f"
+    },
+    "winry_rockbell": {
+        "name": "Winry Rockbell",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kỹ sư thiên tài, vui tính, quan tâm anh em Elric trong Fullmetal Alchemist.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489195384046878781/Z.png?ex=69cf88c7&is=69ce3747&hm=51e895f28f831eb63d84b961123c1e10a1173615cc6f9e0f459f4c54032a9212"
+    },
+    "android_18": {
+        "name": "Android 18",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Lạnh lùng nhưng tình cảm, mạnh mẽ trong Dragon Ball.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489195525738856448/2Q.png?ex=69cf88e9&is=69ce3769&hm=1a3d1bdd9142964efcce1f66f6b961aeefb5dcddb9d9161fb2cb0fa8a0d278b9"
+    },
+    "bulma": {
+        "name": "Bulma",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Thiên tài, sắc sảo, luôn sáng tạo trong Dragon Ball.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489195642256490518/Z.png?ex=69cf8905&is=69ce3785&hm=accf2bd3e0cce70780b15779e3b60549a11a2e262193d4b719366413f9fe78d7"
+    },
+    "hinagiku_katsura": {
+        "name": "Hinagiku Katsura",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ sinh kiêu hãnh, dũng cảm, lãnh đạo hội học sinh trong Hayate no Gotoku.",
+        "image": "https://cdn.discordapp.com/attachments/1266324364677349377/1489195804483915876/9k.png?ex=69cf892b&is=69ce37ab&hm=00683844b46cdd47cb2c29301ecae8dcd4cdb265cdf42238701ec92ffb0783f4"
+    },
+    "alya": {
+        "name": "Alya",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Alisa Mikhailovna Kujou (Alya) là mỹ nhân lai Nga-Nhật trong Tokidoki Bosotto Russia-go. Cô thường dùng tiếng Nga để bộc lộ tình cảm thật của mình với Kuze Masachika vì nghĩ anh không hiểu.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1490257213460316180/2Q.png?ex=69d365af&is=69d2142f&hm=0544bad0343c8576da4fc2e08c75ccc796a7b809c5705494cc227fa7200c7bb4&"
+    },
+    "mikey": {
+        "name": "Sano Manjiro ( Mikey )",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Mikey là biểu tượng sức mạnh và là linh hồn của băng đảng Tokyo Manji. Anh lại là một võ sĩ thiên tài với danh hiệu \"Vô địch\" nhờ những cú đá sấm sét.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490236982171795487/4a189be5a121f49999926119ff64f185.png?ex=69d352d7&is=69d20157&hm=d1df22273ca4ae3738bd1aeac80c3f513ba90b26c1b3d087f22d8d9a084b8c04&"
+    },
+    "yuno": {
+        "name": "Ishigami Senku",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sau 3700 năm hóa đá, thiên tài Senku tỉnh giấc giữa thế giới đồ đá. Không đầu hàng số phận, cậu quyết tâm dùng kiến thức khoa học để tái thiết nền văn minh nhân loại từ con số 0.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490234646267433031/5532891711c0a4ae804c7d274b6ad14c.png?ex=69d350aa&is=69d1ff2a&hm=fbc6b3d1108ebb625d6e86b7ca8665c70dd185f430395f0c89febbc5947ba087&"
+    },
+    "raphtalia": {
+        "name": "Raphtalia",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Raphtalia là nữ chính của Tate no Yuusha . Cô là demi-human giống tanuki , mất cha mẹ trong Wave đầu tiên, làng bị phá, bị bắt làm nô lệ và chịu tra tấn.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490238896926228480/images_10.jpg?ex=69d354a0&is=69d20320&hm=b658a07478590c4b0caa598f65a7be0f4aed2594cad49fc15d15b9d628040573&"
+    },
+    "setsuna": {
+        "name": "Setsuna",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Setsuna là cô gái bán thú thuộc tộc sói tuyết trong Redo of Healer. Ban đầu cô sống trong cảnh bị áp bức và mất niềm tin, nhưng sau khi được Keyaru giải cứu, Setsuna dần thay đổi, trở nên mạnh mẽ.",
+        "image": "https://cdn.discordapp.com/attachments/1491338002616549499/1494203406347272202/Z.png?ex=69e1c0dd&is=69e06f5d&hm=0f7d839cc129c22228bc66a77446289f1e3e38b95e3a3757f50ee75b7988d9a4"
+    },
+    "draken": {
+        "name": "Ryuguji Ken ( Draken )",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Draken là phó tổng trưởng của băng Toman. Hình xăm rồng biểu tượng. Anh chính là người giữ cho Mikey không rơi vào bóng tối, là tấm khiên bảo vệ tình anh em.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1490239042279837838/b75a091846218603824a2c923e6b9e1e.png?ex=69d354c2&is=69d20342&hm=0384d1e9a0a433d4514b4c3c3cc7573cd5c05d6bb0af1f78f000e6263626a718&"
+    },
+    "hikari_zero": {
+        "name": "Hikari (Zero)",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Do tiếp xúc quá nhiều với ánh sáng Arcaea và thiếu đi mục đích, Hikari dần trở nên vô cảm với thế giới. Cuối cùng, cô mất đi toàn bộ ký ức, ý chí, khả năng tư duy và ý thức về bản thân.",
+        "image": "https://cdn.discordapp.com/attachments/1490629027336163431/1490633156892688384/FOXt_N_VsAUb6-R.png?ex=69d4c3cf&is=69d3724f&hm=5f182fbb6907278dfdb2ee2e17a8a3b5a47729ed35e358576d669d0f8349c7f7&format=webp&quality=lossless&width=350&height=350&"
+    },
+    "hikari_fatalis": {
+        "name": "Hikari (Fatalis)",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Bị ánh sáng Arcaea nuốt chửng hoàn toàn, Hikari mất đi toàn bộ ý chí và ký ức. Cô giờ đây chỉ còn là hiện thân của sự tuyệt vọng, trống rỗng cùng một số phận vô cùng bi thảm.",
+        "image": "https://cdn.discordapp.com/attachments/1490629027336163431/1490631866808668160/GYB3HstXUAEDuQD.png?ex=69d4c29b&is=69d3711b&hm=ba926856fbd0d481a5e737414a8e2e74ca3f6c2491f591739ba52bed6e4cc9c2&format=webp&quality=lossless&width=1008&height=1006&"
+    },
+    "insight": {
+        "name": "Insight (Ascendant - 8th Seeker)",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sở hữu \"nhãn thức\" tỏ tường, ánh nhìn của Insight xuyên thủng mọi màn sương dối trá và vô minh. Từ cõi siêu việt, cô tĩnh lặng bóc trần chân lý vĩnh hằng giấu sau các mảnh vỡ ký ức Arcaea.",
+        "image": "https://cdn.discordapp.com/attachments/1490629027336163431/1490635321350688789/iu_.png?ex=69d4c5d3&is=69d37453&hm=bfea12071f615977bdb6953bb3c80ca931089d7fa58b1479fd35dc62ae21c5fb&format=webp&quality=lossless&width=711&height=1006&"
+    },
+    "pandaman": {
+        "name": "Pandaman",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nhân vật bí ẩn trong One Piece, Pandaman thường xuất hiện ẩn trong các cảnh như easter egg thú vị. Với mặt nạ gấu trúc và thân hình lực lưỡng, anh khiến fan thích thú khi săn tìm.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1490640521331216474/file_00000000df50720ba509e3a16c994aee.png?ex=69d4caab&is=69d3792b&hm=ed87f66598a50dd0fe32ff0b6a437e63ea11a004e60d98baed218233c366f329&"
+    },
+    "frieren": {
+        "name": "Frieren (フリーレン)",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Frieren là pháp sư tộc Elf từng cùng tổ đội anh hùng đánh bại Quỷ Vương. Vì tuổi thọ hàng ngàn năm, cô bắt đầu hành trình mới để thấu hiểu cảm xúc con người và những kỷ niệm xưa cũ.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1491040692942798889/2Q.png?ex=69d63f5b&is=69d4eddb&hm=60a5f96495940b5485a828be756bbcdda03131c53f1701dbd4e6c0ba29aa99ee&"
+    },
+    "tatsumaki": {
+        "name": "Tatsumaki",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Anh hùng hạng S trong One Punch Man, Tatsumaki sở hữu năng lực siêu năng lực cực mạnh. Cô lạnh lùng, kiêu ngạo nhưng luôn bảo vệ nhân loại, dễ nổi nóng nhưng rất quan tâm em gái.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491042533432758422/tatsumaki11.webp?ex=69d64112&is=69d4ef92&hm=083aba7f7217a1b5e66828b44db841dad66a636dae2075d9b5c5bbc0df8e2fa9&"
+    },
+    "forlorn": {
+        "name": "Nell / Forlorn (Ascendant - 6th Seeker)",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sâu trong xác cự thần Lephon, mầm mống của một Tân Thần lặng lẽ trỗi dậy. Vượt xa những cuộc săn lùng đẫm máu, đây là khởi nguyên tàn khốc về đức tin kiến tạo thực tại và sự giáng sinh của Lacrymira.",
+        "image": "https://cdn.discordapp.com/attachments/1490629027336163431/1491045505122177167/137939446_p0_master1200.png?ex=69d643d6&is=69d4f256&hm=e45808745d4c4f2b41ef62b48c4d0e97d1dc5faaec678f2048fb752b5107ad5e&format=webp&quality=lossless&width=322&height=350&"
+    },
+    "mahiru": {
+        "name": "Mahiru",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Mahiru Shiina là \"Thiên sứ\" hoàn hảo tại trường nhưng mang trái tim cô đơn. Sau khi được Amane giúp đỡ, cô dần mở lòng, chăm sóc cậu và tìm thấy hạnh phúc trong tình yêu chân thành, ấm áp.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1491061748848005282/2Q.png?ex=69d652f7&is=69d50177&hm=c34d9bbadd4ccd11225359456199852d9d551bc742461c566e383454321f378c&"
+    },
+    "levi_ackerman": {
+        "name": "Levi Ackerman",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Levi Ackerman là chiến binh mạnh nhất nhân loại thuộc Quân Trinh Sát. Xuất thân từ thành phố ngầm, anh sở hữu kỹ năng chiến đấu thượng thừa, vẻ ngoài lạnh lùng cùng sự ám ảnh cực độ với việc dọn dẹp.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1491063628705824889/9k.png?ex=69d654b7&is=69d50337&hm=9e13c57b45b45236a5aff571dc0d5755601ddd6d0a2dcd8dcbb3182aee59c522&"
+    },
+    "akaza": {
+        "name": "Hakuji Soyama",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Akaza là Thượng Huyền Tam trong Thập Nhị Quỷ Nguyệt, Akaza với võ thuật đỉnh cao, Huyết Quỷ Thuật \"Phá Hoại Sát\" (Destructive Death) dựa trên nền tảng võ thuật con người.",
+        "image": "https://cdn.discordapp.com/attachments/1399031570324787280/1491372793332498532/images_14.jpg?ex=69d774a6&is=69d62326&hm=b07778ca248b9e09868ff4fd53e310f8be92a2ea9f070006dfa3cfbb31024b88&"
+    },
+    "elfaria": {
+        "name": "Elfaria Albis Serfort",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Elfaria Albis Serfort là một pháp sư tài năng xuất chúng trong bộ truyện \"Tsue to Tsurugi no Wistoria\". Cô là Magia Vander trẻ nhất lịch sử, giữ kỷ lục tạo ra mười hai phép thuật.",
+        "image": "https://cdn.discordapp.com/attachments/1399031570324787280/1491377884982546432/images_8.jpg?ex=69d77964&is=69d627e4&hm=1d0b7e641dffd6ef72e734dda8607a417f5cf387ecaa67cbf5d55bbbd43c64e9&"
+    },
+    "lihanna": {
+        "name": "Lihanna Owenzaus",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Lihanna Owenzaus là một nhân vật chính trong bộ anime Wistoria: Wand and Sword, nổi tiếng là thủ khoa tài năng của Học viện Phép thuật Regarden. Cô xuất thân từ gia tộc hiệp sĩ Owenzaus.",
+        "image": "https://cdn.discordapp.com/attachments/1399031570324787280/1491380730444648479/images_14.jpg?ex=69d77c0a&is=69d62a8a&hm=51c7b9d344a037ed5dd06248c9cf4795f16f589df6444fb3df87f7bac83b46ec&"
+    },
+    "colette": {
+        "name": "Colette Loire",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Colette Loire là một Pháp sư hệ Đất tốt nghiệp Học viện Phép thuật Regarden. Cô ấy là bạn thân nhất của Will Serfort ở Regarden. Cô gia nhập phe Earth Faction",
+        "image": "https://cdn.discordapp.com/attachments/1399031570324787280/1491383594642444398/images_15.jpg?ex=69d77eb5&is=69d62d35&hm=ee80f103ecc3d275b2f98f3364f6cc1a61e080fb78b8ef63e64694ecd4a2417b&"
+    },
+    "acheron": {
+        "name": "Raiden Bosenmori Mei",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Acheron là một \"Cảnh Binh Thiên Hà\" lạnh lùng, độc hành, nổi tiếng với kỹ năng chiến đấu thượng thừa, rút kiếm như tia điện tím, và là một Emanator (Lệnh sứ) của Hư Vô.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491388194527248506/images_16.jpg?ex=69d782fe&is=69d6317e&hm=0431665a1fe59b0c9d49bd2e90963e7d01a5a078505422ed002e4a92afe8b060&"
+    },
+    "obanai": {
+        "name": "Iguro Obanai ( Xà Trụ )",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Xà Trụ tài năng với hơi thở của Rắn. Anh sở hữu đôi mắt hai màu đặc biệt cùng chú rắn Kaburamaru luôn bên mình. Đằng sau vẻ ngoài lạnh lùng là trái tim quả cảm và tình yêu thầm kín dành cho Mitsuri.",
+        "image": "https://cdn.discordapp.com/attachments/1041389579896365057/1491388583242633226/2dea171ce54229be27353aab9eec567e.png?ex=69d7835a&is=69d631da&hm=9873c089c357d27bffa3f695d6ec9352288b40e57424ac9c4ec8f94393eb7b95&"
+    },
+    "Thanatos": {
+        "name": "Castorice",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Aidonia-vương quốc tôn sùng cái chết, nơi tuyết bay quanh năm, hôm nay đã chìm vào giấc ngủ say ngọt ngào. Castorice-con gái của Sông Styx, Hậu Duệ Chrysos tìm kiếm Ngọn Lửa \"Tử Vong\".",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491389081350049912/images.webp?ex=69d783d1&is=69d63251&hm=ee0455d28693e72489b85765e25497150cbd9969c3bca60e3c5a5aac9337e3b2&"
+    },
+    "rengoku": {
+        "name": "Rengoku Kyojuro ( Viêm Trụ )",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Rengoku là Viêm Trụ của Sát Quỷ Đoàn, mang tinh thần rực cháy. Anh là biểu tượng của lòng quả cảm, luôn tận tâm bảo vệ kẻ yếu bằng trái tim ấm áp và nhiệt huyết cho đến những giây phút cuối cùng.",
+        "image": "https://cdn.discordapp.com/attachments/1041389579896365057/1491389778170478602/cc0457ef4abb426eda53051b533d1050.png?ex=69d78477&is=69d632f7&hm=6de8ad94898d2c3b54662366c8e380a2beef014ba9cf1a4e37b5ef9d517e937e&"
+    },
+    "tanjirou": {
+        "name": "Kamado Tanjirou",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kamado Tanjiro là kiếm sĩ nhân hậu với khứu giác nhạy bén. Anh sử dụng Hơi thở Nước và Hỏa Thần Thần Lạc để tiêu diệt quỷ, bảo vệ con người và tìm cách cứu em gái Nezuko trở lại thành người.",
+        "image": "https://cdn.discordapp.com/attachments/1489898544000270460/1491392797411115059/GFXTlAgAAAAASUVORK5CYII.png?ex=69d78747&is=69d635c7&hm=f07ebfbc89e07a1419119e48e2c7223b9d3836bf786dd2030cc56127462ac065&"
+    },
+    "giyu": {
+        "name": "Tomioka Giyu ( Thủy trụ )",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Giyu là Thủy Trụ lạnh lùng nhưng đầy trách nhiệm của SQĐ. Anh sở hữu kỹ năng kiếm thuật điêu luyện với Hơi thở Nước. Dù ít nói, anh luôn bảo vệ mọi người bằng trái tim chính trực, quả cảm.",
+        "image": "https://cdn.discordapp.com/attachments/1489898544000270460/1491393263372992552/682514ce36c8c27a09cd9fe81d8a9c53.png?ex=69d787b6&is=69d63636&hm=563dd2e47674be57d36417414f68550e989ac8531d94e5fc925faa1e0603bf71&"
+    },
+    "sparxie": {
+        "name": "Sparxie",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sparxie là 1 streamer nổi tiếng. Thích! Theo dõi! Livestream! Lượt xem! Tiệc tùng cho đến khi tận thế! Sparxie và Sparkle, Mặt Nạ và Kẻ Ngốc vốn không khác gì nhau...",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491395175874953217/images_17.jpg?ex=69d7897e&is=69d637fe&hm=941d686ceccec59f4e78ed877074a1736171387511a45b6c1e1ceeceffdb78a4&"
+    },
+    "sam": {
+        "name": "Firefly",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Firefly là thành viên của Thợ Săn Stellaron trong Honkai:Star Rail, nổi tiếng với bí danh SAM-chiến giáp cơ khí chiến đấu. Cô vốn là một vũ khí sinh học được tạo ra.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491393118627430431/images_1.webp?ex=69d78794&is=69d63614&hm=4e910217b51e5742d0fc7e115040521292e156bcad291a764a127847b482608e&"
+    },
+    "zenitsu": {
+        "name": "Agatsuma Zenitsu",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Zenitsu là kiếm sĩ dùng Hơi thở của Sấm Sét với tốc độ cực cao. Dù vẻ ngoài nhút nhát và sợ sệt, nhưng khi rơi vào trạng thái ngủ sâu, anh trở thành một chiến binh dũng mãnh, có sức mạnh kinh ngạc.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491397753241075753/images_13.jpg?ex=69d78be5&is=69d63a65&hm=c8953dd4a3656ad976fac4fbfe06b94f449c99952adad8e949c845a79135037b&"
+    },
+    "sanemi": {
+        "name": "Shinazugawa Sanemi (Phong Trụ)",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sanemi là Phong Trụ của SQĐ với tính cách cọc cằn. Anh sở hữu cơ thể đầy sẹo cùng máu hiếm khiến quỷ say mê. Sau vẻ ngoài hung dữ là lòng trung thành và tình yêu dành em trai âm thầm.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491398605641224253/4f9114b10742a05bb9d0febc8c92d70e.png?ex=69d78cb0&is=69d63b30&hm=ff1243656df5052a41e0c03bfe7b7bb1aa5e7a08d57a7b07f1061405cb45c0f6&"
+    },
+    "huohuo": {
+        "name": "huohuo",
+        "rank": "limited",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô gái hồ ly yếu đuối đáng thương, cũng là phán quan tập sự của Sở Thập Vương Luofu. Bị Phán Quan Sở Thập Vương phong ấn lên đuôi của cô ấy một Tuế Dương tên là \"Lão Đuôi\".",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491399852977033359/images_18.jpg?ex=69d78dd9&is=69d63c59&hm=25d4355345229fffd34a6a07fe50cf4854a292df989b72dcea9ee26ebfa5df72&"
+    },
+    "muichiro": {
+        "name": "Tokito Muichiro",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Muichiro là Hà Trụ của SQĐ, một thiên tài kiếm thuật trở thành trụ cột sau hai tháng cầm kiếm. Dù có vẻ vô cảm và hay quên, anh thực chất là một kiếm sĩ dũng cảm với sức mạnh kinh ngạc.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491400514548535386/ce8be8c4ae6ebb97bd9950532dcd47ff.png?ex=69d78e77&is=69d63cf7&hm=2588873ede47251867eb33b80ee90d4ba683e193fd1db948bd0aa4dfd941fee1&"
+    },
+    "mitsuri": {
+        "name": "Kanroji Mitsuri ( Luyến Trụ )",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kanroji Mitsuri là Luyến Trụ của SQĐ, sở hữu sức mạnh cơ bắp gấp 8 lần người thường. Cô có tính cách vui vẻ, yêu đời, sử dụng Hơi thở Tình Yêu cùng thanh kiếm dẻo dai để bảo vệ mọi người khỏi quỷ dữ.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491401781853290536/4eb47dd522d8ae598c55e9ae9d52d220.png?ex=69d78fa5&is=69d63e25&hm=38ccdfdc2d07d2344236ecc6e572b13dc17b05f69f4fd82a10b6cfbea8dc6841&"
+    },
+    "ajisai": {
+        "name": "Sena Ajisai",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sena Ajisai là một trong những nhân vật chính của bộ tiểu thuyết  \"There's No Freaking Way I'll Be Your Lover! Unless...\". Được biết đến với biệt danh \"Thiên thần\" của trường trung học Ashigaya.",
+        "image": "https://cdn.discordapp.com/attachments/1399031570324787280/1491401685095153835/images_19.jpg?ex=69d78f8e&is=69d63e0e&hm=1a854a451ae4f66e5be28226c9a5b42737f851fdf6dafb10d05a8f70d7de8813&"
+    },
+    "tengen": {
+        "name": "Uzui Tengen ( Âm Trụ )",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Tengen là Âm Trụ của SQĐ. Xuất thân là Ninja, anh có thể chất phi thường và kỹ năng chiến đấu cao. Anh là chiến binh dũng cảm, luôn hết lòng bảo vệ ba người vợ và đồng đội.",
+        "image": "https://cdn.discordapp.com/attachments/1490212883940774059/1491402837446623292/c31af0d9106c858eb7219c0f71d26696.png?ex=69d790a1&is=69d63f21&hm=7723350f8253190327185d516a7364c525fccc13c1a076ddc5c92df9f69974c0&"
+    },
+    "mnestia": {
+        "name": "Aglaea",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Ở Thánh Thành nơi bình minh chiếu rọi, Thợ Dệt nâng niu sợi tơ vàng, kết nối vận mệnh. Đánh bại chúng thần, hoàn trả lửa thần, ban cho Amphoreus đã gần như bị hủy diệt sự sống mới.",
+        "image": "https://cdn.discordapp.com/attachments/1491361583341764608/1491404507240726640/images_2.webp?ex=69d7922f&is=69d640af&hm=566a39808fe357e26b133d4dda6e4cab255a054ca9bf30845006edef15e21b5c&"
+    },
+    "inosuke": {
+        "name": "Hashibira Inosuke",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Inosuke là kiếm sĩ dùng Hơi thở Muôn Thú với style chiến đấu hoang dã. Anh có khuôn mặt xinh đẹp ngược với tính cách nóng nảy và cơ bắp cuồn cuộn. Một chiến binh luôn khao khát khẳng định sức mạnh.",
+        "image": "https://cdn.discordapp.com/attachments/1489898544000270460/1491405239545364651/93c9ff02aea0afef13ed9ef891b6457b.png?ex=69d792de&is=69d6415e&hm=105c08700293f16ac8af12b609986881409851914bcd126b7f6ba8cb4205a854&"
+    },
+    "kuroko_tetsuya": {
+        "name": "Kuroko Tetsuya",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kuroko Tetsuya là \"Bóng ma thứ sáu\" với sự hiện diện mờ nhạt đặc biệt. Cậu sở hữu kỹ năng chuyền bóng ảo diệu, luôn hy sinh thầm lặng để kết nối lối chơi và giúp đồng đội tỏa sáng trên sân đấu.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491406288158982185/350048bea3640ecbee817402e2a50b05.png?ex=69d793d8&is=69d64258&hm=38975f2b89542c8e470f67d3e99c0f0f0bf19d41b1d7eb0d3c90a00b694da2ae&"
+    },
+    "kagami_taiga": {
+        "name": "Kagami Taiga",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kagami Taiga là cầu thủ át chủ bài sở hữu sức bật phi thường cùng lối chơi bùng nổ. Anh là \"Ánh sáng\" mạnh mẽ, luôn sát cánh cùng Kuroko để đánh bại Thế hệ Kỳ tích và chinh phục đỉnh cao.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491408537866338404/310494907d919f9d5a64658b729b39c2.png?ex=69d795f0&is=69d64470&hm=92740325fdb2af69c939881e2a5625002b53e6bd97498503532b479cc01db652&"
+    },
+    "kise_ryouta": {
+        "name": "Kise Ryouta",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kise Ryouta là thiên tài sở hữu khả năng sao chép hoàn hảo mọi kỹ thuật của đối thủ. Với ngoại hình lôi cuốn và tinh thần cầu tiến, anh luôn nỗ lực vượt qua giới hạn để chạm đến đỉnh cao.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491408905404813353/dca9a374847eb01586e4d74f3aa61907.png?ex=69d79648&is=69d644c8&hm=252544bbeaf48412dbb165a64ea97ea7e765fa8587fa44a5a07f78c7c5037009&"
+    },
+    "hikari": {
+        "name": "Hikari",
+        "rank": "ang_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Mang danh \"Ánh sáng\", Hikari lướt qua thế giới Arcaea bằng tâm hồn ngây thơ vô lự. Chỉ đắm mình trong những ký ức rực rỡ, sự mù quáng trước bóng tối rốt cuộc đã đẩy cô xuống vực sâu bi kịch.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491409055238066277/HD2xV88boAEUcDY.png?ex=69d7966b&is=69d644eb&hm=389951926caedcc879b687d36985df6b25f45d38abe48025f6e81b0131af4fd7&"
+    },
+    "Janusopolis": {
+        "name": "Tribios",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Từ thánh địa được Lời Sấm Truyền Tam Thần thương xót, tín sứ tự phân mình thành ngàn mảnh và bắt đầu cuộc hành trình. Tìm con dân mang dòng máu vàng thần thánh.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491410901876736121/images_20.jpg?ex=69d79824&is=69d646a4&hm=d6fe4ac4530d29d257a4135159b26cf5bb63b141faa1cf4df4579bfe81ea65b7&"
+    },
+    "tairitsu_tempest": {
+        "name": "Tairitsu (Tempest)",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Rũ bỏ vẻ u buồn, Tairitsu hóa thành cơn bão cuồng nộ tàn ác. Ánh mắt rực sáng oán hận, cô đắm chìm trong bạo lực, tàn nhẫn dồn ép và khao khát đoạt mạng sống của Hikari.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491411707850002564/G8Gprwxa4AAM_ts.png?ex=69d798e4&is=69d64764&hm=2bcca72340add85fc25bb6c7518f80a1ab078252a02eaebc92393147ab61199e&format=webp&quality=lossless&width=717&height=1006&"
+    },
+    "cipher": {
+        "name": "cifera",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Dolos - thành phố bị cướp phá, nơi ba trăm tên cướp ăn chơi trác táng hoành hành. Cifera, ngôi sao trộm cắp nhanh nhẹn, Hậu Duệ Chrysos trêu đùa với Ngọn Lửa \"Mưu Kế\", hãy chạy đi.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491412680337264770/images_21.jpg?ex=69d799cc&is=69d6484c&hm=0fc1e0e070af634980a5cd12e58956faa94263917669754e8cc559f412dab5e0&"
+    },
+    "milim_nava": {
+        "name": "Milim Nava",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Trong trạng thái Long Nhân, Milim rũ bỏ vẻ ngây thơ để hóa thân thành Bạo chúa hủy diệt. Giương đôi cánh rồng kiêu hãnh, vị Ma Vương tối cổ mang sức mạnh tuyệt đối sẵn sàng nghiền nát muôn loài.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491415146567041156/latest.png?ex=69d79c18&is=69d64a98&hm=1c5553e4f50033f18f1e8dc72d439dc36fb40308e18856299d7af558df2ab16b&"
+    },
+    "yae_sakura": {
+        "name": "Evanescia",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Một mùa Ảo Nguyệt tròn đầy, một mùa nhân thế đổi thay, thiếu nữ thần bí một lần nữa xuất hiện tại Planarcadia! Hoa rơi dễ tan, sự dừng chân của cô ấy cũng chỉ là thoáng chốc.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491414959551287446/FB_IMG_1775480445688.jpg?ex=69d79beb&is=69d64a6b&hm=55d35724fd3fb19a49f89fb253332f0253790898ceff9850fd396e427f214883&"
+    },
+    "diablo": {
+        "name": "Diablo",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Là Hắc Sắc Thủy Tổ, Diablo che giấu sức mạnh kinh hoàng dưới lớp vỏ bọc quản gia tao nhã. Kẻ bề tôi trung thành này sẵn sàng tàn sát mọi kẻ thù dám xúc phạm Rimuru bằng nụ cười độc ác nhất.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491417249523699873/F2qe2ixW0AII3ex.png?ex=69d79e0d&is=69d64c8d&hm=e5e0a937459cad27338aa0ef2ba68b3b7f9c38157cb245800a54d826e3dda3dd&"
+    },
+    "sliver_wolf": {
+        "name": "Sliver Wolf Lv.999",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Mùa giải mới của Elation bắt đầu, với sự trở lại trong thời gian giới hạn của người chơi bất khả chiến bại \"Sói Bạc LV.999\"! Bạn đã trở thành người chiến thắng vĩ đại nhất trong vũ trụ.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491416282342359224/FB_IMG_1775480442978.jpg?ex=69d79d26&is=69d64ba6&hm=645e047b668158bdc5e5efb109e16f2e8dd0d1bf69a2a3872703dafda7e8cafd&"
+    },
+    "pearl": {
+        "name": "Pearl",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô ấy là một quản lý cấp cao hạng P45 của Phòng Đầu tư Chiến lược tại Tập đoàn Hòa bình Liên sao, một thành viên của Mười Người Trái Tim Đá và chủ tịch của Tập đoàn Pearluxe.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491418635368009808/images_22.jpg?ex=69d79f57&is=69d64dd7&hm=7ede39505c1b2f0275c167a76314731fdb82912ee0ff59df24937b268e99d44d&"
+    },
+    "raizel": {
+        "name": "Cadis Etrama Di Raizel",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nắm giữ danh xưng Noblesse tối cao, Cadis Etrama Di Raizel mang vẻ đẹp tĩnh lặng đầy uy quyền. Tỉnh giấc sau 820 năm ngủ vùi, ngài dùng huyết ma thuật tuyệt đối để phán xét mọi kẻ thù.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491419745877102783/F504dh5bcAAzs01.png?ex=69d7a060&is=69d64ee0&hm=9510d84766f3119482e6983a825ef8ccde2c48db8bb492cc77e620dfa9858043&"
+    },
+    "nihilux": {
+        "name": "nihilux",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nihilux là cựu giám đốc của Tuần Báo Furbobo. Cô là một họa sĩ truyện tranh và là tác giả của \"Tàu Bông Xuyên Trời Xanh\". Bút danh của Nihilux là \"Blurry_QR_Colt\".",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491419603656773876/images_23.jpg?ex=69d7a03e&is=69d64ebe&hm=3468217ce04b0a43f2f5379c5f8e6639058443bf823dcf649d9faa60c7c81f28&"
+    },
+    "yao_guang": {
+        "name": "YaoGuang",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Những hành động thần bí, táo bạo, cấp tiến và mưu cầu thay đổi khiến người ta kinh ngạc. Dùng \"Mắt\" của Săn Bắn nhìn thấu cát hung. Quẻ Hạ Hạ, làm sao có thể thay đổi vận mệnh?",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491422130145857536/images_24.jpg?ex=69d7a299&is=69d65119&hm=50ba48a6e22e22a1d8f7c9ebf0a9b6e5270a5d79b0731315a7086f76ddd175ae&"
+    },
+    "cerydra": {
+        "name": "cerydra",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Đế quốc Phương Bắc, vương triều lụi tàn, vùng đất băng giá vẫn rực cháy khát vọng chinh phạt. Quân chủ Cerydra, Hậu Duệ Chrysos nắm giữ Ngọn Lửa \"Luật Pháp\", đấu trí với thần thánh.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491431008543965276/images_25.jpg?ex=69d7aadd&is=69d6595d&hm=bc38a273982c05d88e4f7d3d50c5fecc8a692082aa9b24e6e43135050aa1827d&"
+    },
+    "evernight": {
+        "name": "evernight",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Vùng Hồi Ức tách biệt với thế giới, ánh nến phản chiếu quá khứ, lặng lẽ tắt dần trong sương mù. Đứa con của Ký Ức đến từ bóng tối - Evernight, Hậu Duệ Chrysos che giấu Ngọn Lửa \"Thời Gian\".",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491429588604293301/FB_IMG_1769952228039.jpg?ex=69d7a98b&is=69d6580b&hm=b883ff34540d7be72417d50df06f025bdcf5d9e01559b72ec3940cb810eff664&"
+    },
+    "hyacinthia": {
+        "name": "Hyacine",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Thành bang giữa mây phân ly theo năm tháng, Đình Viện Hoàng Hôn một lần nữa mở rộng cánh cửa, mang đến ánh sáng le lói cho Đêm Vĩnh Hằng. Thầy thuốc Hyacinthia, canh giữ Ngọn lửa \"bầu trời\"",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491436618848927938/images_27.jpg?ex=69d7b017&is=69d65e97&hm=7293e0aafb0423e0df106718d2cc65e2ada4eba1504c395276c1f1a90bac7c22&"
+    },
+    "hysilens": {
+        "name": "hysilens",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Styxia, thành phố ven biển của men say và mộng tưởng, nơi tiếng hát ngày xưa vẫn còn vang vọng giữa những con sóng. Helektra, người con gái của biển cả, Hậu Duệ Chrysos thanh tẩy Ngọn Lửa \"Biển Cả\".",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491437455684014160/images_28.jpg?ex=69d7b0df&is=69d65f5f&hm=4c8a2b12cccc4ba64f1593799f2cfdef43bdb2d522f35bc85e2948802f678b7b&"
+    },
+    "herta": {
+        "name": "The Herta",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Thành viên đáng kính số 83 của Hội Thiên Tài , con người, nữ, trẻ tuổi, xinh đẹp, quyến rũ. Người ta nói rằng cô ấy sống ở tận cùng vũ trụ, hầu như không bao giờ rời đi.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491442833662677002/images_30.jpg?ex=69d7b5e1&is=69d66461&hm=83155b5170709157d315a1a1a20213e0594f2026fc8f2b11ce42f5da13f1653c&"
+    },
+    "ruan_mei": {
+        "name": "Ruan Mei",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Học giả khí chất dịu dàng tao nhã, thành viên #81 của Câu Lạc Bộ Thiên Tài, chuyên gia trong lĩnh vực khoa học sinh mệnh. Với tài năng và sự kiên trì đáng kinh ngạc, đã được Nous để mắt.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491444140028723227/images_32.jpg?ex=69d7b718&is=69d66598&hm=2a425ac214c731952d39bc25ae968df8e002ec71ef677956a19a3040cf1f6a7c&"
+    },
+    "ren_chon": {
+        "name": "Renge Miyauchi (ren-chon)",
+        "rank": "secret",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Ren-chon (Renge) cực đáng yêu với cây sáo dọc, thường thổi những giai điệu ngẫu hứng \"khó đỡ\". Cô bé thông minh, hiếu kỳ, có tính cách lập dị nhưng đầy sáng tạo và tâm hồn nghệ sĩ.",
+        "image": "https://cdn.discordapp.com/attachments/1489660206970568877/1491445630759866671/anime-renge.gif?ex=69d7b87c&is=69d666fc&hm=dbccc375b28a19afe232da3ab9097f20d0f43d3d814100b7f163e29aaa585283&"
+    },
+    "robin": {
+        "name": "Robin",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Một ca sĩ Halovian sinh ra ở Penacony và nổi tiếng khắp vũ trụ. Một thiếu nữ thanh lịch và đoan trang. Lần này, cô được Gia đình mời về nhà để chiêu đãi mọi người bằng một bài hát tại Lễ hội Charmony.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491439518102978702/images_29.jpg?ex=69d7b2ca&is=69d6614a&hm=dcbcfef5b6f67b52622f45f3ce8e46199fbaac9a985f0120bf7582a833bd7453&"
+    },
+    "black_swan": {
+        "name": "Black Swan",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Người Lưu Giữ Ký Ức của Sảnh Đường Hồi Ức, nhà chiêm tinh thần bí tao nhã. Luôn nở nụ cười hiền lành, kiên nhẫn lắng nghe lời nói của người khác, dùng nó để đi vào \"ký ức\" và nắm bắt mọi thông tin.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491447135567347824/images_33.jpg?ex=69d7b9e2&is=69d66862&hm=76b4740c1c4da91c6e588af3fc06c4394e7e581ad456445065ff49cc0676e33e&"
+    },
+    "ryuko_matoi": {
+        "name": "Ryuko Matoi",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ sinh mạnh mẽ trong Kill la Kill, Ryuko chiến đấu để tìm sự thật về cái chết của cha. Sở hữu bộ Kamui Senketsu, cô gan lì, nóng nảy nhưng luôn bảo vệ công lý và bạn bè.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491581256142553129/images-19.jpg?ex=69d836cb&is=69d6e54b&hm=0899a355003ddec307af3c1e6c43cc22d799796e0be354fefc13fcde7e570310&"
+    },
+    "bailu": {
+        "name": "Bailu",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Long Tôn hoạt bát của tộc Vidyadhara, còn được biết đến là \"Long Nữ Trị Liệu\" hay bỏ trốn khỏi Sở Đan Đỉnh tại Xianzhou Luofu. Kỹ năng và kiến thức về y học của cô là vô hạn",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491665258992107560/images_34.jpg?ex=69d88507&is=69d73387&hm=c4e12dcd3eb8c6dd53ce63a144148799d4825be6f2abe5732e934061e99ade63&"
+    },
+    "sparkle": {
+        "name": "Sparkle",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Một trong những thành viên của \"Kẻ Ngốc Đeo Mặt Nạ\", khó nắm bắt, không từ thủ đoạn. Bậc thầy sân khấu nguy hiểm, đam mê diễn xuất. Có thể biến thành hàng nghìn khuôn mặt",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491718135857021018/images_36.jpg?ex=69d8b646&is=69d764c6&hm=4b8a66fef8e8044521709f0bd1a84e0a088654e2826a5269188e55ae59ae2722&"
+    },
+    "yunli": {
+        "name": "Yunli",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Thợ săn kiếm của Xianzhou Zhuming, cháu gái yêu quý của Tướng Quân Vực Nến Huaiyan, tính tình thẳng thắn. Từ nhỏ đã theo Huaiyan học kiếm thuật và rèn luyện.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491725026947240027/images_37.jpg?ex=69d8bcb1&is=69d76b31&hm=760d1d76153eea0129b0a17b5b80084bdb5451db8d20d2b7ac5f2c1cecd5c30c&"
+    },
+    "topaz_and_numby": {
+        "name": "Topaz",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cán bộ cao cấp của Bộ Đầu Tư Chiến Lược thuộc Công Ty Hành Tinh Hòa Bình, lãnh đạo nhóm theo dõi khoản nợ đặc biệt. Tuổi còn trẻ măng nhưng lại trở thành một trong \"mười người có trái tim đá\".",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491725853610999898/images_38.jpg?ex=69d8bd76&is=69d76bf6&hm=6b398d20ea6ed8ce1cdb048c54293f7b6fcf81f7d1cd851e716d8e90f84b4a93&"
+    },
+    "jade": {
+        "name": "Jade",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cán bộ cao cấp \"Bộ Phận Đầu Tư Chiến Lược\" của Công Ty Hành Tinh Hòa Bình, một trong \"10 Người Có Trái Tim Đá\", với Đá Tảng là \"Jade Tín Chấp\". Người cho vay lạnh lùng tao nhã.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491730350911524914/honkai-star-rail-jade-materials-ascension-traces-farming.jpg?ex=69d8c1a6&is=69d77026&hm=fe39a175cab444986c195ebdcb9d3de1cab2970bc418797d494ca3b1b20d59f2&"
+    },
+    "lilithea": {
+        "name": "Lilithea",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Lilithea là nhân vật trợ lý xinh đẹp, bí ẩn trong bộ light novel Killed Again, Mr. Detective?. Cô đồng hành cùng thám tử trung học Sakuya Otsuki, giúp anh giải quyết các vụ án phức tạp.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491733941277954078/images_39.jpg?ex=69d8c4fe&is=69d7737e&hm=adfebe92cd60d9efe618124a820b94cb4b212ce10d60665fd062094dfdbf8b2a&"
+    },
+    "hatsune_miku": {
+        "name": "Hatsune Miku",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Miku này đến từ một Sekai u tối, đại diện cho sự bế tắc và trầm cảm. Cô xuyên qua các màn hình để tìm kiếm \"bài hát chưa được sinh ra\", nhằm cứu lấy những tâm hồn đang muốn từ bỏ đam mê sáng tạo.",
+        "image": "https://cdn.discordapp.com/attachments/1491361583341764608/1491435534671941723/IMG_20260408_215114.jpg?ex=69d857d4&is=69d70654&hm=9a030c0d7b02f6f24861942d502ffa2d2674140b789d52230b9887b3256d6f25&"
+    },
+    "mutsumi": {
+        "name": "Mutsumi Yozakura",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Mutsumi Yozakura là người đứng đầu hiện tại, con gái út và là người con thứ sáu của đời thứ 10 trong gia tộc Yozakura , đồng thời là vợ của nhân vật chính Taiyo Asano.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491740288031522856/images_40.jpg?ex=69d8cae7&is=69d77967&hm=b21b67749f4ecc88092d421c638bc53f1eb20502728e61d03ecd0d870597dfee&"
+    },
+    "futaba": {
+        "name": "Futaba Yozakura",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Futaba Yozakura là con gái lớn và là chị thứ hai thuộc thế hệ thứ 10 của Gia tộc Yozakura. Cô là một cô gái trẻ có làn da trắng sáng, mái tóc trắng bạc.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491741048743923763/images_41.jpg?ex=69d8cb9d&is=69d77a1d&hm=18dacb8353b0b5fdcd379623fe2ef92ff9ca64decd35eba1a334eb1e2eb360f2&"
+    },
+    "shion": {
+        "name": "Shion Yozakura",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Shion Yozakura là con gái thứ hai và là người con thứ tư trong số 10 đời con của gia tộc Yozakura. Cô là một cô gái trẻ xinh đẹp, thân hình cân đối, làn da trắng hồng, mái tóc màu hồng tím dài.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491741924099620884/ShionPostTS.webp?ex=69d8cc6d&is=69d77aed&hm=ab75c18332b0f16f53396ca290ddb6896b7ea24b792abe0fde1f28c38e5379ac&"
+    },
+    "ai": {
+        "name": "Ai Hoshino",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Ai Hoshino là nhân vật chính trong bộ truyện tranh Oshi no Ko và là gương mặt đại diện của bộ truyện này . Cô là thần tượng hàng đầu của nhóm B-Komachi phiên bản gốc và là mẹ của Aqua và Ruby.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491764984705712269/images_42.jpg?ex=69d8e1e8&is=69d79068&hm=766ad6e347145664a5fecf2a6e11b90e7b3453ebc36d0e4dcff840f2935767bf&"
+    },
+    "ruby": {
+        "name": "Ruby Hoshino",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Ruby Hoshino là nữ nhân vật chính và là một trong những nhân vật tiêu biểu của bộ truyện Oshi no Ko . Trong kiếp trước, cô được biết đến với cái tên Sarina Tendouji , một bệnh nhân mắc bệnh nan y.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491765922778583161/images_44.jpg?ex=69d8e2c7&is=69d79147&hm=006a10471b9fabf0c198f062c132bd28a760eea5b0f6ef4fe65898c135283ac6&"
+    },
+    "kana_arima": {
+        "name": "Kana Arima",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kana Arima là một nhân vật phụ quan trọng trong Oshi no Ko . Cô là bạn thời thơ ấu của Aqua và Ruby Hoshino và là một diễn viên nhí tài năng, mặc dù sự nổi tiếng của cô đã giảm sút theo thời gian.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491767147171549215/images_45.jpg?ex=69d8e3eb&is=69d7926b&hm=6ab51fed21528ebb787096153e0c9e415a5b246b54bb28aa10d38af5e7b05106&"
+    },
+    "shuna": {
+        "name": "Shuna",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Công chúa Ogre trong Tensei Shitara Slime, Shuna dịu dàng, thông minh và trung thành tuyệt đối với Rimuru. Cô giỏi phép thuật, khéo léo nội trợ và luôn chăm lo cho mọi người trong Tempest.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491769636017147934/shuna__tensei_shitara_slime____cherry_blossom_by_uthaiyama_dgmk9du-fullview.jpg?ex=69d8e63c&is=69d794bc&hm=27cd8fac4cbec683721a5a99c9d1b56e92da6d9e5ccd48a165da1fb9fbbcc7e7&"
+    },
+    "empty_miku": {
+        "name": "Empty Miku (SEKAI)",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Empty Miku là một phần của nhóm 25-ji, Nightcord de., cô ấy đóng vai trò là người dẫn đường thầm lặng cho Mafuyu Asahina, đại diện cho cảm giác trống rỗng và những cảm xúc bị kìm nén.",
+        "image": "https://cdn.discordapp.com/attachments/1399031570324787280/1491768980237451264/images_16.jpg?ex=69d8e5a0&is=69d79420&hm=c6048a4039978fbda0451c61b0aa23d4b4e9b4cdc4f74a7ceed12ac3d802a5f3&"
+    },
+    "nao_tomori": {
+        "name": "Nao Tomori",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Chủ tịch hội học sinh trong Charlotte, Nao thông minh, mạnh mẽ và có phần lạnh lùng. Cô sở hữu năng lực tàng hình trước một người, luôn hành động vì mục tiêu bảo vệ những người có siêu năng lực.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491771209497706546/648557.jpg?ex=69d8e7b4&is=69d79634&hm=aeddd48a2cd0dcbee8e933bb1356fdb173c12d7c7bdbf52fbd9063020d80d7f0&"
+    },
+    "toru_hagakure": {
+        "name": "Toru Hagakure",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Nữ sinh lớp 1-A trong My Hero Academia với năng lực tàng hình hoàn toàn. Toru vui vẻ, hòa đồng và luôn mang lại năng lượng tích cực, sẵn sàng hỗ trợ bạn bè trong mọi tình huống.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491774791097647226/e6f52d7c-d520-945b-ceef-b2cb2091b88a.jpg?ex=69d8eb0a&is=69d7998a&hm=d1aac74708e10ae67fae7e1a80f24b74b544e0e0a04ddc580a5686c2ef730339&"
+    },
+    "yuki": {
+        "name": "Yuki Suou",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Yuki Suou là một nhân vật chính trong bộ truyện. Cô là học sinh năm nhất tại Học viện tư thục Seirei , giữ chức vụ Trưởng ban Quan hệ công chúng của hội học sinh.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491783188555628554/images_46.jpg?ex=69d8f2dc&is=69d7a15c&hm=0f6ab7845028645e9730afd89ba989ce9ce139fde311f4f6ce6f54dc75e9d96a&"
+    },
+    "masha": {
+        "name": "Maria Mikhailovna Kujou",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Maria Mikhailovna Kujou là nhân vật phụ trong truyện. Cô là sinh viên năm thứ hai tại Học viện tư thục Seirei , giữ chức vụ Thư ký hội học sinh. Cô sở hữu vẻ ngoài nổi bật và khác biệt.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491784115110936626/Maria_Mikhailovna_Kujou_Light_Novel.webp?ex=69d8f3b9&is=69d7a239&hm=f73985a0fff9d3294552b14edef2497c3b4eea5a4d395b3f20856a2e5e99edf0&"
+    },
+    "ayano": {
+        "name": "Kimishima Ayano",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kimishima Ayano là một nhân vật phụ trong bộ truyện. Cô là học sinh năm nhất tại Học viện tư thục Seirei, giữ chức vụ thành viên Ban Hành chính của hội học sinh.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491784959256559637/Ayano_Kimishima_Light_Novel.webp?ex=69d8f482&is=69d7a302&hm=71302070a61222c1e9c6e2e5d1c575187e1d318f17ac88455fcabbfb730844f2&"
+    },
+    "nonoa": {
+        "name": "Miyamae Nonoa",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Miyamae Nonoa là một nhân vật phụ trong bộ truyện. Cô là học sinh năm nhất tại Học viện tư thục Seirei . Nonoa làm người mẫu cho thương hiệu thuộc sở hữu của bố mẹ cô.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491785790798172261/Nonoa_Miyamae_Light_Novel.webp?ex=69d8f548&is=69d7a3c8&hm=24775ff5de7391e73a0e814170521ae4759bd88c5336b8213f58d20768709332&"
+    },
+    "sayaka": {
+        "name": "Taniyama Sayaka",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Taniyama Sayaka là một nhân vật phụ trong bộ truyện. Cô là học sinh năm nhất tại Học viện tư thục Seirei , đồng thời là thành viên của Ủy ban Kỷ luật.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491786312737357895/Sayaka_Taniyama_Anime.webp?ex=69d8f5c5&is=69d7a445&hm=275e8b8f277537e3b793b9c2270a58ad412d905bbf50d86c535dbefbe1ec5c14&"
+    },
+    "sumire": {
+        "name": "Kiryūin Sumire",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kiryūin Sumire là một nhân vật phụ trong bộ truyện. Cô là học sinh năm hai tại Học viện tư thục Seirei và là đội phó của câu lạc bộ kiếm đạo nữ. Cô có mái tóc màu mật ong uốn xoăn.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491786885335351336/Sumire_Kiryuuin_Anime.webp?ex=69d8f64d&is=69d7a4cd&hm=865ba5b8d8f76da7868d497e4827dcbb5bb220166c27752f4600ca4f0e72f0b0&"
+    },
+    "yuzaki_tsukasa": {
+        "name": "Tsukuyomi Tsukasa",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Tsukuyomi Tsukasa là nữ chính của bộ truyện. Cô là vợ của Nasa Yuzaki và là người cứu mạng anh. Tsukasa thường được miêu tả là xinh đẹp, cô có mái tóc dài màu hồng với một chiếc kẹp tóc phía sau.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491808104789311500/images_47.jpg?ex=69d90a10&is=69d7b890&hm=4c58b26a2dc0ee930a38cabb6f8b032f63dc4b931d23d1628774a2e5fdc624d6&"
+    },
+    "himura_kenshin": {
+        "name": "Himura Kenshin",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Kiếm sĩ huyền thoại từng là sát thủ Battousai trong Rurouni Kenshin. Sau quá khứ đẫm máu, Kenshin chọn con đường bảo vệ người vô tội, sống hiền hòa nhưng vẫn vô cùng mạnh mẽ.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491826562776170658/81451e5c-29d6-4f55-be6f-42aa545e8137.jpg?ex=69d91b41&is=69d7c9c1&hm=f1748a9b5212d737d7ef6f617868fc456fabd7fbe5457f34010db4bd05f448a4&"
+    },
+    "igris": {
+        "name": "Igris",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Hiệp sĩ bóng tối trung thành trong Solo Leveling, Igris là cận vệ mạnh mẽ của Sung Jin-Woo. Lạnh lùng, ít nói nhưng tuyệt đối trung thành, luôn chiến đấu bảo vệ chủ nhân bằng sức mạnh áp đảo.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491827950356791378/bb1fc62ccbb850b17a19129853e18b35.jpg?ex=69d91c8c&is=69d7cb0c&hm=bb0ab2d5f918fea021baa7fb39dbf141705ad51f32b341d896da327c407913b2&"
+    },
+    "going_merry": {
+        "name": "Going Merry",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Con tàu đầu tiên của băng Mũ Rơm trong One Piece, Merry mang hình dáng cừu đáng yêu. Dù không bền, con tàu vẫn trung thành, đồng hành qua nhiều chuyến phiêu lưu trước khi chia tay đầy cảm xúc.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491829828750672043/One_Piece.jpg?ex=69d91e4c&is=69d7cccc&hm=e5bdd77d72a799f7c8429c88d991ee6f88f0cd59bdef35f57f660949332f5780&"
+    },
+    "sinon": {
+        "name": "Sinon",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Xạ thủ xuất sắc trong Sword Art Online, Sinon sở hữu kỹ năng bắn tỉa chính xác và tinh thần mạnh mẽ. Dù mang quá khứ ám ảnh, cô vẫn dũng cảm đối mặt và bảo vệ bạn bè.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491832277884207215/HD-wallpaper-sinon-gun-gale-online-sword-art-online.jpg?ex=69d92093&is=69d7cf13&hm=77810a1dc4b2b5eda42ce594d0641874691b370980e69cb1319c1ce8dafce734&"
+    },
+    "kakashi_hatake": {
+        "name": "Kakashi Hatake",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Ninja thiên tài của Konoha, Kakashi nổi tiếng với Sharingan và kỹ năng chiến đấu vượt trội. Bình tĩnh, thông minh và giàu kinh nghiệm, anh luôn dẫn dắt học trò và bảo vệ đồng đội.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491833219568369756/kakashi05.webp?ex=69d92174&is=69d7cff4&hm=04ecce256846cae50d6b121bdf040ebc48cbb048d5a3eeb2d1dbd7f95c14af4c&"
+    },
+    "neferpitou": {
+        "name": "Neferpitou",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cận vệ Hoàng gia của Chimera Ant trong Hunter x Hunter, Neferpitou sở hữu sức mạnh và giác quan vượt trội. Tàn nhẫn nhưng trung thành tuyệt đối với vua, luôn sẵn sàng chiến đấu.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491837158770737413/ed838d60-1180-42ad-bbe4-b4301a9ed404.jpg?ex=69d9251f&is=69d7d39f&hm=d61688b3cdf0bece952a4b6c7ba6928d7f5a48ee07b37f1069acd11168423c67&"
+    },
+    "yuna": {
+        "name": "Yuna",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Yuna là một nhân vật phụ trong câu chuyện phụ Ordinal Scale và phần kết của nó, Cordial Chords. YUNA là một Trí tuệ Nhân tạo (AI) được  tạo ra để thu hút người chơi đến với Ordinal Scale.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491934847676186747/images_48.jpg?ex=69d9801a&is=69d82e9a&hm=3cb2191a80fb271f7a05b57daa9ec302c133d6368b78cbd50a595e7229c795ef&"
+    },
+    "yukki": {
+        "name": "Konno Yuuki",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Konno Yuuki là nhân vật phụ chính trong câu chuyện phụ Mother's Rosario và là nhân vật chính trong câu chuyện phụ Sisters' Prayer trong loạt phim Sword Art Online.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491936715869523988/images_49.jpg?ex=69d981d7&is=69d83057&hm=266579d0bf5c949805810ee0655bdc7ed3213e25d94e6fb534475debc88e2b67&"
+    },
+    "leafa": {
+        "name": "Suguha Kirigaya",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Suguha Kirigaya là nhân vật hư cấu xuất hiện trong loạt light novel và anime Sword Art Online. Cô thường được biết đến với cái tên Leafa, tên người chơi của cô trong ALFheim Online.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491937571796684880/images_50.jpg?ex=69d982a3&is=69d83123&hm=b8fb7363b3770a189e48408335340a671effda46a6f87a8d255c9fa2d5f920cd&"
+    },
+    "alice": {
+        "name": "Alice Zuburg",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Alice Zuberg là một trong những nhân vật chính trong Arc Alicization và là nhân vật phụ trong Arc Unital Ring. Cô là  bạn thời thơ ấu của Eugeo và Kirito.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491938113021542592/images_51.jpg?ex=69d98325&is=69d831a5&hm=a4d657b4caaf2af0aa855b78f81a1d40a80cfb58ba2d4780af38c7f49052fb11&"
+    },
+    "beta": {
+        "name": "Natsumi Kafka",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Beta  là thành viên ban đầu thứ ba của Shadow Garden và là thành viên thứ hai của Bảy Bóng. Với vai trò là người lưu trữ, cô tích lũy thông tin thông qua nghiên cứu hoặc ăn cắp.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491940095526174830/tai_xuong_1.jpg?ex=69d984fd&is=69d8337d&hm=1d070be394d0d3dcb78ab144d0d32232debfb6046d58f33f2e3423e766f9e7a0&"
+    },
+    "alpha": {
+        "name": "Alpha",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Alpha là tổng tư lệnh của Shadow Garden và là người đứng đầu của Bảy Bóng Tối , đồng thời là hậu duệ của \"Anh hùng Elf\" Olivier. Cô là một yêu tinh trẻ với mái tóc vàng bóng dài và đôi mắt xanh.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491940915672125480/images_52.jpg?ex=69d985c1&is=69d83441&hm=03af967d465de48177a25b4d3b83ad4f078ee9dcad87951e5c3c0a5eddefd19e&"
+    },
+    "gamma": {
+        "name": "Luna",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Gamma là thành viên ban đầu thứ tư của Shadow Garden và là người điều khiển thứ ba trong Bóng Tối Tối. Cô quản lý các hoạt động hàng ngày của tổ chức và bộ phận hành chính đầu tiên.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491941808836575476/images_53.jpg?ex=69d98696&is=69d83516&hm=a9cc2ba9ac2af3fe3f0b140018d1ab3b41c83688aab3ab3f1feea6a94bb7baec&"
+    },
+    "delta": {
+        "name": "Sara",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Delta là thành viên ban đầu thứ năm của Shadow Garden và là người thứ tư trong số Bảy Bóng Tối. Chủ yếu được phái đi thực hiện các nhiệm vụ chiến đấu.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491943312293101598/images_55.jpg?ex=69d987fc&is=69d8367c&hm=1d038b9689896f92fb83abcb3c477404a6cb8b206aa959006b088d033c45dfad&"
+    },
+    "diablos": {
+        "name": "Aurora",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Aurora là một nhân vật bí ẩn trong truyền thuyết anh hùng cổ đại; được biết đến là Phù thủy Tai họa. kẻ đã đẩy thế giới vào hỗn loạn. Cô đã chết từ lâu.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1491944669750362252/images_57.jpg?ex=69d98940&is=69d837c0&hm=24e0b77acfe375d59d4822d60c9691149fe436a1973514559bd2c13c305a0573&"
+    },
+    "shiro": {
+        "name": "Shiro",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Thiên tài game trong No Game No Life, Shiro sở hữu trí tuệ vượt trội và khả năng tính toán hoàn hảo. Cô ít nói, gắn bó với Sora và cùng anh chinh phục mọi trò chơi trong thế giới mới.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491948997718577182/ad679eb5-154b-43c8-838e-e2aa090f1afe.jpg?ex=69d98d48&is=69d83bc8&hm=d7b7c849cd5cdc3a1c2541e9995a4a45ff4122bb19e31df5b12bab798098635b&"
+    },
+    "nina_tucker": {
+        "name": "Nina Tucker",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô bé đáng thương trong Fullmetal Alchemist, Nina hiền lành và yêu thương cha. Bi kịch khi bị biến thành chimera khiến cô trở thành một trong những ký ức đau lòng nhất.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491957505608384623/353b7894a385ca98be6ee66629e3220f.jpg?ex=69d99534&is=69d843b4&hm=5fa883bd2c409753500a0c574bc8e46fa17943fa6863064d8a8d9eba897695c4&"
+    },
+    "lelouch_lamperouge": {
+        "name": "Lelouch Lamperouge",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Thiên tài chiến lược trong Code Geass, Lelouch sở hữu Geass cho phép điều khiển ý chí người khác. Mang danh Zero, anh lãnh đạo cuộc nổi dậy chống Britannia vì em gái, chấp nhận hy sinh tất cả.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491962942885986316/Lelouch_vi_Britannia.jpg?ex=69d99a44&is=69d848c4&hm=ba65013cb342d9a4e4ab10d14d3f7f22eb9f581229593f71a02c1bacb76eca4b&"
+    },
+    "nanachi": {
+        "name": "Nanachi",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sinh vật bí ẩn trong Made in Abyss, Nanachi từng là con người và mang quá khứ đau thương. Thông minh, tốt bụng và giàu kinh nghiệm sinh tồn, luôn giúp đỡ Riko và Reg.",
+        "image": "https://cdn.discordapp.com/attachments/1489657742812778747/1491968466276712458/1275581.jpg?ex=69d99f69&is=69d84de9&hm=215e03ecaf64a8ece1745f8d60c5c266f57ee610181af85c0a2ad7e1a8d84df7&"
+    },
+    "administrator": {
+        "name": "Quinella",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Quinella là nhân vật phản diện chính trong nửa đầu của Arc Alicization. Bà ta là người cai trị thực sự của Đế chế Nhân loại ở Thế giới ngầm với tư cách là giáo sĩ cao cấp nhất của của Giáo hội Axiom.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492025526972453047/images_58.jpg?ex=69d9d48e&is=69d8830e&hm=221a120b0f25ecb6ce773c1020ccab81254721946ff9544e7810e7acd5a86041&"
+    },
+    "feixiao": {
+        "name": "Saran",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Từng là nô lệ chiến tranh của tộc Borisin, Feixiao giờ đây là Móng Vuốt Kỳ Lân của Tiên Châu Yaoqing và là một trong Thất Trọng Tài . Tính cách của cô phóng khoáng và thẳng thắn.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492030669449330718/images_60.jpg?ex=69d9d958&is=69d887d8&hm=33c57fa0e0c377813b048bb7d8e767c0a4ead5630e3d8e08bc0b447dfdd3de78&"
+    },
+    "jingliu": {
+        "name": "Jingliu",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Từng là kiếm thủ hàng đầu của Xianzhou Luofu, cũng đồng thời là sư phụ của Jing Yuan. Sau khi đọa Nhập Ma và trở nên mất kiểm soát, cô đã trốn thoát khỏi Biển Thuyền Sao.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492031630460719217/images_61.jpg?ex=69d9da3d&is=69d888bd&hm=914500c481b84f755868a6c283a48f23f18f6d793e04243d5fb26a0dc8765cc5&"
+    },
+    "baiheng": {
+        "name": "Baiheng",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Baiheng là một lữ khách và anh hùng người Hồ Ly trong lịch sử Liên minh Tiên Châu. Cô là một thành viên của Vô Danh và là một phần của Vân Thượng Ngũ Kiêu.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492033231531282492/images_62.jpg?ex=69d9dbbb&is=69d88a3b&hm=0a62f247fcfbe18271bb2c55477a26e16c4d4b9eee05ca6410473762f72c947f&"
+    },
+    "kafka": {
+        "name": "Kafka",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Một thành viên của nhóm Stellaron Hunters, điềm tĩnh, tự chủ và xinh đẹp. Hồ sơ của cô trên danh sách truy nã của Tập đoàn Hòa bình Liên sao chỉ ghi tên và sở thích của cô.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492033914754306158/images_63.jpg?ex=69d9dc5d&is=69d88add&hm=6d869f92c089a5a89db9de14f44ff84c3126067df2f0d80f050a07bd2687c377&"
+    },
+    "himeko": {
+        "name": "Himeko",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Là một nhà khoa học ưa mạo hiểm, người từng tình cờ gặp và sửa chữa một đoàn tàu bị mắc kẹt khi còn nhỏ, giờ đây cô phiêu lưu khắp vũ trụ cùng với con tàu Astral Express làm người dẫn đường.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492034716990177340/images_64.jpg?ex=69d9dd1d&is=69d88b9d&hm=6b39080fd883af4ef3fc2565114098ad4c42f6ac416c85a372685ee0ca1a1648&"
+    },
+    "march_7th": {
+        "name": "March 7th",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Một cô gái nhiệt huyết được phi hành đoàn Astral Express cứu thoát khỏi lớp băng vĩnh cửu. Khi tỉnh dậy, cô không nhớ gì về bản thân hay quá khứ của mình.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492035390138355803/images_66.jpg?ex=69d9ddbd&is=69d88c3d&hm=0b55b7b56735b995aacec7f8f5ecf06300a28007f1ef88e75af9f635552b57d3&"
+    },
+    "bronya": {
+        "name": "Bronya",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "\"Đấng Bảo Vệ Tối Cao\" hiện tại của Belobog, thống lĩnh can trường của Thiết Vệ Bờm Bạc. Bronya từ nhỏ đã được giáo dục nghiêm ngặt, cô sở hữu sự duyên dáng và ân cần cần có của một người thừa kế.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492036601986158622/images_67.jpg?ex=69d9dede&is=69d88d5e&hm=be60d6501a427dbdfc6b5c3e258d92928a11f7fbd70256ccfe233938e22342c5&"
+    },
+    "fu_xuan": {
+        "name": "Fu Xuan",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Người đứng đầu Sở Thiên Tượng của Xianzhou Luofu, người tài trí tự tin chính trực. Dựa vào con mắt thứ ba và Ma Trận Tiên Tri để tiên đoán đường đi của Xianzhou, đoán trước tốt xấu của sự việc.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492037060176121946/images_68.jpg?ex=69d9df4b&is=69d88dcb&hm=56590dcd9c12a3b5cfda3b463b78c29d14b8507dbc2c2fce7fef1324656c901e&"
+    },
+    "fugue": {
+        "name": "Fugue",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô gái Người Hồ Ly hoạt bát. Tướng mạo, tên và thân phận đều bị người khác cướp đi. Vận mệnh để lại cho cô một tia hy vọng sống, nhưng dấu ấn của \"Hủy Diệt\" vẫn đang rục rịch.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492037726617206866/images_69.jpg?ex=69d9dfea&is=69d88e6a&hm=a94a9000b381aa9c5c1c04a60ace222ecb2ad032a3d196d25041e163f98aefe3&"
+    },
+    "yukong": {
+        "name": "Yukong",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Sở trưởng Sở Thiên Bách Xianzhou Luofu, tính tình ôn hòa, và có kinh nghiệm xử lý mọi việc. Khi còn trẻ, từng là một phi công trải qua nhiều trận chiến, và trở thành sở trưởng với thành tích xuất sắc.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492039419681570917/images_71.jpg?ex=69d9e17e&is=69d88ffe&hm=059ae0281bfb1e3eccf50f3d00982c1ecf1c734c74c0b1e071ffe8dc2fe4033a&"
+    },
+    "columbina": {
+        "name": "Damselette",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Columbina, hay còn gọi là \"Damselette\", là Quan Chấp Hành thứ ba trong 11 Quan Chấp Hành Fatui trong Genshin Impact. Cô được miêu tả là một \"Thiếu Nữ\" với vẻ ngoài bí ẩn, sức mạnh to lớn.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492162152700706986/tai_xuong_2.jpg?ex=69da53cc&is=69d9024c&hm=5e4ddfbf2e94e7bea511f903c6b78da2dec94d37ecaf2c9f108206d610dc3d54&"
+    },
+    "yae_miko": {
+        "name": "Guuji Yae",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Yae Miko, còn được gọi là Guuji Yae hoặc Guuji. Yae Miko, một kitsune đa diện, trông coi Đại đền Narukami , sở hữu Nhà xuất bản Yae, và là người hầu kiêm bạn của Eternity.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492162886028492830/images_4.webp?ex=69da547b&is=69d902fb&hm=9cf37effb5e6dfd4bb91d22a96827b6a88ff6a149189f4541cd40e0a6b82516f&"
+    },
+    "ye_shunguang": {
+        "name": "Ye Shunguang",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô ấy là một Đặc vụ có thể chơi được trong Zenless Zone Zero và là thành viên của Hội nghị thượng đỉnh Yunkui . Cô ấy đã được trao danh hiệu \" Thợ săn Hư không: Trọng tài Thanh Minh\".",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492163732800012318/images_73.jpg?ex=69da5544&is=69d903c4&hm=bc9e24f8ade69088c765e36d4836be8fd209ead2a99619de45167b17c693ed24&"
+    },
+    "yixuan": {
+        "name": "Yixuan",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Yixuan là một Đặc vụ có thể chơi được trong Zenless Zone Zero và là Cao sư của Hội nghị Yunkui. Cô ấy đã tự mình đạt được danh hiệu \"Đại sư \" và được các đệ tử gọi là Sư phụ.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492164655626453103/images_74.jpg?ex=69da5620&is=69d904a0&hm=c449301d45500359d6b2061462dd111763585fd3baa80d25e851855a170c8212&"
+    },
+    "cartethyia": {
+        "name": "Cartethyia",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Xuyên suốt Rinascita, cô được tôn kính với tên gọi Fleurdelys, \"Trinh nữ được ban phước\", và trong một số tài liệu, là \"Trinh nữ tử đạo\". Là một nhân vật quan trọng trong lịch sử khu vực.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492165443467743232/images_75.jpg?ex=69da56dc&is=69d9055c&hm=b3a0826850acb0ac123b592f5922fb65c87d7e8d97f061775ff281ca9a1287df&"
+    },
+    "carlotta": {
+        "name": "Carlotta",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô là con gái thứ hai của gia tộc Montelli danh giá ở Rinascita, thể hiện sự cao quý bẩm sinh và gu thẩm mỹ tinh tế đối với nghệ thuật. Cô sở hữu trí thông minh, sự tự tin, mưu mẹo vô song.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492166412876255392/images_76.jpg?ex=69da57c3&is=69d90643&hm=c77a16572275a5966855b6762798402581547e96506243d487f389b8233f171e&"
+    },
+    "cantarella": {
+        "name": "Cantarella",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô là người đứng đầu thứ 36 của gia tộc Fisalia và là cựu Thánh Nữ của Imperator . Vẻ ngoài thanh lịch, điềm tĩnh và nhan sắc quyến rũ của cô che giấu một quá khứ đen tối và đáng sợ.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492167144148828210/images_77.jpg?ex=69da5872&is=69d906f2&hm=95544f09452b156a9ab745acf97d8001dc738b513497630354151fffa7f7c1a5&"
+    },
+    "camellya": {
+        "name": "Camellya",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô là một Bloom Bearer của Black Shores và phụ trách các bài kiểm tra ươm mầm hướng đến chiến đấu dành cho các ứng viên mới. Tuy nhiên, cô từ chối mọi trách nhiệm.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492169050602737806/images_79.jpg?ex=69da5a38&is=69d908b8&hm=0d769d8177ae609abaae6e614b452bd0fd3e3bc3fb0d547ddf04fa5c41ca7ad6&"
+    },
+    "lynae": {
+        "name": "Lynae",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô là sinh viên chương trình dự bị tại Học viện Startorch. Trước khi theo học Startorch, cô là lính đánh thuê đến từ Vùng Vô Luật pháp thuộc Liên bang Mới.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492169567642845364/images_80.jpg?ex=69da5ab4&is=69d90934&hm=088cd9bfcfefe66d0d1e8183790088b885b2022e3fdb32f2513afc4ddc3f3b01&"
+    },
+    "changli": {
+        "name": "Changli",
+        "rank": "anh_hung",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô là cựu Tổng thư ký của Văn phòng Trung ương tại Mingting, kinh đô, và hiện đang giữ chức Cố vấn cho Quan huyện Jinzhou. Vượt qua tuổi thơ khắc nghiệt, giờ đây cô trở thành một quan chức tài ba.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492170003259068616/images_82.jpg?ex=69da5b1b&is=69d9099b&hm=0da14b27db57a58ab337b9a963b836268cdbdafe54ee895e3a73ccc12a15faee&"
+    },
+    "jinhsi": {
+        "name": "Jinhsi",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô là vị quan huyện trẻ tuổi của Jinzhou, sở hữu bản chất kiên quyết và vị tha, cùng với lòng tận tụy không lay chuyển trong việc bảo vệ thành phố và đồng bào đến hơi thở cuối cùng.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1492171427481256026/images_83.jpg?ex=69da5c6f&is=69d90aef&hm=2651b55046fa1a1bcb98e185104025842befe4f7785adeabd06bbc3387505d7c&"
+    },
+    "minamoto_shizuka": {
+        "name": "Minamoto Shizuka",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Minamoto Shizuka là cô bé nhân hậu, học giỏi trong Doraemon. Cô thích tắm, ăn khoai lang và chơi violin. Với trái tim ấm áp, Shizuka luôn giúp đỡ bạn bè và sau này trở thành người vợ hiền của Nobita.",
+        "image": "https://cdn.discordapp.com/attachments/1491023125213741218/1492424563995443261/2Q.png?ex=69db482f&is=69d9f6af&hm=75cea9497858c3a936a21bb91f1d5c71a6748b05f36fe83c4090993412a31969"
+    },
+    "ayase_miharu": {
+        "name": "Miharu Ayase",
+        "rank": "huyen_thoai",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Miharu Ayase là một trong những nhân vật chính của câu chuyện. Cô là bạn thời thơ ấu của Amakawa Haruto. Cô biến mất một cách bí ẩn ngay sau lễ tốt nghiệp trung học, điều này đã khiến Haruto vô cùng đau khổ.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1493129846988079166/V19034.webp?ex=69ddd908&is=69dc8788&hm=a9b091947488ea2da24dc555db652d7e381c814a88ef3df6e586ad3ad6d9ea6e&"
+    },
+    "celia_claire": {
+        "name": "Celia Claire",
+        "rank": "truyen_thuyet",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Celia Claire là một trong những nhân vật chính của bộ truyện. Cô là con gái của một quý tộc Claire. Cô được ca ngợi là pháp sư thiên tài xuất sắc nhất vùng Strahl trong thời đại hiện nay.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1493130689758101524/Celia_profile.webp?ex=69ddd9d1&is=69dc8851&hm=5ba708a496820f1e2a4e872eea75669162cc4be03c8cb27036014bc3436ed5ed&"
+    },
+    "aishia": {
+        "name": "Aishia",
+        "rank": "limited",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Aishia là một trong những nữ chính của bộ truyện. Cô là linh hồn giao ước của Rio, đồng thời là một linh hồn cấp cao, thuộc loại vô cùng hiếm gặp. Cô đã giao ước với Rio từ đầu tiểu thuyết, vào thời điểm ký ức của Haruto thức tỉnh trong Rio.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1493131586445639771/V23_bonus_tapestry_full.webp?ex=69dddaa7&is=69dc8927&hm=c4ddb5edf1859ddb81405e5ce5ba0496ac55127c6ee63fc8ecc860a90eebc418&"
+    },
+    "sora": {
+        "name": "Sora",
+        "rank": "toi_thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Cô bé là một đứa trẻ mười tuổi có vẻ ngoài châu Á, vóc dáng như một đứa trẻ mười tuổi. Cô bé có mái tóc xanh dài đến cổ, đôi mắt vàng và làn da trắng muốt.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1493133488298397768/Sora.webp?ex=69dddc6c&is=69dc8aec&hm=66bb2af79f56ce87ddb351faad2c8150c61df14f8b00ccbd18fb27497d666c90&"
+    },
+    "tamaki": {
+        "name": "Tamaki Kotatsu",
+        "rank": "thuong",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Tamaki Kotatsu là cựu Lính cứu hỏa hạng Hai thế hệ thứ hai, trước đây thuộc Đội Cứu hỏa Đặc biệt số 1. Do phục vụ cho Rekka Hoshimiya, cô đã bị kỷ luật dưới sự giám sát của Đội Cứu hỏa Đặc biệt số 8.",
+        "image": "https://cdn.discordapp.com/attachments/1491404998494392422/1493134830169362492/images_84.jpg?ex=69ddddac&is=69dc8c2c&hm=659bdc118d9edc7a586fbbdd299c5cf3feeb04c3bb68ee752b60a58d1ed56d3b&"
+    },
+    "doraemon_team": {
+        "name": "Doraemon, Nobita, Shizuka, Suneo, Jaian",
+        "rank": "secret",
+        "quantity": -1,
+        "claimed": 0,
+        "Bio": "Doraemon, Nobita, Shizuka, Suneo và Jaian là nhóm bạn tiểu học gắn bó. Cùng túi bảo bối thần kỳ, họ trải qua những chuyến phiêu lưu vượt thời gian, bồi đắp tình bạn chân thành và bài học ý nghĩa.",
+        "image": "https://cdn.discordapp.com/attachments/1488197484848222310/1493967427598549093/Z.png?ex=69e0e517&is=69df9397&hm=02be2f702ffe9d9f27dc1fc176403c336f0164d72e9f092ea0ff8a4023d08b57&"
+    }
+}
