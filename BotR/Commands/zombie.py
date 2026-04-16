@@ -10,6 +10,11 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 import discord
 from discord.ui import Modal, Select, TextInput, View
 
+try:
+    from Data import data_user
+except Exception:
+    data_user = None
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 INV_FILE = os.path.join(BASE_DIR, "Data", "inventory.json")
@@ -50,6 +55,7 @@ ITEM_META = {
     },
 }
 
+# Chỉ cho phép dùng 2 potion trong zombie
 ALLOWED_ZOMBIE_ITEMS = ["health_potion", "damage_potion"]
 REWARD_ITEMS = ["soup", "pizza", "drug", "health_potion", "damage_potion"]
 
@@ -173,27 +179,25 @@ def fmt_hp(hp: int, max_hp: int) -> str:
     return f"`{max(0, int(hp)):,}/{max(1, int(max_hp)):,}`"
 
 
-def display_name_from_ctx(ctx, uid: str, fallback: str = None) -> str:
-    uid = str(uid)
-    guild = getattr(ctx, "guild", None)
-    if guild and uid.isdigit():
-        member = guild.get_member(int(uid))
-        if member:
-            return member.display_name
-
-    bot = getattr(ctx, "bot", None)
-    if bot and uid.isdigit():
-        try:
-            user = bot.get_user(int(uid))
-            if user:
-                return getattr(user, "global_name", None) or user.name
-        except Exception:
-            pass
-
-    return fallback or f"<@{uid}>"
+def safe_display_name(user_obj, fallback="Người chơi"):
+    if user_obj is None:
+        return fallback
+    try:
+        return (
+            getattr(user_obj, "display_name", None)
+            or getattr(user_obj, "global_name", None)
+            or getattr(user_obj, "name", None)
+            or fallback
+        )
+    except Exception:
+        return fallback
 
 
 # ========= INVENTORY =========
+def norm_item_key(item_key: str) -> str:
+    return str(item_key or "").strip().lower()
+
+
 def ensure_user_schema(inv: Dict[str, Any], uid: str) -> Dict[str, Any]:
     uid = str(uid)
     user = inv.get(uid)
@@ -220,6 +224,7 @@ def ensure_user_schema(inv: Dict[str, Any], uid: str) -> Dict[str, Any]:
 def get_item_count(inv: Dict[str, Any], uid: str, item_key: str) -> int:
     user = inv.get(str(uid), {})
     bag_item = user.get("bag_item", {})
+    item_key = norm_item_key(item_key)
     try:
         return max(0, int(bag_item.get(item_key, 0)))
     except Exception:
@@ -228,6 +233,7 @@ def get_item_count(inv: Dict[str, Any], uid: str, item_key: str) -> int:
 
 def add_item(inv: Dict[str, Any], uid: str, item_key: str, qty: int):
     uid = str(uid)
+    item_key = norm_item_key(item_key)
     qty = max(0, int(qty))
     if qty <= 0:
         return
@@ -238,6 +244,7 @@ def add_item(inv: Dict[str, Any], uid: str, item_key: str, qty: int):
 
 def remove_item(inv: Dict[str, Any], uid: str, item_key: str, qty: int) -> bool:
     uid = str(uid)
+    item_key = norm_item_key(item_key)
     qty = max(0, int(qty))
     if qty <= 0:
         return False
@@ -246,7 +253,11 @@ def remove_item(inv: Dict[str, Any], uid: str, item_key: str, qty: int) -> bool:
     current = max(0, int(bag_item.get(item_key, 0)))
     if current < qty:
         return False
-    bag_item[item_key] = current - qty
+    new_val = current - qty
+    if new_val <= 0:
+        bag_item.pop(item_key, None)
+    else:
+        bag_item[item_key] = new_val
     return True
 
 
@@ -403,6 +414,17 @@ def get_team_members(inv, uid, team_data, waifu_data):
     return out
 
 
+def is_member_dead(member: Dict[str, Any]) -> bool:
+    if not isinstance(member, dict):
+        return True
+    if member.get("alive") is False:
+        return True
+    try:
+        return int(member.get("hp", 0) or 0) <= 0
+    except Exception:
+        return True
+
+
 # ========= ZOMBIE ENEMY =========
 def build_zombie(level: int) -> Dict[str, Any]:
     level = max(1, int(level))
@@ -440,14 +462,54 @@ def build_zombie(level: int) -> Dict[str, Any]:
 
 
 # ========= REWARD =========
-def random_reward(level: int) -> Tuple[str, int]:
-    level = max(1, int(level))
-    if random.random() < 0.55:
-        gold = random.randint(60, 140) * level
-        return "gold", gold
-    item = random.choice(REWARD_ITEMS)
-    qty = 1 if random.random() < 0.80 else 2
-    return item, qty
+def calc_inactive_bonus(seconds_since_last_play: int) -> float:
+    hours = max(0.0, seconds_since_last_play / 3600.0)
+    if hours >= 72:
+        return 0.15
+    if hours >= 24:
+        return 0.10
+    if hours >= 6:
+        return 0.05
+    if hours >= 1:
+        return 0.02
+    return 0.0
+
+
+def add_gold_reward(inv: Dict[str, Any], uid: str, amount: int) -> int:
+    """
+    Cộng gold vào cả inventory.json lẫn Data.data_user nếu module đó có tồn tại.
+    """
+    uid = str(uid)
+    amount = max(0, int(amount))
+
+    final_gold = None
+
+    if data_user is not None:
+        try:
+            user = data_user.get_user(uid)
+            if not isinstance(user, dict):
+                user = {}
+            current = int(user.get("gold", 0) or 0)
+            final_gold = current + amount
+            user["gold"] = final_gold
+            data_user.save_user(uid, user)
+            if hasattr(data_user, "save_data"):
+                try:
+                    data_user.save_data()
+                except Exception:
+                    pass
+        except Exception as e:
+            print(f"[zombie.py] add_gold_reward data_user error: {e}")
+            final_gold = None
+
+    inv_user = ensure_user_schema(inv, uid)
+    if final_gold is None:
+        inv_user["gold"] = int(inv_user.get("gold", 0) or 0) + amount
+        final_gold = int(inv_user["gold"])
+    else:
+        inv_user["gold"] = final_gold
+
+    return final_gold
 
 
 # ========= SESSION =========
@@ -456,6 +518,7 @@ class ZombieSession:
         self.ctx = ctx
         self.user = get_user_obj(ctx)
         self.uid = str(self.user.id)
+        self.udisplay = safe_display_name(self.user, "Người chơi")
 
         self.inv = {}
         self.waifu_data = {}
@@ -467,6 +530,15 @@ class ZombieSession:
         self.ended = False
         self.logs: List[str] = []
         self.message = None
+        self.menu_view = None
+
+        # anti-spam nhẹ: mỗi run 1 mốc thưởng sau 2–3 level
+        self.run_progress = 0
+        self.next_reward_at = random.randint(2, 3)
+
+        # giữ chân user quay lại
+        self.last_play_ts = 0
+        self.inactive_bonus = 0.0
 
         self.load_state()
         self.rebuild_party()
@@ -475,14 +547,26 @@ class ZombieSession:
         self.inv = load_json(INV_FILE)
         self.waifu_data = load_json(WAIFU_FILE)
         self.team_data = load_json(TEAM_FILE)
-        ensure_user_schema(self.inv, self.uid)
+        user = ensure_user_schema(self.inv, self.uid)
+
+        self.last_play_ts = int(user.get("zombie_last_play", 0) or 0)
+        if self.last_play_ts > 0:
+            self.inactive_bonus = calc_inactive_bonus(int(time.time()) - self.last_play_ts)
+        else:
+            self.inactive_bonus = 0.0
 
     def save_state(self):
         save_json(INV_FILE, self.inv)
 
+    def touch_last_play(self):
+        user = ensure_user_schema(self.inv, self.uid)
+        user["zombie_last_play"] = int(time.time())
+        self.save_state()
+
     def finish(self):
         self.ended = True
         ACTIVE_ZOMBIE_SESSIONS.pop(self.uid, None)
+        self.touch_last_play()
 
     def rebuild_party(self, preserve_hp: bool = True):
         old_state = {}
@@ -528,9 +612,14 @@ class ZombieSession:
     def use_potion(self, wid: str, item_key: str, qty: int) -> Tuple[bool, str]:
         wid = str(wid)
         qty = max(1, int(qty))
+        item_key = norm_item_key(item_key)
+
         member = self.member_by_wid(wid)
         if not member:
             return False, "Không tìm thấy waifu."
+
+        if is_member_dead(member):
+            return False, "Waifu này đã chết rồi, không thể dùng item nữa."
 
         if item_key not in ALLOWED_ZOMBIE_ITEMS:
             return False, "Item này không được dùng trong zombie."
@@ -555,11 +644,10 @@ class ZombieSession:
             return True, f"Đã dùng {qty} Health Potion lên {member['name']}."
 
         if item_key == "damage_potion":
-            if member["hp"] <= 0:
-                return False, "Waifu này đã gục, không thể buff damage."
             boost_total = 0.0
             for _ in range(qty):
                 boost_total += random.uniform(0.10, 0.20)
+
             member["temp_dmg_pct"] = float(member.get("temp_dmg_pct", 0.0)) + boost_total
             self.save_state()
             self.log(f"⚔️ {member['name']} nhận +{boost_total * 100:.0f}% damage trong 1 trận.")
@@ -568,12 +656,16 @@ class ZombieSession:
         return False, "Item không hợp lệ."
 
     def render_menu(self) -> discord.Embed:
+        bonus_line = ""
+        if self.inactive_bonus > 0:
+            bonus_line = f"\n🎁 Bonus quay lại: +{int(self.inactive_bonus * 100)}% tỉ lệ quà mốc thưởng."
+
         embed = discord.Embed(
-            title=f"🧟 Zombie Hunt — {display_name_from_ctx(self.ctx, self.uid)}",
+            title=f"🧟 Zombie Hunt — {self.udisplay}",
             description=(
                 f"**Level hiện tại:** `{self.level}`\n"
                 f"Boss xuất hiện mỗi 10 level. Mini boss có thể xuất hiện sau level 10.\n"
-                f"Không có hồi máu tự động giữa các level."
+                f"Không có hồi máu tự động giữa các level.{bonus_line}"
             ),
             color=discord.Color.dark_green(),
         )
@@ -590,21 +682,31 @@ class ZombieSession:
                 )
             embed.add_field(name="Team", value="\n".join(lines)[:1024], inline=False)
 
+        status_lines = []
+        for c in self.party[:3]:
+            state = "☠️" if c["hp"] <= 0 else "❤️"
+            buff = ""
+            if c.get("temp_dmg_pct", 0) > 0:
+                buff = f" | ⚔️ +{int(c['temp_dmg_pct'] * 100)}%"
+
+            status_lines.append(
+                f"{state} **{c['name']}** | "
+                f"HP {fmt_hp(c['hp'], c['max_hp'])} `{hp_bar(c['hp'], c['max_hp'])}`"
+                f"{buff}"
+            )
+
         embed.add_field(
             name="Hướng dẫn",
-            value="`Chiến trận tiếp theo` để đánh level mới. `Sử dụng item` để chọn waifu và dùng potion trước trận.",
+            value="`Chiến trận tiếp theo` để đánh level mới. `Sử dụng item` để chọn waifu và dùng item trước trận.",
             inline=False,
         )
 
-        if self.logs:
-            embed.add_field(name="Log gần nhất", value="\n".join(self.logs[-5:])[:1024], inline=False)
-
-        embed.set_footer(text="Chỉ health potion và damage potion được dùng trong zombie.")
+        embed.set_footer(text="Chỉ Health Potion và Damage Potion được dùng trong zombie.")
         return embed
 
     def render_battle(self, zombie: Dict[str, Any]) -> discord.Embed:
         embed = discord.Embed(
-            title=f"⚔️ {display_name_from_ctx(self.ctx, self.uid)} vs {zombie['name']}",
+            title=f"⚔️ {self.udisplay} vs {zombie['name']}",
             description=f"Level `{self.level}` • `{zombie['kind']}`",
             color=zombie["color"],
         )
@@ -637,14 +739,33 @@ class ZombieSession:
         embed = discord.Embed(title=title, description=desc, color=discord.Color.gold())
         embed.add_field(name="Level", value=str(self.level), inline=True)
         embed.add_field(name="Party còn sống", value=str(len(self.alive_party())), inline=True)
-        if self.logs:
-            embed.add_field(name="Log", value="\n".join(self.logs[-5:])[:1024], inline=False)
+
+        status_lines = []
+        for c in self.party[:3]:
+            state = "☠️" if c["hp"] <= 0 else "❤️"
+            buff = ""
+            if c.get("temp_dmg_pct", 0) > 0:
+                buff = f" | ⚔️ +{int(c['temp_dmg_pct'] * 100)}%"
+
+            status_lines.append(
+                f"{state} **{c['name']}** | "
+                f"HP {fmt_hp(c['hp'], c['max_hp'])} `{hp_bar(c['hp'], c['max_hp'])}`"
+                f"{buff}"
+            )
+
+        if status_lines:
+            embed.add_field(
+                name="📊 Tình trạng hiện tại",
+                value="\n".join(status_lines)[:1024],
+                inline=False
+            )
+
         return embed
 
     def render_end(self) -> discord.Embed:
         return make_embed(
-            "⚠️ Hôm nay bạn đã đấu quá nhiều rồi, nghĩ ngơi đi",
-            "Không còn waifu đủ sức để tiếp tục săn zombie.",
+            "Bạn đã thua trận, lũ zombie quá mạnh so với bạn!",
+            "Không còn waifu đủ sức để tiếp tục săn zombie. Hãy nâng cấp waifu của bạn",
             discord.Color.orange(),
         )
 
@@ -743,16 +864,31 @@ class ZombieSession:
         self.in_battle = False
         return zombie["hp"] <= 0
 
-    def reward_level(self):
-        kind, value = random_reward(self.level)
-        if kind == "gold":
-            user = ensure_user_schema(self.inv, self.uid)
-            user["gold"] = int(user.get("gold", 0)) + int(value)
+    def reward_level(self, major: bool = False):
+        """
+        major=False  -> lv nhỏ, chỉ ít gold
+        major=True   -> 2-3 level một lần, có tỉ lệ drop item cao hơn
+        """
+        if not major:
+            base_gold = random.randint(12, 24) + (self.level * random.randint(2, 5))
+            base_gold = int(base_gold * (1 + (self.inactive_bonus * 0.35)))
+            final_gold = add_gold_reward(self.inv, self.uid, base_gold)
             self.save_state()
-            return f"💰 Nhận **{value:,} gold**."
-        add_item(self.inv, self.uid, kind, value)
+            return f"💰 Nhận **{base_gold:,} gold**. (Tổng gold: `{final_gold:,}`)"
+
+        item_chance = min(0.85, 0.60 + self.inactive_bonus)
+        if random.random() < item_chance:
+            item = random.choice(REWARD_ITEMS)
+            qty = 1 if random.random() < 0.80 else 2
+            add_item(self.inv, self.uid, item, qty)
+            self.save_state()
+            return f"🎁 Nhận **{qty} {ITEM_META[item]['label']}**."
+
+        gold = random.randint(70, 130) + self.level * random.randint(12, 20)
+        gold = int(gold * (1 + self.inactive_bonus))
+        final_gold = add_gold_reward(self.inv, self.uid, gold)
         self.save_state()
-        return f"🎁 Nhận **{value} {ITEM_META[kind]['label']}**."
+        return f"💰 Nhận **{gold:,} gold**. (Tổng gold: `{final_gold:,}`)"
 
     async def play_next_level(self, msg, view):
         if self.ended:
@@ -764,17 +900,23 @@ class ZombieSession:
         if self.party_dead():
             self.ended = True
             self.finish()
-            await edit_like(msg, embed=self.render_end(), view=view)
+            await edit_like(msg, embed=self.render_end(), view=None)
             return
 
         battle_ok = await self.run_level(msg, view)
         if not battle_ok:
             self.ended = True
             self.finish()
-            await edit_like(msg, embed=self.render_end(), view=view)
+            await edit_like(msg, embed=self.render_end(), view=None)
             return
 
-        reward_text = self.reward_level()
+        self.run_progress += 1
+        major_reward = self.run_progress >= self.next_reward_at
+        reward_text = self.reward_level(major=major_reward)
+
+        if major_reward:
+            self.next_reward_at += random.randint(2, 3)
+
         self.logs.append(reward_text)
         self.level += 1
         self.clear_temp_buffs()
@@ -784,7 +926,7 @@ class ZombieSession:
         if self.party_dead():
             self.ended = True
             self.finish()
-            await edit_like(msg, embed=self.render_end(), view=view)
+            await edit_like(msg, embed=self.render_end(), view=None)
             return
 
         reward_embed = self.render_reward("✅ Vượt qua zombie", reward_text)
@@ -846,7 +988,7 @@ class ZombiePotionSelect(Select):
             )
 
         super().__init__(
-            placeholder="Chọn potion",
+            placeholder="Chọn item",
             min_values=1,
             max_values=1,
             options=options,
@@ -859,7 +1001,8 @@ class ZombiePotionSelect(Select):
                 ephemeral=True,
             )
 
-        item_key = self.values[0]
+        item_key = norm_item_key(self.values[0])
+
         if get_item_count(self.session.inv, self.session.uid, item_key) <= 0:
             return await interaction.response.send_message("❌ Bạn không còn item này.", ephemeral=True)
 
@@ -877,7 +1020,10 @@ class ZombieTargetSelect(Select):
         self.session = session
         options = []
 
-        for idx, c in enumerate(self.session.party[:3], start=1):
+        # Chỉ hiện waifu còn sống
+        alive_party = [c for c in self.session.party[:3] if not is_member_dead(c)]
+
+        for idx, c in enumerate(alive_party, start=1):
             options.append(
                 discord.SelectOption(
                     label=f"{idx}. {c['name']}"[:100],
@@ -887,10 +1033,10 @@ class ZombieTargetSelect(Select):
             )
 
         if not options:
-            options = [discord.SelectOption(label="Không có waifu", value="none")]
+            options = [discord.SelectOption(label="Không có waifu còn sống", value="none")]
 
         super().__init__(
-            placeholder="Chọn waifu để dùng potion",
+            placeholder="Chọn waifu để dùng item",
             min_values=1,
             max_values=1,
             options=options,
@@ -899,7 +1045,7 @@ class ZombieTargetSelect(Select):
     async def callback(self, interaction: discord.Interaction):
         wid = self.values[0]
         if wid == "none":
-            return await interaction.response.send_message("❌ Không có waifu phù hợp.", ephemeral=True)
+            return await interaction.response.send_message("❌ Không có waifu còn sống để dùng item.", ephemeral=True)
 
         if self.session.in_battle:
             return await interaction.response.send_message(
@@ -907,10 +1053,17 @@ class ZombieTargetSelect(Select):
                 ephemeral=True,
             )
 
+        target = self.session.member_by_wid(wid)
+        if not target or is_member_dead(target):
+            return await interaction.response.send_message(
+                "❌ Waifu này đã chết rồi, không thể dùng item.",
+                ephemeral=True,
+            )
+
         view = ZombiePotionView(self.session, wid)
         embed = make_embed(
-            "🧪 Chọn potion",
-            f"Chọn item để dùng cho **{display_name_from_ctx(self.session.ctx, self.session.uid)}**",
+            "🧪 Chọn item",
+            f"Chọn item để dùng cho **{target['name']}**",
             discord.Color.blurple(),
         )
         await interaction.response.send_message(embed=embed, view=view, ephemeral=True)
@@ -961,9 +1114,15 @@ class ZombieMenuView(View):
                 ephemeral=True,
             )
 
+        if not any(not is_member_dead(c) for c in self.session.party[:3]):
+            return await interaction.response.send_message(
+                "❌ Không có waifu còn sống để dùng item.",
+                ephemeral=True,
+            )
+
         embed = make_embed(
             "🧪 Chọn waifu",
-            "Chọn 1 trong 3 waifu đầu team để dùng potion trước khi vào trận.",
+            "Chọn 1 trong 3 waifu đầu team để dùng item trước khi vào trận.",
             discord.Color.green(),
         )
         await interaction.response.send_message(embed=embed, view=ZombieTargetView(self.session), ephemeral=True)
@@ -1010,6 +1169,7 @@ async def zombie_logic(ctx):
 
     start_embed = session.render_menu()
     view = ZombieMenuView(session)
+    session.menu_view = view
 
     msg = await send_like(ctx, embed=start_embed, view=view)
     if msg is None:
