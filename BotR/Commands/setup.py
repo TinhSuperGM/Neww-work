@@ -8,7 +8,7 @@ from threading import Lock
 from typing import Any, Dict, Optional
 
 import discord
-from discord.ui import Button, Modal, TextInput, View
+from discord.ui import Button, Modal, TextInput, View, Select
 
 from Commands.prayer import get_luck
 from Data import data_user
@@ -552,11 +552,40 @@ async def send_roll_embed_logic(interaction, channel_id: str):
 # =========================
 # SHOP LOGIC
 # =========================
+ITEM_META = {
+    "soup": {
+        "label": "Soup",
+        "price": 100,
+        "desc": "+5 love",
+    },
+    "pizza": {
+        "label": "Pizza",
+        "price": 200,
+        "desc": "+10~30 love",
+    },
+    "drug": {
+        "label": "Drug",
+        "price": 300,
+        "desc": "+30~50 love",
+    },
+    "health_potion": {
+        "label": "Health Potion",
+        "price": 1000,
+        "desc": "Heal 10~20% max HP",
+    },
+    "damage_potion": {
+        "label": "Damage Potion",
+        "price": 1500,
+        "desc": "+10~20% damage for 1 battle",
+    },
+}
+
+
 class QuantityModal(Modal):
-    def __init__(self, item: str, price: int):
-        super().__init__(title=f"Mua {item}")
-        self.item = item
-        self.price = price
+    def __init__(self, item_key: str):
+        super().__init__(title=f"Mua {ITEM_META[item_key]['label']}")
+        self.item_key = item_key
+        self.price = ITEM_META[item_key]["price"]
 
         self.qty_input = TextInput(
             label="Nhập số lượng",
@@ -570,65 +599,84 @@ class QuantityModal(Modal):
 
         try:
             qty = int(self.qty_input.value)
-            if qty <= 0:
-                return await _respond(interaction, "❌ Số lượng phải > 0", ephemeral=True)
         except Exception:
-            return await _respond(interaction, "❌ Số không hợp lệ", ephemeral=True)
+            return await _respond(interaction, "❌ Số lượng không hợp lệ.", ephemeral=True)
+
+        if qty <= 0:
+            return await _respond(interaction, "❌ Số lượng phải > 0", ephemeral=True)
 
         user_id = str(interaction.user.id)
+
+        inv_before = load_inventory()
+        inv_data = copy.deepcopy(inv_before)
+        user_inv = _ensure_inventory_schema(inv_data, user_id)
+
+        user_before = copy.deepcopy(data_user.get_user(user_id) or {})
+        user_now = copy.deepcopy(user_before)
+
         total = self.price * qty
+        gold = int(user_now.get("gold", 0) or 0)
 
-        lock = data_user.get_lock(user_id)
-        async with lock:
-            user_before = copy.deepcopy(data_user.get_user(user_id))
+        if gold < total:
+            return await _respond(interaction, "❌ Không đủ gold!", ephemeral=True)
 
-            if int(user_before.get("gold", 0) or 0) < total:
-                return await _respond(interaction, f"❌ Không đủ {total} gold!", ephemeral=True)
+        user_now["gold"] = gold - total
+        data_user.save_user(user_id, user_now)
 
-            user_now = data_user.get_user(user_id)
-            user_now["gold"] = int(user_now.get("gold", 0) or 0) - total
-            data_user.save_user(user_id, user_now)
-
-            inv_before = load_inventory()
-            inv_data = copy.deepcopy(inv_before)
-            user_inv = _ensure_inventory_schema(inv_data, user_id)
-
+        try:
+            user_inv["bag_item"][self.item_key] = int(user_inv["bag_item"].get(self.item_key, 0) or 0) + qty
+            save_inventory(inv_data)
+            data_user.save_data()
+        except Exception:
             try:
-                user_inv["bag_item"][self.item] = user_inv["bag_item"].get(self.item, 0) + qty
-                save_inventory(inv_data)
+                data_user.save_user(user_id, user_before)
                 data_user.save_data()
             except Exception:
-                try:
-                    data_user.save_user(user_id, user_before)
-                    data_user.save_data()
-                except Exception:
-                    pass
+                pass
 
-                try:
-                    save_inventory(inv_before)
-                except Exception:
-                    pass
+            try:
+                save_inventory(inv_before)
+            except Exception:
+                pass
 
-                return await _respond(interaction, "❌ Lỗi, đã hoàn gold.", ephemeral=True)
+            return await _respond(interaction, "❌ Lỗi, đã hoàn gold.", ephemeral=True)
 
-        await _respond(interaction, f"✅ Mua {qty} {self.item} (-{total} gold)", ephemeral=True)
+        await _respond(
+            interaction,
+            f"✅ Mua {qty} {ITEM_META[self.item_key]['label']} (-{total} gold)",
+            ephemeral=True,
+        )
+
+
+class ShopItemSelect(Select):
+    def __init__(self):
+        options = []
+        for key in ["soup", "pizza", "drug", "health_potion", "damage_potion"]:
+            meta = ITEM_META[key]
+            options.append(
+                discord.SelectOption(
+                    label=f"{meta['label']} - {meta['price']} gold",
+                    value=key,
+                    description=meta["desc"],
+                )
+            )
+
+        super().__init__(
+            placeholder="Chọn vật phẩm để mua",
+            min_values=1,
+            max_values=1,
+            options=options,
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        item_key = self.values[0]
+        await interaction.response.send_modal(QuantityModal(item_key))
 
 
 class ShopView(View):
     def __init__(self):
         super().__init__(timeout=None)
-
-    @discord.ui.button(label="🌹 Soup", style=discord.ButtonStyle.green, custom_id="shop_soup")
-    async def soup(self, interaction: discord.Interaction, button: Button):
-        await interaction.response.send_modal(QuantityModal("soup", 100))
-
-    @discord.ui.button(label="🍕 Pizza", style=discord.ButtonStyle.blurple, custom_id="shop_pizza")
-    async def pizza(self, interaction: discord.Interaction, button: Button):
-        await interaction.response.send_modal(QuantityModal("pizza", 200))
-
-    @discord.ui.button(label="💊 Drug", style=discord.ButtonStyle.red, custom_id="shop_drug")
-    async def drug(self, interaction: discord.Interaction, button: Button):
-        await interaction.response.send_modal(QuantityModal("drug", 300))
+        self.add_item(ShopItemSelect())
 
 
 async def send_shop_embed_logic(interaction, channel_id: str):
@@ -659,15 +707,17 @@ async def send_shop_embed_logic(interaction, channel_id: str):
         return await _respond(interaction, "❌ Phải là text channel!", ephemeral=True)
 
     embed = discord.Embed(
-        title="🛒 Shop waifu",
+        title="Shop waifu",
         description=(
-            "> - Soup | 100 gold (+5 love)\n"
-            "> - Pizza | 200 gold (+10-30 love)\n"
-            "> - Drug | 300 gold (+30-50 love)"
+            "> Soup | 100 gold\n"
+            "> Pizza | 200 gold\n"
+            "> Drug | 300 gold\n"
+            "> Health Potion | 1000 gold\n"
+            "> Damage Potion | 1500 gold"
         ),
         color=discord.Color.purple(),
     )
-    embed.set_footer(text="Mua đi bro 😎")
+    embed.set_footer(text="Chọn vật phẩm trong menu để mua")
 
     sent = await ch.send(embed=embed, view=ShopView())
 
@@ -675,12 +725,12 @@ async def send_shop_embed_logic(interaction, channel_id: str):
     guild_key = str(interaction.guild.id)
     if guild_key not in channels or not isinstance(channels.get(guild_key), dict):
         channels[guild_key] = {}
+
     channels[guild_key]["shop_channel_id"] = ch.id
     channels[guild_key]["shop_message_id"] = sent.id
     save_channels(channels)
 
-    return await _respond(interaction, f"✅ Đã gửi shop vào {ch.mention}", ephemeral=True)
-
+    return await _respond(interaction, f"✅ Đã gửi shop panel vào {ch.mention}", ephemeral=True)
 
 # =========================
 # BOT SETUP

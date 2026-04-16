@@ -66,13 +66,15 @@ def build_help_embed(prefix="/"):
     embed.add_field(
         name="Battle Waifu",
         value=f"""
-{prefix}fight: Chọn ai đó đấu với bạn ( {prefix}fight <user_name>
+{prefix}fight: Chọn ai đó để đấu với bạn hoặc random ( {prefix}fight [mention] )
 {prefix}team: Cài đặt team đấu của bạn ( {prefix}team [set/show/remove/clear] <waifu_id>)
+{prefix}lock: Khóa trạng thái fight nhằm trách bị người khác mention và fight ( nếu Random thì không có tác dụng )
+{prefix}zombie: Đưa team đấu của bạn đi chiến với lũ zombie và nhận thưởng!
 """,
         inline=False
     )
 
-    embed.set_footer(text="Slash: / | Prefix: .")
+    embed.set_footer(text="Hướng dẫn dùng bot: Bạn chỉ cần nhập đúng theo trên hoặc thay . thành / để dùng. ( Dấu <> là bắt buộc, [] là tùy chọn.")
 
     return embed
 

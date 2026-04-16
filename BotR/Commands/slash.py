@@ -44,6 +44,7 @@ from Commands.prayer import prayer_logic
 from Commands.fight import fight_logic
 from Commands.team import team_logic
 from Commands.lock import lock_logic
+from Commands.zombie import zombie_logic
 
 
 def _resolve_user(user: Optional[discord.User]) -> Optional[discord.User]:
@@ -293,4 +294,7 @@ async def setup(bot):
     @app_commands.describe(state="true/false, bỏ trống để toggle")
     async def lock_cmd(interaction: discord.Interaction, state: Optional[bool] = None):
         await lock_logic(interaction, state)
+    @bot.tree.command(name="zombie", description="Săn zombie bằng team hiện tại")
+    async def zombie_cmd(interaction: discord.Interaction):
+        await zombie_logic(interaction)
 print("Loaded slash has successs")

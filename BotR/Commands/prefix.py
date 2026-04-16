@@ -38,6 +38,7 @@ from Commands.prayer import prayer_logic
 from Commands.fight import fight_logic
 from Commands.team import team_logic
 from Commands.lock import lock_logic
+from Commands.zombie import zombie_logic
 
 
 def _normalize_name(name: str) -> str:
@@ -288,6 +289,7 @@ async def setup(bot):
             "team": "team",
             "fight": "fight",
             "lock": "lock",
+            "zombie": "zombie",
         }
 
         # ===== SMART PARSER =====
@@ -533,7 +535,8 @@ async def setup(bot):
             if cmd == "lock":
                 state = args[0] if args else None
                 return await lock_logic(ctx, state)
-
+            if cmd == "zombie":
+                return await zombie_logic(ctx)
         except ValueError:
             return await reply("❌ Tham số số không hợp lệ.")
         except Exception as exc:
