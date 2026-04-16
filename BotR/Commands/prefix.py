@@ -290,6 +290,9 @@ async def setup(bot):
             "fight": "fight",
             "lock": "lock",
             "zombie": "zombie",
+            "zom": "zombie",
+            "wolf": "werewolf",
+            "werewolf": "werewolf",
         }
 
         # ===== SMART PARSER =====
@@ -537,6 +540,9 @@ async def setup(bot):
                 return await lock_logic(ctx, state)
             if cmd == "zombie":
                 return await zombie_logic(ctx)
+            if cmd == "werewolf":
+                channel_arg = args[0] if args else None
+                return await werewolf_logic(ctx, channel_arg)
         except ValueError:
             return await reply("❌ Tham số số không hợp lệ.")
         except Exception as exc:

@@ -45,6 +45,7 @@ from Commands.fight import fight_logic
 from Commands.team import team_logic
 from Commands.lock import lock_logic
 from Commands.zombie import zombie_logic
+from Commands.werewolf import werewolf_logic
 
 
 def _resolve_user(user: Optional[discord.User]) -> Optional[discord.User]:
@@ -297,4 +298,7 @@ async def setup(bot):
     @bot.tree.command(name="zombie", description="Săn zombie bằng team hiện tại")
     async def zombie_cmd(interaction: discord.Interaction):
         await zombie_logic(interaction)
+    @bot.tree.command(name="werewolf", description="Tạo phòng Ma Sói trong một channel")
+    async def werewolf_cmd(interaction: discord.Interaction, channel_id: str):
+        await werewolf_logic(interaction, channel_id)
 print("Loaded slash has successs")
