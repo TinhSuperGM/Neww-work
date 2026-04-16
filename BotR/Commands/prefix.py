@@ -37,6 +37,7 @@ from Commands.profile import get_profile_embed
 from Commands.prayer import prayer_logic
 from Commands.fight import fight_logic
 from Commands.team import team_logic
+from Commands.lock import lock_logic
 
 
 def _normalize_name(name: str) -> str:
@@ -286,6 +287,7 @@ async def setup(bot):
             "pray": "prayer",
             "team": "team",
             "fight": "fight",
+            "lock": "lock",
         }
 
         # ===== SMART PARSER =====
@@ -519,10 +521,6 @@ async def setup(bot):
                 return
             if cmd == "fight":
                 target = await _smart_target(bot, message, args, fallback_author=False)
-
-                if not target:
-                    return await reply("❌ Cú pháp: .fight @user")
-
                 return await fight_logic(ctx, target)
             if cmd == "team":
                 if not args:
@@ -532,6 +530,9 @@ async def setup(bot):
                 waifu_id = args[1] if len(args) >= 2 else None
 
                 return await team_logic(ctx, action, waifu_id)
+            if cmd == "lock":
+                state = args[0] if args else None
+                return await lock_logic(ctx, state)
 
         except ValueError:
             return await reply("❌ Tham số số không hợp lệ.")

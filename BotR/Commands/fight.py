@@ -6,11 +6,11 @@ import random
 import re
 import time
 from threading import Lock
-from typing import Dict, List, Optional, Set, Tuple, Union
+from typing import Dict, List, Optional, Set, Tuple
 
 import discord
-from discord.ext import commands
 from Data import data_user
+from Commands.lock import is_user_locked
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -152,7 +152,7 @@ async def _defer_if_interaction(ctx, ephemeral: bool = False):
             pass
 
 
-async def send_like(ctx, content=None, embed=None, view=None):
+async def send_like(ctx, content=None, embed=None, view=None, ephemeral: bool = False):
     kwargs = {}
     if content is not None:
         kwargs["content"] = content
@@ -163,12 +163,12 @@ async def send_like(ctx, content=None, embed=None, view=None):
 
     if isinstance(ctx, discord.Interaction):
         if not ctx.response.is_done():
-            await ctx.response.send_message(**kwargs)
+            await ctx.response.send_message(**kwargs, ephemeral=ephemeral)
             try:
                 return await ctx.original_response()
             except Exception:
                 return None
-        return await ctx.followup.send(**kwargs)
+        return await ctx.followup.send(**kwargs, ephemeral=ephemeral)
 
     if hasattr(ctx, "channel") and ctx.channel is not None:
         return await ctx.channel.send(**kwargs)
@@ -189,6 +189,29 @@ async def edit_like(msg, content=None, embed=None, view=None):
     except Exception as e:
         print(f"[fight.py] edit_like error: {e}")
         return None
+
+
+def make_embed(title: str, description: str = "", color: discord.Color = None) -> discord.Embed:
+    return discord.Embed(
+        title=title,
+        description=description,
+        color=color or discord.Color.blurple(),
+    )
+
+
+def format_duration(seconds: int) -> str:
+    seconds = max(0, int(seconds))
+    h = seconds // 3600
+    m = (seconds % 3600) // 60
+    s = seconds % 60
+    parts = []
+    if h > 0:
+        parts.append(f"{h}h")
+    if m > 0:
+        parts.append(f"{m}m")
+    if s > 0 or not parts:
+        parts.append(f"{s}s")
+    return " ".join(parts)
 
 
 # ===== TEAM SAFE =====
@@ -253,6 +276,34 @@ def normalize_team_ids(inv, uid, team_data=None):
             break
 
     return out
+
+
+def get_eligible_team_opponents(inv, team_data, exclude_uid, challenger_uid):
+    candidates = []
+
+    for raw_uid in team_data.keys():
+        uid = str(raw_uid)
+        if uid == str(exclude_uid):
+            continue
+        if uid not in inv:
+            continue
+        if not normalize_team_ids(inv, uid, team_data):
+            continue
+
+        on_cd, _ = is_on_cooldown(challenger_uid, uid)
+        if on_cd:
+            continue
+
+        candidates.append(uid)
+
+    return candidates
+
+
+def _pick_random_team_opponent(inv, team_data, exclude_uid, challenger_uid):
+    candidates = get_eligible_team_opponents(inv, team_data, exclude_uid, challenger_uid)
+    if not candidates:
+        return None
+    return random.choice(candidates)
 
 
 # ===== LOVE =====
@@ -338,7 +389,7 @@ def team_text(team: List[dict]) -> str:
         hp = max(0, int(c.get("hp", 0)))
         max_hp = max(1, int(c.get("max_hp", 1)))
         out.append(
-            f"**{c.get('name', '???')}** | HP: `{hp}/{max_hp}` `{hp_bar(hp, max_hp)}` "
+            f"**{c.get('name', '???')}** | HP: `{hp}/{max_hp}` `{hp_bar(hp, max_hp)}`"
         )
     return "\n".join(out)
 
@@ -646,7 +697,7 @@ class FightSession:
         self.delay = ACTION_DELAY
         self.finished = False
         self.sudden_death_applied = False
-
+        self.winner_uid = None
         self.love_drop_targets: Set[Tuple[str, str]] = set()
 
     def alive(self, team):
@@ -662,27 +713,67 @@ class FightSession:
 
     def render(self):
         mode = "x2" if self.delay <= 1 else "x1"
+
+        a_alive = len(self.alive(self.ta))
+        b_alive = len(self.alive(self.tb))
+        a_total = len(self.ta)
+        b_total = len(self.tb)
+
         e = discord.Embed(
-            title=f"The battle giữa {self.na} và {self.nb}",
+            title=f"⚔️ Trận đấu: {self.na} vs {self.nb}",
+            description="Trận chiến đang diễn ra.",
             color=discord.Color.red(),
         )
+
         e.add_field(
             name=f"🔴 {self.na}",
-            value=team_text(self.ta)[:1000] or "Không có waifu.",
+            value=(
+                f"**Sống:** `{a_alive}/{a_total}`\n"
+                f"{team_text(self.ta)[:900] or 'Không có waifu.'}"
+            ),
             inline=True,
         )
         e.add_field(
             name=f"🔵 {self.nb}",
-            value=team_text(self.tb)[:1000] or "Không có waifu.",
+            value=(
+                f"**Sống:** `{b_alive}/{b_total}`\n"
+                f"{team_text(self.tb)[:900] or 'Không có waifu.'}"
+            ),
             inline=True,
         )
         e.add_field(
-            name="Diễn biến",
+            name="📜 Diễn biến",
             value="\n".join(self.logs)[:1000] or "Chưa có diễn biến.",
             inline=False,
         )
-        e.set_footer(text=f"Turn {min(self.turn, MAX_ROUNDS)}/{MAX_ROUNDS} | Mode {mode}")
+        e.set_footer(text=f"Turn {min(self.turn, MAX_ROUNDS)}/{MAX_ROUNDS} • Mode {mode}")
         return e
+
+    def render_result(self):
+        winner_name = self.na if self.winner_uid == self.uid1 else self.nb if self.winner_uid == self.uid2 else "Hòa"
+        loser_name = self.nb if self.winner_uid == self.uid1 else self.na if self.winner_uid == self.uid2 else "Hòa"
+
+        embed = discord.Embed(
+            title="🏆 Kết quả trận đấu",
+            color=discord.Color.gold()
+        )
+
+        if self.winner_uid:
+            embed.description = f"🎉 **{winner_name} chiến thắng!**"
+            embed.add_field(name="👑 Winner", value=winner_name, inline=True)
+            embed.add_field(name="💀 Loser", value=loser_name, inline=True)
+
+            # hiển thị log cuối (có gold)
+            if self.logs:
+                embed.add_field(
+                    name="📜 Diễn biến cuối",
+                    value="\n".join(self.logs[-5:])[:1000],
+                    inline=False
+                )    
+        else:
+            embed.description = "🤝 Trận đấu kết thúc với kết quả hòa."
+
+        return embed
 
     def choose_attacker(self, side: str) -> Optional[dict]:
         team = self.ta if side == "a" else self.tb
@@ -848,8 +939,16 @@ class FightSession:
 
         self.finished = True
         view.disable_all()
-        await edit_like(msg, embed=self.render(), view=view)
 
+        winner_side = self.winner()
+        if winner_side == "a":
+            self.winner_uid = self.uid1
+        elif winner_side == "b":
+            self.winner_uid = self.uid2
+        else:
+            self.winner_uid = None
+
+        await edit_like(msg, embed=self.render(), view=view)
         return view
 
     async def commit(self):
@@ -904,34 +1003,40 @@ def _resolve_opponent(opponent):
     return None, None
 
 
-async def fight_logic(ctx, opponent):
+async def resolve_user_name(ctx, uid: str, fallback: str = None):
+    uid = str(uid)
+
+    # Ưu tiên lấy trong server
+    guild = getattr(ctx, "guild", None)
+    if guild and uid.isdigit():
+        member = guild.get_member(int(uid))
+        if member:
+            return member.display_name
+
+    # Nếu không có trong server → fetch global
+    try:
+        user = await ctx.bot.fetch_user(int(uid))
+        return user.global_name or user.name
+    except Exception:
+        return fallback or f"<@{uid}>"
+
+
+async def fight_logic(ctx, opponent=None):
     await _defer_if_interaction(ctx)
 
     user = get_user_obj(ctx)
     if not user:
-        return await send_like(ctx, content="❌ Không xác định user")
+        return await send_like(
+            ctx,
+            embed=make_embed("❌ Lỗi", "Không xác định được người dùng.", discord.Color.red()),
+        )
 
     uid1 = str(user.id)
     user_name = getattr(user, "display_name", getattr(user, "name", f"<@{uid1}>"))
 
-    uid2, opponent_name = _resolve_opponent(opponent)
-    if not uid2:
-        return await send_like(ctx, content="❌ Chọn đối thủ hợp lệ")
-
-    if uid1 == uid2:
-        return await send_like(ctx, content="❌ Không thể tự đánh")
-
-    on_cd, remain = is_on_cooldown(uid1, uid2)
-    if on_cd:
-        hrs = remain // 3600
-        mins = (remain % 3600) // 60
-        return await send_like(ctx, content=f"⏳ Hai người đã đấu gần đây. Còn cooldown {hrs}h {mins}p.")
-
-    async with BATTLE_STATE_LOCK:
-        if uid1 in ACTIVE_BATTLE_USERS or uid2 in ACTIVE_BATTLE_USERS:
-            return await send_like(ctx, content="⏳ Đang trong trận khác")
-        ACTIVE_BATTLE_USERS.add(uid1)
-        ACTIVE_BATTLE_USERS.add(uid2)
+    explicit_target = opponent is not None
+    uid2 = None
+    opponent_name = None
 
     try:
         async with INV_LOCK:
@@ -939,107 +1044,151 @@ async def fight_logic(ctx, opponent):
             waifu = load_json(WAIFU_FILE)
             team = load_json(TEAM_FILE)
 
-        if str(uid1) not in inv or str(uid2) not in inv:
-            return await send_like(ctx, content="❌ Một trong hai người chưa có inventory.")
-
-        ta = normalize_team_ids(inv, uid1, team)
-        tb = normalize_team_ids(inv, uid2, team)
-
-        if not ta:
-            return await send_like(ctx, content="❌ Bạn không có team")
-        if not tb:
-            return await send_like(ctx, content="❌ Đối thủ không có team")
-
-        session = FightSession(
-            ctx=ctx,
-            uid1=uid1,
-            uid2=uid2,
-            ta=ta,
-            tb=tb,
-            inv=copy.deepcopy(inv),
-            waifu=waifu,
-            na=user_name,
-            nb=opponent_name,
-        )
-
-        if not session.ta:
-            return await send_like(ctx, content="❌ Team bạn lỗi hoặc rỗng")
-        if not session.tb:
-            return await send_like(ctx, content="❌ Team đối thủ lỗi hoặc rỗng")
-
-        msg = await send_like(ctx, content="⚔️ Fight!", embed=session.render())
-        if not msg:
-            return
-
-        await session.play(msg)
-
-        win = session.winner()
-        t = max(1, session.turn - 1)
-        rate = get_gold_rate_by_turn(t)
-
-        if not win:
-            await session.commit()
-            set_cooldown(uid1, uid2)
-
-            result_embed = discord.Embed(
-                title="Kết quả",
-                description=f"🤝 Trận chiến giữa {user_name} và {opponent_name} đã kết thúc với tỉ số hòa.",
-                color=discord.Color.gold(),
+        if uid1 not in inv:
+            return await send_like(
+                ctx,
+                embed=make_embed("❌ Không thể đấu", "Bạn chưa có inventory.", discord.Color.red()),
             )
-            result_embed.add_field(
-                name="Phần thưởng",
-                value="Không có gold.",
-                inline=False,
-            )
-            result_embed.set_footer(text=f"Turn hoàn thành: {t} | Cooldown {COOLDOWN_HOURS}h")
 
-            await edit_like(msg, content=None, embed=result_embed, view=None)
-            return
+        if explicit_target:
+            uid2, _ = _resolve_opponent(opponent)
+            if not uid2:
+                return await send_like(
+                    ctx,
+                    embed=make_embed("❌ Không thể đấu", "Chọn đối thủ hợp lệ.", discord.Color.red()),
+                )
 
-        winner = uid1 if win == "a" else uid2
-        loser = uid2 if win == "a" else uid1
+            opponent_name = await resolve_user_name(ctx, uid2, fallback=str(opponent))
 
-        try:
-            loser_gold = int((data_user.get_user(loser) or {}).get("gold", 0))
-        except Exception:
-            loser_gold = 0
+            if uid1 == uid2:
+                return await send_like(
+                    ctx,
+                    embed=make_embed("❌ Không thể đấu", "Bạn không thể tự đánh chính mình.", discord.Color.red()),
+                )
 
-        bonus = max(0, min(loser_gold, int(loser_gold * rate)))
-        transferred = await transfer_gold_safely(winner, loser, bonus)
+            if await is_user_locked(uid2):
+                return await send_like(
+                    ctx,
+                    embed=make_embed(
+                        "🔒 Đối thủ đang lock",
+                        f"**{opponent_name}** đang bật lock, không thể thách đấu bằng mention.",
+                        discord.Color.orange(),
+                    ),
+                )
 
-        await session.commit()
-        set_cooldown(uid1, uid2)
+            on_cd, remain = is_on_cooldown(uid1, uid2)
+            if on_cd:
+                return await send_like(
+                    ctx,
+                    embed=make_embed(
+                        "⏳ Đang hồi chiêu",
+                        f"Bạn đã fight với **{opponent_name}** rồi. Cần chờ **{format_duration(remain)}** nữa.",
+                        discord.Color.orange(),
+                    ),
+                )
 
-        win_name = session.get_side_name(win)
-        lose_name = session.get_side_name("b" if win == "a" else "a")
-
-        result_embed = discord.Embed(
-            title="Kết quả",
-            description=f"🏆 {win_name} chiến thắng trước {lose_name}!",
-            color=discord.Color.green(),
-        )
-        result_embed.add_field(
-            name="Phần thưởng",
-            value=f"💰 +{transferred} gold ({int(rate * 100)}% từ gold của đối thủ)",
-            inline=False,
-        )
-        result_embed.set_footer(text=f"Turn hoàn thành: {t} | Cooldown {COOLDOWN_HOURS}h")
-
-        await edit_like(
-            msg,
-            content=f"🏆 <@{winner}> thắng!\n💰 +{transferred} gold",
-            embed=result_embed,
-            view=None,
-        )
-
-    finally:
         async with BATTLE_STATE_LOCK:
-            ACTIVE_BATTLE_USERS.discard(uid1)
-            ACTIVE_BATTLE_USERS.discard(uid2)
+            if uid1 in ACTIVE_BATTLE_USERS or (uid2 and uid2 in ACTIVE_BATTLE_USERS):
+                return await send_like(
+                    ctx,
+                    embed=make_embed("⏳ Đang bận", "Đang có trận khác diễn ra.", discord.Color.orange()),
+                )
 
+            ACTIVE_BATTLE_USERS.add(uid1)
+            if uid2:
+                ACTIVE_BATTLE_USERS.add(uid2)
 
-async def setup(bot):
-    return None
+            try:
+                if not explicit_target:
+                    uid2 = _pick_random_team_opponent(inv, team, uid1, uid1)
+                    if not uid2:
+                        return await send_like(
+                            ctx,
+                            embed=make_embed(
+                                "⚠️ Hôm nay đã đấu quá nhiều",
+                                "Hôm nay bạn đã đấu quá nhiều rồi, nghĩ ngơi đi",
+                                discord.Color.orange(),
+                            ),
+                        )
+                    opponent_name = await resolve_user_name(ctx, uid2, fallback=uid2)
+
+                if uid2 not in inv:
+                    return await send_like(
+                        ctx,
+                        embed=make_embed("❌ Không thể đấu", "Đối thủ chưa có inventory.", discord.Color.red()),
+                    )
+
+                ta = normalize_team_ids(inv, uid1, team)
+                tb = normalize_team_ids(inv, uid2, team)
+
+                if not ta:
+                    return await send_like(
+                        ctx,
+                        embed=make_embed("❌ Không thể đấu", "Bạn không có team.", discord.Color.red()),
+                    )
+
+                if not tb:
+                    return await send_like(
+                        ctx,
+                        embed=make_embed("❌ Không thể đấu", "Đối thủ không có team.", discord.Color.red()),
+                    )
+
+                session = FightSession(
+                    ctx=ctx,
+                    uid1=uid1,
+                    uid2=uid2,
+                    ta=ta,
+                    tb=tb,
+                    inv=copy.deepcopy(inv),
+                    waifu=waifu,
+                    na=user_name,
+                    nb=opponent_name or resolve_user_name(ctx, uid2, fallback=uid2),
+                )
+
+                start_embed = make_embed(
+                    "⚔️ Trận đấu bắt đầu",
+                    f"**{session.na}** vs **{session.nb}**\n"
+                    f"Chọn tốc độ bằng nút bên dưới.",
+                    discord.Color.blurple(),
+                )
+
+                msg = await send_like(ctx, embed=start_embed)
+                if msg is None:
+                    return
+
+                await session.play(msg)
+                await session.commit()
+                # ===== GOLD REWARD =====
+                if session.winner_uid:
+                    loser_uid = session.uid1 if session.winner_uid == session.uid2 else session.uid2
+
+                    # thưởng dựa theo turn (càng nhanh càng nhiều)
+                    gold_rate = get_gold_rate_by_turn(session.turn)
+                    base_gold = random.randint(100, 300)
+                    bonus = int(base_gold * gold_rate)
+
+                    gained = await transfer_gold_safely(session.winner_uid, loser_uid, bonus)
+
+                    if gained > 0:
+                        winner_name = await resolve_user_name(ctx, session.winner_uid, "Winner")
+                        session.logs.append(f"💰 {winner_name} nhận {gained} gold từ đối thủ!")
+                set_cooldown(uid1, uid2, hours=COOLDOWN_HOURS)
+
+                result_embed = session.render_result()
+                await edit_like(msg, content=None, embed=result_embed, view=None)
+                return
+
+            finally:
+                ACTIVE_BATTLE_USERS.discard(uid1)
+                if uid2:
+                    ACTIVE_BATTLE_USERS.discard(uid2)
+
+    except Exception as e:
+        print(f"[fight.py] fight_logic error: {e}")
+        return await send_like(
+            ctx,
+            embed=make_embed("❌ Lỗi", "Đã xảy ra lỗi trong trận đấu.", discord.Color.red()),
+        )
 
 
 print("Loaded fight has success")

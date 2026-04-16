@@ -43,6 +43,7 @@ from Commands.profile import get_profile_embed
 from Commands.prayer import prayer_logic
 from Commands.fight import fight_logic
 from Commands.team import team_logic
+from Commands.lock import lock_logic
 
 
 def _resolve_user(user: Optional[discord.User]) -> Optional[discord.User]:
@@ -274,8 +275,8 @@ async def setup(bot):
         ctx = interaction
         await prayer_logic(ctx)
     @bot.tree.command(name="fight", description="Đấu với người khác")
-    @app_commands.describe(user="Người bạn muốn đấu")
-    async def fight_cmd(interaction: discord.Interaction, user: discord.Member):
+    @app_commands.describe(user="Người bạn muốn đấu (để trống để random trong team.json)")
+    async def fight_cmd(interaction: discord.Interaction, user: Optional[discord.Member] = None):
         await fight_logic(interaction, user)
     @bot.tree.command(name="team", description="Quản lý team waifu")
     @app_commands.describe(
@@ -288,4 +289,8 @@ async def setup(bot):
         waifu_id: Optional[str] = None
     ):
         await team_logic(interaction, action, waifu_id)
+    @bot.tree.command(name="lock", description="Bật/tắt lock thách đấu")
+    @app_commands.describe(state="true/false, bỏ trống để toggle")
+    async def lock_cmd(interaction: discord.Interaction, state: Optional[bool] = None):
+        await lock_logic(interaction, state)
 print("Loaded slash has successs")
