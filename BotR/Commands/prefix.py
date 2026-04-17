@@ -541,8 +541,9 @@ async def setup(bot):
             if cmd == "zombie":
                 return await zombie_logic(ctx)
             if cmd == "werewolf":
-                channel_arg = args[0] if args else None
-                return await werewolf_logic(ctx, channel_arg)
+                if len(args) < 2:
+                    return await reply("❌ Cú pháp: .werewolf <channel_id> <role_dead>")
+                return await werewolf_logic(ctx, args[0], args[1])
         except ValueError:
             return await reply("❌ Tham số số không hợp lệ.")
         except Exception as exc:
