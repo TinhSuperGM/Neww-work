@@ -298,7 +298,15 @@ async def setup(bot):
     @bot.tree.command(name="zombie", description="Săn zombie bằng team hiện tại")
     async def zombie_cmd(interaction: discord.Interaction):
         await zombie_logic(interaction)
-    @bot.tree.command(name="werewolf", description="Tạo phòng Ma Sói trong một channel")
-    async def werewolf_cmd(interaction: discord.Interaction, channel_id: str):
-        await werewolf_logic(interaction, channel_id)
+    @bot.tree.command(name="werewolf", description="Tạo phòng Ma Sói")
+    @app_commands.describe(
+        channel_id="ID hoặc mention channel",
+        role_dead="ID hoặc mention role dead"
+    )
+    async def werewolf_cmd(
+        interaction: discord.Interaction,
+        channel_id: str,
+        role_dead: str
+    ):
+        await werewolf_logic(interaction, channel_id, role_dead)
 print("Loaded slash has successs")
