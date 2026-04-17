@@ -9,6 +9,14 @@ from typing import Optional
 import discord
 from discord.ui import Button, Select, View
 
+try:
+    # Optional future module for role definitions / actions.
+    from Commands.role import ROLE_DEFINITIONS, build_role_assignments, build_night_actions
+except Exception:  # pragma: no cover - optional module may not exist yet
+    ROLE_DEFINITIONS = None
+    build_role_assignments = None
+    build_night_actions = None
+
 
 MIN_PLAYERS = 5
 MAX_PLAYERS = 16
@@ -119,6 +127,7 @@ class WerewolfSession:
 
         self.day_votes: dict[str, str] = {}
         self.night_votes: dict[str, str] = {}
+        self.special_actions: list[dict] = []
 
         self.lobby_message: Optional[discord.Message] = None
         self.day_vote_message: Optional[discord.Message] = None
@@ -179,6 +188,17 @@ class WerewolfSession:
         ids = list(self.players.keys())
         random.shuffle(ids)
 
+        if callable(build_role_assignments):
+            try:
+                role_map = build_role_assignments(ids, self.players)
+                if isinstance(role_map, dict) and role_map:
+                    for uid, role_key in role_map.items():
+                        if uid in self.players:
+                            self.players[uid]["role"] = role_key
+                    return
+            except Exception:
+                pass
+
         wolf_count = max(1, len(ids) // 4)
         wolf_count = min(wolf_count, len(ids) - 1) if len(ids) > 1 else 1
         wolves = set(ids[:wolf_count])
@@ -187,6 +207,11 @@ class WerewolfSession:
             self.players[uid]["role"] = "wolf" if uid in wolves else "villager"
 
     def _role_name(self, role_key: str) -> str:
+        if ROLE_DEFINITIONS and role_key in ROLE_DEFINITIONS:
+            role = ROLE_DEFINITIONS[role_key]
+            name = role.get("name") if isinstance(role, dict) else None
+            if name:
+                return str(name)
         return "🐺 Ma Sói" if role_key == "wolf" else "🧑 Dân làng"
 
     async def reveal_roles(self) -> None:
@@ -548,6 +573,29 @@ class WerewolfSession:
 
         self.dead_members.clear()
 
+    async def queue_role_actions(self, phase: str) -> None:
+        """
+        Placeholder cho role.py sau này.
+        Khi role.py có mặt, action ban đêm sẽ đẩy vào đây trước khi resolve.
+        """
+        self.special_actions.clear()
+
+        if callable(build_night_actions):
+            try:
+                actions = build_night_actions(self)
+                if actions:
+                    self.special_actions.extend(actions)
+            except Exception:
+                pass
+
+    async def apply_special_actions(self) -> None:
+        """
+        Placeholder. Khi role.py có mặt, xử lý các action theo priority ở đây.
+        Hiện tại chưa có role đặc biệt nên vẫn là no-op.
+        """
+        if not self.special_actions:
+            return
+
     async def kill_player(self, uid: str, announce_reason: str) -> Optional[dict]:
         p = self.get_player(uid)
         if not p or not p.get("alive"):
@@ -560,6 +608,8 @@ class WerewolfSession:
         return p
 
     async def resolve_night(self) -> Optional[str]:
+        await self.apply_special_actions()
+
         if not self.night_votes:
             await self.channel.send("🌙 Đêm qua không có ai bị giết.")
             return None
@@ -746,6 +796,7 @@ class WerewolfSession:
             await self.sync_wolf_permissions("night")
             await self.send_or_refresh_night_ui()
 
+            await self.queue_role_actions("night")
             await asyncio.sleep(NIGHT_VOTE_SECONDS)
             await self.resolve_night()
             if self.check_win():
