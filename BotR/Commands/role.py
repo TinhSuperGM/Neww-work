@@ -1,93 +1,136 @@
-# role.py
+from __future__ import annotations
+from typing import Any, Optional
+import discord
 
 # ===== TEAM =====
 TEAM_VILLAGE = "village"
 TEAM_WOLF = "wolf"
 
+# ⚠️ Không tạo class dân làng (theo yêu cầu)
+DEFAULT_ROLE = "civilian"
+
+
+# ===== ROLE DEFINITIONS =====
+ROLE_DEFINITIONS = {
+    "seer": {
+        "name": "🔮 Tiên tri",
+        "team": TEAM_VILLAGE,
+        "action": "inspect",
+        "priority": 1
+    },
+    "guard": {
+        "name": "🛡️ Người canh gác",
+        "team": TEAM_VILLAGE,
+        "action": "protect",
+        "priority": 0
+    },
+    "wolf": {
+        "name": "🐺 Ma Sói",
+        "team": TEAM_WOLF,
+        "action": "kill",
+        "priority": 3
+    },
+    "wolf_witch": {
+        "name": "🧪 Sói phù thủy",
+        "team": TEAM_WOLF,
+        "action": "curse",
+        "priority": 4
+    },
+    "wolf_seer": {
+        "name": "👁️ Sói tiên tri",
+        "team": TEAM_WOLF,
+        "action": "inspect",
+        "priority": 1
+    }
+}
+
 
 # ===== BASE ROLE =====
 class Role:
-    def __init__(self, player):
+    def __init__(self, player: discord.abc.User, role_key: str):
         self.player = player
-        self.name = "Unknown"
-        self.team = None
-        self.alive = True
+        self.role_key = role_key
 
-    # ===== EVENTS =====
-    async def on_game_start(self, game):
-        """Khi game bắt đầu"""
-        pass
+        data = ROLE_DEFINITIONS.get(role_key, {})
+        self.name = data.get("name", "Unknown")
+        self.team = data.get("team")
+        self.action_type = data.get("action")
+        self.priority = data.get("priority", 0)
 
-    async def on_night_start(self, game):
-        """Khi bắt đầu ban đêm"""
-        pass
+        self.target_id: Optional[int] = None
 
-    async def night_action(self, game, target):
-        """Hành động ban đêm"""
-        pass
-
-    async def on_day_start(self, game):
-        """Khi bắt đầu ban ngày"""
-        pass
-
-    async def on_death(self, game):
-        """Khi chết"""
-        pass
-
-    # ===== HELPER =====
-    async def send(self, message):
-        """Gửi DM cho player"""
+    async def send(self, msg: str):
         try:
-            await self.player.send(message)
+            await self.player.send(msg)
         except:
             pass
 
+    def set_target(self, target):
+        try:
+            self.target_id = int(target.id if hasattr(target, "id") else target)
+        except:
+            self.target_id = None
 
-# ===== VILLAGE =====
-class Village(Role):
-    def __init__(self, player):
-        super().__init__(player)
-        self.name = "Villager"
-        self.team = TEAM_VILLAGE
+    def build_action(self):
+        if not self.target_id or not self.action_type:
+            return None
 
-    async def on_game_start(self, game):
-        await self.send("👤 Bạn là **Dân làng**.\nHãy tìm ra Sói!")
-
-
-# ===== WOLF =====
-class Wolf(Role):
-    def __init__(self, player):
-        super().__init__(player)
-        self.name = "Werewolf"
-        self.team = TEAM_WOLF
-
-    async def on_game_start(self, game):
-        wolves = [
-            p for p in game.players
-            if hasattr(p, "role") and p.role.team == TEAM_WOLF
-        ]
-
-        names = ", ".join([p.display_name for p in wolves if p != self.player])
-
-        msg = "🐺 Bạn là **Sói**.\n"
-        if names:
-            msg += f"Đồng đội của bạn: {names}\n"
-        msg += "Hãy tiêu diệt tất cả dân làng!"
-
-        await self.send(msg)
-
-    async def night_action(self, game, target):
-        """Sói chọn người để giết"""
-        game.add_action({
-            "type": "kill",
+        return {
+            "type": self.action_type,
             "actor": self.player,
-            "target": target,
-            "priority": 3
-        })
+            "target_id": self.target_id,
+            "priority": self.priority,
+            "role": self.role_key
+        }
 
 
-# ===== ROLE MAP =====
-ROLE_MAP = {
-    "village": Village,
-    "wolf": Wolf
-}
+# ===== FACTORY =====
+def create_role(role_key: str, player):
+    return Role(player, role_key)
+
+
+# ===== ROLE ASSIGN =====
+def build_role_assignments(player_ids, players):
+    """
+    Phân role kiểu Wolvesville cơ bản
+    """
+    n = len(player_ids)
+    ids = list(player_ids)
+
+    result = {}
+
+    # Role đặc biệt
+    special_roles = ["seer", "guard", "wolf_seer", "wolf_witch"]
+
+    for i, role in enumerate(special_roles):
+        if i < n:
+            result[ids[i]] = role
+
+    # Sói thường
+    remaining = ids[len(special_roles):]
+    wolf_count = max(1, n // 4)
+
+    for uid in remaining[:wolf_count]:
+        result[uid] = "wolf"
+
+    # Còn lại = dân thường (không class riêng)
+    for uid in remaining[wolf_count:]:
+        result[uid] = DEFAULT_ROLE
+
+    return result
+
+
+# ===== BUILD ACTION =====
+def build_night_actions(game):
+    actions = []
+
+    for p in game.players.values():
+        role_obj = p.get("role_obj")
+        if not role_obj:
+            continue
+
+        action = role_obj.build_action()
+        if action:
+            actions.append(action)
+
+    return actions
