@@ -36,7 +36,7 @@ ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
         ],
     },
     "guard": {
-        "name": "🛡️ Người gác",
+        "name": "🛡️ Người canh gác",
         "team": TEAM_VILLAGE,
         "description": "Ban ngày có thể dùng Bắn hoặc Soi, mỗi kỹ năng 1 lần/ván.",
         "skills": [
