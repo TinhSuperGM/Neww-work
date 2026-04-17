@@ -1,4 +1,3 @@
-# BotR/Commands/role.py
 from __future__ import annotations
 
 from typing import Any, Optional
@@ -7,36 +6,39 @@ import discord
 
 TEAM_VILLAGE = "village"
 TEAM_WOLF = "wolf"
+TEAM_SOLO = "solo"
 DEFAULT_ROLE_KEY = "civilian"
 
 ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
     "civilian": {
         "name": "👤 Dân làng",
         "team": TEAM_VILLAGE,
-        "description": "Ban ngày thảo luận và vote. Ban đêm không làm gì.",
+        "description": "Ban ngày thảo luận và vote. Ban đêm không có kỹ năng chủ động.",
         "skills": [],
     },
     "seer": {
         "name": "🔮 Tiên tri",
         "team": TEAM_VILLAGE,
-        "description": "Ban đêm soi role của 1 người, mỗi đêm 1 lần.",
+        "description": "Ban đêm soi role thật của 1 người.",
         "skills": [
             {
                 "key": "inspect",
                 "label": "Soi",
-                "description": "Xem role của một người",
+                "description": "Xem role thật của một người",
                 "phase": "night",
                 "kind": "inspect",
-                "uses": 1,
-                "reset": "night",
+                "uses": None,
+                "reset": None,
                 "priority": 1,
+                "target_state": "alive",
+                "allow_self": False,
             }
         ],
     },
     "guard": {
-        "name": "🛡️ Người canh gác",
+        "name": "🛡️ Người gác",
         "team": TEAM_VILLAGE,
-        "description": "Ban ngày có thể dùng Bắn hoặc Soi, mỗi skill 1 lần/ván.",
+        "description": "Ban ngày có thể dùng Bắn hoặc Soi, mỗi kỹ năng 1 lần/ván.",
         "skills": [
             {
                 "key": "shoot",
@@ -47,6 +49,8 @@ ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
                 "uses": 1,
                 "reset": None,
                 "priority": 5,
+                "target_state": "alive",
+                "allow_self": False,
             },
             {
                 "key": "inspect",
@@ -57,14 +61,73 @@ ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
                 "uses": 1,
                 "reset": None,
                 "priority": 1,
+                "target_state": "alive",
+                "allow_self": False,
             },
+        ],
+    },
+    "protector": {
+        "name": "🛡️ Bảo vệ",
+        "team": TEAM_VILLAGE,
+        "description": "Mỗi đêm chọn 1 người để bảo vệ. Lần đầu bị tấn công sẽ sống, lần sau nếu cùng mục tiêu bị tấn công thì Bảo vệ chết thay.",
+        "skills": [
+            {
+                "key": "protect",
+                "label": "Bảo vệ",
+                "description": "Bảo vệ 1 người trong đêm",
+                "phase": "night",
+                "kind": "protect",
+                "uses": 1,
+                "reset": "night",
+                "priority": 0,
+                "target_state": "alive",
+                "allow_self": True,
+            }
         ],
     },
     "wolf": {
         "name": "🐺 Ma Sói",
         "team": TEAM_WOLF,
-        "description": "Ban đêm ở cùng phe sói và chọn ra kẻ bị giết.",
+        "description": "Ban đêm vote trong hang sói để chọn nạn nhân.",
         "skills": [],
+    },
+    "wolf_seer": {
+        "name": "🌘 Sói tiên tri",
+        "team": TEAM_WOLF,
+        "description": "Giống tiên tri nhưng thuộc phe sói.",
+        "skills": [
+            {
+                "key": "inspect",
+                "label": "Soi",
+                "description": "Xem role thật của một người",
+                "phase": "night",
+                "kind": "wolf_inspect",
+                "uses": 1,
+                "reset": "night",
+                "priority": 1,
+                "target_state": "alive",
+                "allow_self": False,
+            }
+        ],
+    },
+    "wolf_shaman": {
+        "name": "🧙 Sói pháp sư",
+        "team": TEAM_WOLF,
+        "description": "Ban ngày chọn 1 người để tối đó tiên tri soi nhầm thành Sói pháp sư.",
+        "skills": [
+            {
+                "key": "bless",
+                "label": "Làm mờ",
+                "description": "Che mắt tiên tri lên 1 mục tiêu",
+                "phase": "day",
+                "kind": "mark_blind",
+                "uses": 1,
+                "reset": "day",
+                "priority": 2,
+                "target_state": "alive",
+                "allow_self": False,
+            }
+        ],
     },
     "nightmare_wolf": {
         "name": "🌑 Sói ác mộng",
@@ -80,6 +143,71 @@ ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
                 "uses": 2,
                 "reset": None,
                 "priority": 2,
+                "target_state": "alive",
+                "allow_self": False,
+            }
+        ],
+    },
+    "medium": {
+        "name": "🕯️ Thầy đồng",
+        "team": TEAM_VILLAGE,
+        "description": "Đêm đầu không làm gì. Từ đêm sau có thể nói chuyện với người chết và hồi sinh 1 dân làng duy nhất.",
+        "skills": [
+            {
+                "key": "revive",
+                "label": "Hồi sinh",
+                "description": "Hồi sinh 1 người thuộc phe dân làng",
+                "phase": "night",
+                "kind": "revive",
+                "uses": 1,
+                "reset": None,
+                "priority": 3,
+                "target_state": "dead",
+                "allow_self": False,
+            }
+        ],
+    },
+    "jailer": {
+        "name": "🔒 Quản ngục",
+        "team": TEAM_VILLAGE,
+        "description": "Ban ngày chọn 1 người để đêm đó bị giam cùng bạn trong phòng riêng. Có 1 viên đạn duy nhất để bắn tù nhân.",
+        "skills": [
+            {
+                "key": "jail",
+                "label": "Giam",
+                "description": "Chọn 1 người để đưa vào phòng giam ban đêm",
+                "phase": "day",
+                "kind": "jail",
+                "uses": 1,
+                "reset": "day",
+                "priority": 2,
+                "target_state": "alive",
+                "allow_self": False,
+            }
+        ],
+    },
+    "jester": {
+        "name": "🎭 Thằng ngố",
+        "team": TEAM_SOLO,
+        "description": "Mục tiêu là bị dân làng treo cổ. Nếu bị treo cổ, bạn thắng ngay. Bị sói cắn thì vẫn chết bình thường.",
+        "skills": [],
+    },
+    "serial_killer": {
+        "name": "🔪 Kẻ giết người hàng loạt",
+        "team": TEAM_SOLO,
+        "description": "Mỗi đêm có thể giết 1 người. Sói không thể giết bạn bằng cắn. Mục tiêu là sống tới cuối cùng.",
+        "skills": [
+            {
+                "key": "kill",
+                "label": "Giết",
+                "description": "Giết 1 người vào ban đêm",
+                "phase": "night",
+                "kind": "kill",
+                "uses": None,
+                "reset": None,
+                "priority": 4,
+                "target_state": "alive",
+                "allow_self": False,
             }
         ],
     },
@@ -134,14 +262,15 @@ class Role:
             pass
 
     def card_embed(self) -> discord.Embed:
-        color = discord.Color.dark_red() if self.team == TEAM_WOLF else discord.Color.blurple()
+        color = discord.Color.dark_red() if self.team == TEAM_WOLF else discord.Color.purple() if self.team == TEAM_SOLO else discord.Color.blurple()
         embed = discord.Embed(title=self.name, description=self.description, color=color)
-        embed.add_field(name="Phe", value="Ma Sói" if self.team == TEAM_WOLF else "Dân làng", inline=True)
+        team_label = "Ma Sói" if self.team == TEAM_WOLF else "Solo" if self.team == TEAM_SOLO else "Dân làng"
+        embed.add_field(name="Phe", value=team_label, inline=True)
 
         if self.skills_meta:
             lines = []
             for skill in self.skills_meta:
-                left = self.uses_left.get(skill["key"], skill.get("uses"))
+                left = self.uses_left.get(skill["key"])
                 left_text = "∞" if left is None else str(left)
                 lines.append(f"• **{skill['label']}** — {skill['description']} (`{left_text}`)")
             embed.add_field(name="Kỹ năng", value="\n".join(lines), inline=False)
@@ -175,13 +304,16 @@ class Role:
         self.uses_left[skill_key] -= 1
         return True
 
-    def reset_night_use(self) -> None:
+    def reset_uses_for_phase(self, phase: str) -> None:
         for skill in self.skills_meta:
-            if skill.get("reset") == "night":
+            if skill.get("reset") == phase and skill.get("uses") is not None:
                 self.uses_left[skill["key"]] = int(skill.get("uses", 1))
 
     def can_use_skill(self, phase: str, skill_key: Optional[str] = None, game=None) -> bool:
         if game is not None and self._is_nightmare_locked(game):
+            return False
+
+        if game is not None and game.is_jailed(getattr(self.player, "id", None)):
             return False
 
         skill_key = skill_key or self.selected_skill_key
@@ -189,14 +321,29 @@ class Role:
             return False
 
         skill = next((s for s in self.skills_meta if s["key"] == skill_key), None)
-        if skill is None:
+        if skill is None or skill.get("phase") != phase:
             return False
-        if skill.get("phase") != phase:
+
+        if self.role_key == "medium" and phase == "night" and game is not None and getattr(game, "round_no", 1) < 2:
             return False
-        if self.uses_left.get(skill_key, 0) <= 0:
+
+        uses = self.uses_left.get(skill_key)
+        if uses is not None and uses <= 0:
             return False
 
         if self.role_key == "seer":
+            return phase == "night"
+        if self.role_key == "wolf_seer":
+            return phase == "night"
+        if self.role_key == "protector":
+            return phase == "night"
+        if self.role_key == "wolf_shaman":
+            return phase == "day"
+        if self.role_key == "medium":
+            return phase == "night"
+        if self.role_key == "jailer":
+            return phase == "day"
+        if self.role_key == "serial_killer":
             return phase == "night"
         if self.role_key == "guard":
             return phase == "day"
@@ -209,8 +356,6 @@ class Role:
         for skill in self.skills_meta:
             key = skill["key"]
             if skill.get("phase") != phase:
-                continue
-            if self.uses_left.get(key, 0) <= 0:
                 continue
             if not self.can_use_skill(phase, key, game=game):
                 continue
@@ -232,12 +377,20 @@ class Role:
         if skill_key is None:
             return []
 
-        alive_ids = [uid for uid, pdata in game.players.items() if pdata.get("alive")]
         my_id = str(getattr(self.player, "id", ""))
 
-        if self.role_key in {"seer", "guard", "nightmare_wolf"}:
-            return [uid for uid in alive_ids if uid != my_id]
-
+        if self.role_key in {"seer", "wolf_seer", "wolf_shaman", "nightmare_wolf"}:
+            return [uid for uid, pdata in game.players.items() if pdata.get("alive") and uid != my_id]
+        if self.role_key == "protector":
+            return [uid for uid, pdata in game.players.items() if pdata.get("alive")]
+        if self.role_key in {"guard", "jailer", "serial_killer"}:
+            return [uid for uid, pdata in game.players.items() if pdata.get("alive") and uid != my_id]
+        if self.role_key == "medium" and skill_key == "revive":
+            return [
+                uid
+                for uid, pdata in game.players.items()
+                if not pdata.get("alive") and game.role_team(pdata.get("role", DEFAULT_ROLE_KEY)) == TEAM_VILLAGE
+            ]
         return []
 
     def can_target(self, game, target_id: object, phase: str, skill_key: Optional[str] = None) -> bool:
@@ -248,23 +401,46 @@ class Role:
 
         if game is None or tid not in game.players:
             return False
-        if not game.players[tid].get("alive"):
-            return False
 
         skill_key = skill_key or self.selected_skill_key
         if skill_key is None:
             return False
 
+        skill = next((s for s in self.skills_meta if s["key"] == skill_key), None)
+        if skill is None:
+            return False
+
+        target_state = skill.get("target_state", "alive")
+        allow_self = bool(skill.get("allow_self", False))
         my_id = str(getattr(self.player, "id", ""))
-        if tid == my_id:
+
+        if tid == my_id and not allow_self:
+            return False
+
+        pdata = game.players.get(tid)
+        if target_state == "alive" and not pdata.get("alive"):
+            return False
+        if target_state == "dead" and pdata.get("alive"):
             return False
 
         if self.role_key == "seer" and skill_key == "inspect":
-            return True
+            return pdata.get("alive")
+        if self.role_key == "wolf_seer" and skill_key == "inspect":
+            return pdata.get("alive")
+        if self.role_key == "protector" and skill_key == "protect":
+            return pdata.get("alive") or tid == my_id
+        if self.role_key == "wolf_shaman" and skill_key == "bless":
+            return pdata.get("alive")
+        if self.role_key == "medium" and skill_key == "revive":
+            return not pdata.get("alive") and game.role_team(pdata.get("role", DEFAULT_ROLE_KEY)) == TEAM_VILLAGE
+        if self.role_key == "jailer" and skill_key == "jail":
+            return pdata.get("alive")
+        if self.role_key == "serial_killer" and skill_key == "kill":
+            return pdata.get("alive") and tid != my_id
         if self.role_key == "guard" and skill_key in {"shoot", "inspect"}:
-            return True
+            return pdata.get("alive") and tid != my_id
         if self.role_key == "nightmare_wolf" and skill_key == "nightmare":
-            return True
+            return pdata.get("alive") and tid != my_id
         return False
 
     def use_skill(self, game, skill_key: str, target_id: object) -> Optional[dict[str, Any]]:
@@ -309,9 +485,18 @@ class Role:
 
     async def on_night_start(self, game):
         self.clear_selection()
+        self.reset_uses_for_phase("night")
         if self.role_key == "seer":
-            self.reset_night_use()
             await self.send("🌙 Đêm bắt đầu. Bấm **Skill** để soi 1 người.")
+        elif self.role_key == "wolf_seer":
+            await self.send("🌙 Đêm bắt đầu. Bạn có thể soi 1 người.")
+        elif self.role_key == "protector":
+            await self.send("🌙 Đêm bắt đầu. Bạn có thể bảo vệ 1 người.")
+        elif self.role_key == "medium":
+            if getattr(game, "round_no", 1) >= 2:
+                await self.send("🌙 Bạn có thể nhìn và chat với kênh người chết, đồng thời hồi sinh 1 dân làng.")
+        elif self.role_key == "serial_killer":
+            await self.send("🌙 Đêm bắt đầu. Bạn có thể chọn 1 người để giết.")
         elif self.role_key == "wolf":
             await self.send("🌙 Đêm bắt đầu. Phe sói sẽ chọn mục tiêu bằng vote.")
         elif self.role_key == "nightmare_wolf":
@@ -319,9 +504,14 @@ class Role:
 
     async def on_day_start(self, game):
         self.clear_selection()
+        self.reset_uses_for_phase("day")
         await self._clear_nightmare_lock(game)
         if self.role_key == "guard":
             await self.send("☀️ Ban ngày bắt đầu. Bạn có thể dùng **Bắn** hoặc **Soi** trong lượt vote.")
+        elif self.role_key == "wolf_shaman":
+            await self.send("☀️ Ban ngày. Chọn 1 người để tiên tri soi nhầm trong đêm nay.")
+        elif self.role_key == "jailer":
+            await self.send("☀️ Ban ngày. Chọn 1 người để giam vào đêm nay.")
 
     async def on_death(self, game):
         self.clear_selection()
@@ -376,9 +566,24 @@ class Guard(Role):
         super().__init__(player, "guard")
 
 
+class Protector(Role):
+    def __init__(self, player):
+        super().__init__(player, "protector")
+
+
 class Wolf(Role):
     def __init__(self, player):
         super().__init__(player, "wolf")
+
+
+class WolfSeer(Role):
+    def __init__(self, player):
+        super().__init__(player, "wolf_seer")
+
+
+class WolfShaman(Role):
+    def __init__(self, player):
+        super().__init__(player, "wolf_shaman")
 
 
 class NightmareWolf(Role):
@@ -423,20 +628,69 @@ class NightmareWolf(Role):
         await self._clear_nightmare_lock(game)
 
 
+class Medium(Role):
+    def __init__(self, player):
+        super().__init__(player, "medium")
+
+
+class Jailer(Role):
+    def __init__(self, player):
+        super().__init__(player, "jailer")
+
+
+class Jester(Role):
+    def __init__(self, player):
+        super().__init__(player, "jester")
+
+
+class SerialKiller(Role):
+    def __init__(self, player):
+        super().__init__(player, "serial_killer")
+
+
 ROLE_MAP = {
     "civilian": Civilian,
     "seer": Seer,
     "guard": Guard,
+    "protector": Protector,
     "wolf": Wolf,
+    "wolf_seer": WolfSeer,
+    "wolf_shaman": WolfShaman,
     "nightmare_wolf": NightmareWolf,
+    "medium": Medium,
+    "jailer": Jailer,
+    "jester": Jester,
+    "serial_killer": SerialKiller,
 }
 
 ROLE_ALIASES = {
     "villager": "civilian",
     "dân_làng": "civilian",
-    "sói_ác_mộng": "nightmare_wolf",
+    "guard": "guard",
+    "người_gác": "guard",
+    "bảo_vệ": "protector",
+    "bao_ve": "protector",
+    "protect": "protector",
+    "seer": "seer",
+    "tiên_tri": "seer",
+    "wolf": "wolf",
+    "ma_sói": "wolf",
+    "wolfseer": "wolf_seer",
+    "wolf-seer": "wolf_seer",
+    "sói_tiên_tri": "wolf_seer",
+    "wolfshaman": "wolf_shaman",
+    "wolf-shaman": "wolf_shaman",
+    "sói_pháp_sư": "wolf_shaman",
+    "nightmare_wolf": "nightmare_wolf",
     "nightmare-wolf": "nightmare_wolf",
-    "nightmarewolf": "nightmare_wolf",
+    "medium": "medium",
+    "thầy_đồng": "medium",
+    "jailer": "jailer",
+    "quản_ngục": "jailer",
+    "jester": "jester",
+    "thằng_ngố": "jester",
+    "serial_killer": "serial_killer",
+    "kẻ_giết_người_hàng_loạt": "serial_killer",
 }
 
 
@@ -453,21 +707,30 @@ def create_role(role_key: str, player):
 
 def build_role_assignments(player_ids: list[str], players: dict[str, dict]) -> dict[str, str]:
     ids = list(player_ids)
+    random = __import__("random")
+    random.shuffle(ids)
     n = len(ids)
     result: dict[str, str] = {}
 
     if n == 0:
         return result
 
-    specials = ["seer", "guard", "nightmare_wolf"]
-    special_count = min(len(specials), max(0, n - 1))
-    for i in range(special_count):
-        result[ids[i]] = specials[i]
+    specials: list[str] = []
+    if n >= 5:
+        specials.append("seer")
+    if n >= 6:
+        specials.append("protector")
+    if n >= 7:
+        specials.append(random.choice(["wolf_seer", "wolf_shaman"]))
+    if n >= 8:
+        specials.append(random.choice(["jester", "serial_killer", "medium", "jailer"]))
+    if n >= 9:
+        specials.append("nightmare_wolf")
 
-    remaining = ids[special_count:]
-    if not remaining:
-        return result
+    for uid, role_key in zip(ids, specials):
+        result[uid] = role_key
 
+    remaining = ids[len(specials):]
     wolf_count = max(1, n // 4)
     wolf_count = min(wolf_count, len(remaining))
     for uid in remaining[:wolf_count]:
@@ -498,9 +761,14 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
     actions = sorted(actions, key=lambda a: a.get("priority", 0))
 
     plan: dict[str, Any] = {
-        "killed": [],
-        "public_messages": [],
+        "kills": [],
         "private_dms": [],
+        "public_messages": [],
+        "inspect_results": [],
+        "protects": [],
+        "revives": [],
+        "jail_target_id": None,
+        "wolf_shaman_cover_target_id": None,
         "nightmare_token_target_id": None,
     }
 
@@ -509,49 +777,112 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
         actor = action.get("actor")
         actor_id = action.get("actor_id")
         target_id = action.get("target_id")
+        target_id_str = None
 
-        if target_id is None:
-            continue
+        if target_id is not None:
+            try:
+                target_id_str = str(int(target_id))
+            except Exception:
+                target_id_str = None
 
-        target_id = str(target_id)
-        target_pdata = game.players.get(target_id)
-        if not target_pdata or not target_pdata.get("alive"):
-            continue
+        if a_type in {"inspect", "wolf_inspect", "inspect_guard"}:
+            if target_id_str is None or target_id_str not in game.players:
+                continue
+            target = game.players[target_id_str]
+            target_name = target.get("name", "Unknown")
+            target_role_key = target.get("role", DEFAULT_ROLE_KEY)
+            target_role_label = _role_label(target_role_key)
 
-        actor_name = _safe_name(actor)
-        target_name = target_pdata.get("name", "Unknown")
-        target_role_key = target_pdata.get("role", DEFAULT_ROLE_KEY)
-        target_role_label = _role_label(target_role_key)
+            cover_target = getattr(game, "wolf_shaman_cover_target_id", None)
+            cover_round = getattr(game, "wolf_shaman_cover_round", None)
+            fake_label = _role_label("wolf_shaman")
+            if (
+                cover_target is not None
+                and str(cover_target) == target_id_str
+                and cover_round == getattr(game, "round_no", None)
+                and a_type in {"inspect", "wolf_inspect"}
+            ):
+                target_role_label = fake_label
 
-        if a_type in ("inspect", "inspect_guard"):
-            plan["private_dms"].append((str(actor_id), f"🔎 {target_name} là **{target_role_label}**."))
-            if a_type == "inspect_guard" and _role_team(target_role_key) == TEAM_WOLF:
-                plan["private_dms"].append((target_id, f"🕵️ Bạn đã bị **Người canh gác {actor_name}** soi."))
-            continue
-
-        if a_type == "shoot":
-            if target_id not in plan["killed"]:
-                plan["killed"].append(target_id)
-            plan["public_messages"].append(
-                f"🔫 **{actor_name}** đã nổ súng và lộ vai trò của mình: **{_role_label(action.get('role_key', 'guard'))}**."
+            plan["inspect_results"].append(
+                {
+                    "actor_id": str(actor_id) if actor_id is not None else None,
+                    "target_id": target_id_str,
+                    "target_name": target_name,
+                    "role_label": target_role_label,
+                    "role_key": target_role_key,
+                }
             )
+            plan["private_dms"].append((str(actor_id), f"🔎 {target_name} là **{target_role_label}**."))
+            if a_type == "inspect_guard" and game.role_team(target_role_key) == TEAM_WOLF:
+                plan["private_dms"].append((target_id_str, f"🕵️ Bạn đã bị **{_safe_name(actor)}** soi."))
             continue
 
-        if a_type == "kill":
-            if target_id not in plan["killed"]:
-                plan["killed"].append(target_id)
+        if a_type == "protect":
+            if target_id_str is not None:
+                plan["protects"].append(
+                    {
+                        "protector_id": str(actor_id) if actor_id is not None else None,
+                        "target_id": target_id_str,
+                    }
+                )
+            continue
+
+        if a_type == "mark_blind":
+            if target_id_str is not None:
+                plan["wolf_shaman_cover_target_id"] = int(target_id_str)
+            continue
+
+        if a_type == "jail":
+            if target_id_str is not None:
+                plan["jail_target_id"] = int(target_id_str)
+            continue
+
+        if a_type == "revive":
+            if target_id_str is not None:
+                plan["revives"].append(
+                    {
+                        "actor_id": str(actor_id) if actor_id is not None else None,
+                        "target_id": target_id_str,
+                    }
+                )
             continue
 
         if a_type == "nightmare":
-            plan["nightmare_token_target_id"] = int(target_id)
+            if target_id_str is not None:
+                plan["nightmare_token_target_id"] = int(target_id_str)
+            continue
+
+        if a_type in {"kill", "shoot"}:
+            if target_id_str is not None:
+                plan["kills"].append(
+                    {
+                        "actor_id": str(actor_id) if actor_id is not None else None,
+                        "target_id": target_id_str,
+                        "source_role_key": action.get("role_key"),
+                        "source_type": a_type,
+                    }
+                )
+            if a_type == "shoot" and target_id_str is not None and target_id_str in game.players:
+                target = game.players[target_id_str]
+                plan["public_messages"].append(
+                    f"🔫 **{_safe_name(actor)}** đã nổ súng vào **{target.get('name', 'Unknown')}** và lộ vai trò của mình: **{_role_label(action.get('role_key', 'guard'))}**."
+                )
             continue
 
     return plan
 
 
 async def apply_action_plan(game, plan: dict[str, Any]) -> None:
+    if plan.get("wolf_shaman_cover_target_id") is not None:
+        game.wolf_shaman_cover_target_id = plan["wolf_shaman_cover_target_id"]
+        game.wolf_shaman_cover_round = getattr(game, "round_no", 1)
+
+    if plan.get("jail_target_id") is not None:
+        game.jailer_target_id = plan["jail_target_id"]
+
     if plan.get("nightmare_token_target_id") is not None:
-        setattr(game, "nightmare_token_target_id", plan["nightmare_token_target_id"])
+        game.nightmare_token_target_id = plan["nightmare_token_target_id"]
 
     for uid, msg in plan.get("private_dms", []):
         try:
@@ -569,9 +900,30 @@ async def apply_action_plan(game, plan: dict[str, Any]) -> None:
         except Exception:
             pass
 
-    for uid in plan.get("killed", []):
+    for revive in plan.get("revives", []):
         try:
-            await game.kill_player(str(uid), "bị loại trong đêm.")
+            await game.revive_player(revive["target_id"], source_role_key="medium")
+        except Exception:
+            pass
+
+    if plan.get("protects"):
+        if not hasattr(game, "active_protections"):
+            game.active_protections = {}
+        for item in plan["protects"]:
+            protector_id = item.get("protector_id")
+            target_id = item.get("target_id")
+            if protector_id and target_id:
+                game.active_protections[str(target_id)] = str(protector_id)
+
+    for kill in plan.get("kills", []):
+        try:
+            await game.resolve_kill_event(kill["target_id"], kill.get("source_role_key"), kill.get("actor_id"))
+        except Exception:
+            pass
+
+    if plan.get("jail_target_id") is not None:
+        try:
+            await game.open_jail_room()
         except Exception:
             pass
 
