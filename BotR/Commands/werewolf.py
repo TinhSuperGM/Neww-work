@@ -5,6 +5,7 @@ import random
 import time
 from collections import Counter
 from typing import Optional
+from Commands.role import create_role, build_role_assignments, build_night_actions
 
 import discord
 from discord.ui import Button, Select, View
@@ -184,35 +185,27 @@ class WerewolfSession:
     def can_start(self) -> bool:
         return MIN_PLAYERS <= len(self.players) <= MAX_PLAYERS
 
-    def assign_roles(self) -> None:
+    def assign_roles(self):
         ids = list(self.players.keys())
         random.shuffle(ids)
 
-        if callable(build_role_assignments):
-            try:
-                role_map = build_role_assignments(ids, self.players)
-                if isinstance(role_map, dict) and role_map:
-                    for uid, role_key in role_map.items():
-                        if uid in self.players:
-                            self.players[uid]["role"] = role_key
-                    return
-            except Exception:
-                pass
-
-        wolf_count = max(1, len(ids) // 4)
-        wolf_count = min(wolf_count, len(ids) - 1) if len(ids) > 1 else 1
-        wolves = set(ids[:wolf_count])
+        role_map = build_role_assignments(ids, self.players)
 
         for uid in ids:
-            self.players[uid]["role"] = "wolf" if uid in wolves else "villager"
+            role_key = role_map.get(uid, "civilian")
+            member = self.guild.get_member(int(uid))
 
-    def _role_name(self, role_key: str) -> str:
-        if ROLE_DEFINITIONS and role_key in ROLE_DEFINITIONS:
-            role = ROLE_DEFINITIONS[role_key]
-            name = role.get("name") if isinstance(role, dict) else None
-            if name:
-                return str(name)
-        return "🐺 Ma Sói" if role_key == "wolf" else "🧑 Dân làng"
+            role_obj = create_role(role_key, member)
+
+            self.players[uid]["role"] = role_key
+            self.players[uid]["role_obj"] = role_obj
+        def _role_name(self, role_key: str) -> str:
+            if ROLE_DEFINITIONS and role_key in ROLE_DEFINITIONS:
+                role = ROLE_DEFINITIONS[role_key]
+                name = role.get("name") if isinstance(role, dict) else None
+                if name:
+                    return str(name)
+            return "🐺 Ma Sói" if role_key == "wolf" else "🧑 Dân làng"
 
     async def reveal_roles(self) -> None:
         for uid, data in self.players.items():
@@ -607,23 +600,53 @@ class WerewolfSession:
         await self.refresh_wolf_panel()
         return p
 
-    async def resolve_night(self) -> Optional[str]:
-        await self.apply_special_actions()
+    async def resolve_night(self):
+        from Commands.role import build_night_actions
 
-        if not self.night_votes:
-            await self.channel.send("🌙 Đêm qua không có ai bị giết.")
-            return None
+        actions = build_night_actions(self)
+        actions.sort(key=lambda x: x["priority"])
 
-        counts = _tally(self.night_votes)
-        top = max(counts.values())
-        targets = [uid for uid, cnt in counts.items() if cnt == top]
-        victim_id = random.choice(targets)
+        protected = set()
+        killed = []
 
-        victim = await self.kill_player(victim_id, "bị Ma Sói giết vào ban đêm.")
+        for a in actions:
+            t = str(a["target"])
+
+            if a["type"] == "protect":
+                protected.add(t)
+
+            elif a["type"] == "kill":
+                if t not in protected:
+                    killed.append(t)
+
+            elif a["type"] == "curse":
+                killed.append(t)
+
+            elif a["type"] == "inspect":
+                actor = a["actor"]
+                target = self.players.get(t)
+                if target:
+                    try:
+                        await actor.send(f"🔍 {target['name']} là **{target['role']}**")
+                    except:
+                        pass
+
+        # fallback nếu không có action
+        if not killed and self.night_votes:
+            counts = Counter(self.night_votes.values())
+            top = max(counts.values())
+            targets = [u for u, c in counts.items() if c == top]
+            killed.append(random.choice(targets))
+
+        if not killed:
+            await self.channel.send("🌙 Không ai chết.")
+            return
+
+        victim_id = random.choice(killed)
+
+        victim = await self.kill_player(victim_id, "bị giết trong đêm.")
         if victim:
-            await self.channel.send(f"💀 **{victim['name']}** đã chết trong đêm.")
-            return victim["name"]
-        return None
+            await self.channel.send(f"💀 **{victim['name']}** đã chết.")
 
     async def resolve_day(self) -> Optional[str]:
         if not self.day_votes:
