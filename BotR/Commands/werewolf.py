@@ -262,7 +262,7 @@ class JailAnonymousModal(Modal):
             return await interaction.response.send_message("❌ Tin nhắn trống.", ephemeral=True)
 
         try:
-            await self.session.jail_channel.send(f"📮 **Quản ngục ẩn danh:** {msg}")
+            await self.session.jail_channel.send(f"📮 **Quản ngục:** {msg}")
             await interaction.response.send_message("✅ Đã gửi.", ephemeral=True)
         except Exception:
             await interaction.response.send_message("❌ Không gửi được.", ephemeral=True)
@@ -294,12 +294,58 @@ class JailAnonymousView(View):
             return await interaction.response.send_message("❌ Tù nhân đã chết hoặc không hợp lệ.", ephemeral=True)
         # Đánh dấu đã bắn
         self.session.jail_shot_used = True
-        # Giết tù nhân, public announce
-        await self.session.kill_player(str(prisoner_id), "bị Quản ngục xử bắn trong phòng giam!", cause="jailer_shoot")
-        await self.session.channel.send(f"🔫 **{prisoner['name']}** đã bị **Quản ngục** xử bắn trong phòng giam!")
-        await interaction.response.send_message("✅ Đã bắn tù nhân.", ephemeral=True)
+
+        member = self.session.guild.get_member(int(prisoner_id))
+
+        # =========================
+        #1 ) DM cho người bị bắn
+        # =========================
+        try:
+            if member:
+                await member.send(
+                    embed=discord.Embed(
+                        title="💀 Bạn đã bị hành quyết",
+                        description="Bạn đã bị **Quản ngục xử bắn trong phòng giam**.",
+                        color=discord.Color.dark_red(),
+                    )
+                )
+        except Exception:
+            pass
 
 
+        # =========================
+        # 2) Gửi thông báo public
+        # =========================
+        try:
+            if self.session.public_channel:
+                await self.session.public_channel.send(
+                    embed=discord.Embed(
+                        title="⚖️ Hành quyết",
+                        description=f"Quản ngục đã hành quyết **{prisoner['name']}** và tiễn họ về thế giới bên kia.",
+                        color=discord.Color.dark_red(),
+                    )
+                )
+        except Exception:
+            pass
+
+
+        # =========================
+        # 3) Kill logic
+        # =========================
+        await self.session.kill_player(
+            str(prisoner_id),
+            "bị Quản ngục xử bắn trong phòng giam!",
+            cause="jailer_shoot",
+        )
+
+
+        # =========================
+        # 4) Ephemeral cho quản ngục
+        # =========================
+        await interaction.response.send_message(
+            f"✅ Đã bắn tù nhân **{prisoner['name']}**.",
+            ephemeral=True
+        )
 class WerewolfSession:
 
     # --- UI ẩn danh cho Medium gửi vào kênh người chết ---
@@ -391,6 +437,7 @@ class WerewolfSession:
         self.host_id: Optional[str] = None
 
         self.day_votes: dict[str, str] = {}
+        self._last_day_vote_state = None
         self.night_votes: dict[str, str] = {}
 
         self.lobby_message: Optional[discord.Message] = None
@@ -421,7 +468,7 @@ class WerewolfSession:
         self._lock = asyncio.Lock()
 
         self.dead_channel = next((c for c in guild.text_channels if c.name.lower() == "dead"), None)
-
+        self.wolf_vote_message: Optional[discord.Message] = None
     def role_label(self, role_key: str) -> str:
         return _role_name(role_key)
 
@@ -517,8 +564,7 @@ class WerewolfSession:
         )
 
     async def notify_host_join(self, joiner: discord.abc.User) -> None:
-        if not self.host_id:
-            return
+        return
 
         host = self.guild.get_member(int(self.host_id))
         if host is None:
@@ -588,7 +634,7 @@ class WerewolfSession:
             title="🐺 Wolvesville Lobby",
             description=(
                 "Bấm **Join** để tham gia.\n"
-                "Người vào đầu tiên sẽ là **chủ phòng**.\n"
+                "Người vào đầu tiên sẽ hiện ở mục **Chủ phòng**.\n"
                 f"Chủ phòng có thể bấm **Start** khi đủ từ **{MIN_PLAYERS}** đến **{MAX_PLAYERS}** người."
             ),
             color=discord.Color.blurple(),
@@ -649,20 +695,47 @@ class WerewolfSession:
 
     def render_phase_embed(self, phase: str, announcement: str) -> discord.Embed:
         if phase == "night":
-            e = discord.Embed(title=f"🌙 Đêm {self.round_no}", description=announcement, color=discord.Color.dark_red())
-            # Không public vote sói ở kênh chính
-            e.add_field(name="Vote hiện tại", value="(Chỉ hiện trong kênh sói)", inline=False)
-            e.add_field(name="Kết thúc", value=_fmt_ts(self.night_deadline_at), inline=True)
-            e.set_footer(text="Ban đêm • vote sói + kỹ năng")
+            e = discord.Embed(
+                title=f"🌙 Đêm {self.round_no}",
+                description=announcement,
+                color=discord.Color.dark_red()
+            )
+
+            e.add_field(
+                name="Thời gian còn lại trước bình minh:",
+                value=_fmt_ts(self.night_deadline_at),
+                inline=True
+            )
+
+            e.set_footer(text="Màn đêm dần buông xuống!")
+
         else:
-            e = discord.Embed(title=f"🌞 Ngày {self.round_no}", description=announcement, color=discord.Color.gold())
-            e.add_field(name="Vote hiện tại", value=self._vote_summary(self.day_votes, phase), inline=False)
-            e.add_field(name="Kết thúc", value=_fmt_ts(self.vote_deadline_at), inline=True)
+            e = discord.Embed(
+                title=f"🌞 Ngày {self.round_no}",
+                description=announcement,
+                color=discord.Color.gold()
+            )
+
+            e.add_field(
+                name="Vote hiện tại",
+                value=self._vote_summary(self.day_votes, phase),
+                inline=False
+            )
+
+            e.add_field(
+                name="Thời gian còn lại trước hoàng hôn:",
+                value=_fmt_ts(self.vote_deadline_at),
+                inline=True
+            )
+
             e.set_footer(text="Ban ngày • thảo luận + vote + kỹ năng")
 
-        # Danh sách sống/chết, hiện vai trò nếu đã chết
+        # =========================
+        # Alive / Dead list (giữ nguyên)
+        # =========================
         alive_lines = []
         dead_lines = []
+
         for uid, pdata in self.players.items():
             if pdata.get("alive"):
                 alive_lines.append(f"🟢 {pdata['name']}")
@@ -670,15 +743,20 @@ class WerewolfSession:
                 role = pdata.get("role", DEFAULT_ROLE_KEY)
                 role_label = self.role_label(role)
                 dead_lines.append(f"⚰️ {pdata['name']} ({role_label})")
-        e.add_field(name="Còn sống", value="\n".join(alive_lines) if alive_lines else "Không còn ai.", inline=False)
-        if dead_lines:
-            e.add_field(name="Đã chết", value="\n".join(dead_lines), inline=False)
-        e.add_field(name="Tình hình", value=self._panel_counts_text(), inline=True)
-        e.add_field(name="Kênh sói", value=self.wolf_channel.mention if self.wolf_channel else "Đang tạo...", inline=True)
-        if self.jail_channel:
-            e.add_field(name="Phòng giam", value=self.jail_channel.mention, inline=True)
-        return e
 
+        e.add_field(
+            name="Còn sống",
+            value="\n".join(alive_lines) if alive_lines else "Không còn ai.",
+            inline=False
+        )
+
+        if dead_lines:
+            e.add_field(
+                name="Đã chết",
+                value="\n".join(dead_lines),
+                inline=False
+            )
+        return e
     def _vote_summary(self, votes: dict[str, str], phase: str) -> str:
         if not votes:
             return "Chưa có phiếu nào."
@@ -690,19 +768,34 @@ class WerewolfSession:
                 voters = [self.players[uid]["name"] for uid, t in votes.items() if t == target_id and uid in self.players]
                 out.append(f"• **{target['name']}** — {amount} phiếu (bởi: {', '.join(voters)})")
         return "\n".join(out)
+    def _day_vote_snapshot(self) -> tuple[tuple[str, str], ...]:
+        return tuple(sorted((voter_id, target_id) for voter_id, target_id in self.day_votes.items()))
 
+    async def _refresh_day_vote_panel_if_changed(self, announcement: str) -> None:
+        current_state = self._day_vote_snapshot()
+        if current_state == self._last_day_vote_state:
+            return
+
+        self._last_day_vote_state = current_state
+        await self.refresh_phase_message("day", announcement)
     async def replace_phase_message(self, phase: str, announcement: str) -> None:
         await safe_delete(self.phase_message)
         self.phase_message = await self.channel.send(
             embed=self.render_phase_embed(phase, announcement),
             view=GameActionView(self, phase),
         )
-        # Nếu là ban đêm, gửi vote sói vào kênh sói (nếu có)
-        if phase == "night" and self.wolf_channel:
-            await self.wolf_channel.send(embed=self._wolf_vote_embed())
 
+        if phase != "night":
+            await self.close_jail_room()
+            await safe_delete(self.wolf_vote_message)
+            self.wolf_vote_message = None
+            return
+
+        await self.sync_dead_channel(phase)
+        await self._refresh_wolf_vote_panel(fresh=True)
     def _wolf_vote_embed(self) -> discord.Embed:
         # Embed riêng cho kênh sói, hiện vote sói chi tiết
+        
         e = discord.Embed(title=f"🐺 Vote sói - Đêm {self.round_no}", color=discord.Color.dark_red())
         e.add_field(name="Vote hiện tại", value=self._vote_summary(self.night_votes, "night"), inline=False)
         return e
@@ -711,11 +804,20 @@ class WerewolfSession:
         if self.phase_message is None:
             await self.replace_phase_message(phase, announcement)
             return
-        await safe_edit(self.phase_message, embed=self.render_phase_embed(phase, announcement), view=GameActionView(self, phase))
-        # Nếu là ban đêm, update vote sói ở kênh sói
-        if phase == "night" and self.wolf_channel:
-            await self.wolf_channel.send(embed=self._wolf_vote_embed())
 
+        await safe_edit(
+            self.phase_message,
+            embed=self.render_phase_embed(phase, announcement),
+            view=GameActionView(self, phase),
+        )
+
+        if phase == "night":
+            await self.sync_dead_channel(phase)
+            await self._refresh_wolf_vote_panel(fresh=False)
+        else:
+            await self.close_jail_room()
+            await safe_delete(self.wolf_vote_message)
+            self.wolf_vote_message = None
     async def ensure_private_channel(
         self,
         name: str,
@@ -788,11 +890,47 @@ class WerewolfSession:
                 await self.wolf_channel.edit(position=self.base_position + 1)
             except Exception:
                 pass
+        
+        await self.ensure_dead_channel()
+        await self.sync_dead_channel("night")
+
         return self.wolf_channel
 
     async def ensure_dead_channel(self) -> Optional[discord.TextChannel]:
+        guild = self.guild
+
+        # 1) nếu chưa cache thì tìm
         if self.dead_channel is None:
-            self.dead_channel = next((c for c in self.guild.text_channels if c.name.lower() == "dead"), None)
+            self.dead_channel = next(
+                (c for c in guild.text_channels if c.name.lower() == "dead"),
+                None
+            )
+
+        # 2) nếu vẫn không có → tạo mới
+        if self.dead_channel is None:
+            overwrites = {
+                guild.default_role: discord.PermissionOverwrite(
+                    read_messages=False
+                ),
+                guild.me: discord.PermissionOverwrite(
+                    read_messages=True,
+                    send_messages=True
+                )
+            }
+
+            # role Dead luôn được vào
+            dead_role = discord.utils.get(guild.roles, name="Dead")
+            if dead_role:
+                overwrites[dead_role] = discord.PermissionOverwrite(
+                    read_messages=True,
+                    send_messages=True
+                )
+
+            self.dead_channel = await guild.create_text_channel(
+                name="dead",
+                overwrites=overwrites
+            )
+
         return self.dead_channel
 
     async def sync_dead_channel(self, phase: str) -> None:
@@ -861,25 +999,17 @@ class WerewolfSession:
     async def open_jail_room(self) -> None:
         # Chỉ gỡ kênh giam cũ; không gọi close_jail_room() — hàm đó xóa jail_target_id
         # mà apply_action_plan vừa gán, khiến phòng giam không mở và is_jailed sai.
-        if self.jail_channel:
-            try:
-                await self.jail_channel.delete(reason="Werewolf: replace jail room")
-            except Exception:
-                pass
-            self.jail_channel = None
-        self.jailer_id = None
-
         if self.jail_target_id is None:
+            return
+
+        target = self.players.get(str(self.jail_target_id))
+        if not target or not target.get("alive"):
             return
 
         jailer_uid = next((uid for uid, p in self.players.items() if p.get("alive") and p.get("role") == "jailer"), None)
         if jailer_uid is None:
             return
         self.jailer_id = int(jailer_uid)
-
-        target = self.players.get(str(self.jail_target_id))
-        if not target or not target.get("alive"):
-            return
 
         jailer = self.guild.get_member(int(jailer_uid))
         if jailer is None:
@@ -913,17 +1043,21 @@ class WerewolfSession:
 
         if self.jail_channel:
             try:
+                target_name = target.get("name", "Unknown")
                 await self.jail_channel.send(
                     embed=discord.Embed(
                         title="🔒 Phòng giam đã mở",
-                        description="Quản ngục có thể nhắn ẩn danh bằng nút bên dưới. Người bị giam không thể dùng kỹ năng trong đêm này.",
+                        description=(
+                            f"**{target_name}** đã bị **Quản ngục** giam trong đêm nay.\n"
+                            "Quản ngục có thể nhắn ẩn danh bằng nút bên dưới.\n"
+                            "Người bị giam không thể dùng kỹ năng trong đêm này."
+                        ),
                         color=discord.Color.dark_grey(),
                     ),
                     view=JailAnonymousView(self),
                 )
             except Exception:
                 pass
-
     async def apply_dead_role(self, uid: str) -> None:
         self.dead_members.add(uid)
         if not self.dead_role_id:
@@ -1463,62 +1597,20 @@ class WerewolfSession:
             self.phase = "day"
             self.discussion_deadline_at = int(time.time()) + DAY_DISCUSSION_SECONDS
             self.vote_deadline_at = self.discussion_deadline_at + DAY_VOTE_SECONDS
-
             await self._sync_day_start()
-            await self.replace_phase_message("day", "☀️ Ban ngày bắt đầu. Thảo luận trước khi vote.")
+            await self.replace_phase_message("day", "☀️ Ban ngày bắt đầu.\nThảo luận trước khi vote.")
             while time.time() < self.discussion_deadline_at and self.active:
                 await asyncio.sleep(1)
 
             if not self.active:
                 break
+            vote_announcement = "Bắt đầu vote ban ngày."
+            await self.refresh_phase_message("day", vote_announcement)
+            self._last_day_vote_state = self._day_vote_snapshot()
 
-            await self.refresh_phase_message("day", "🗳️ Bắt đầu vote ban ngày.")
             while time.time() < self.vote_deadline_at and self.active:
                 await asyncio.sleep(1)
-
-            if not self.active:
-                break
-
-            await self.resolve_day()
-            if self.check_win() or not self.active:
-                break
-
-            self.round_no += 1
-
-        await self.end_and_restart_lobby()
-
-    async def sync_public_permissions(self, phase: str) -> None:
-        for uid, pdata in self.players.items():
-            member = self.guild.get_member(int(uid))
-            if member is None:
-                try:
-                    member = await self.guild.fetch_member(int(uid))
-                except Exception:
-                    member = None
-            if member is None:
-                continue
-            alive = bool(pdata.get("alive"))
-            try:
-                await self.channel.set_permissions(
-                    member,
-                    view_channel=alive,
-                    send_messages=phase == "day" and alive,
-                    read_message_history=alive,
-                    reason="Werewolf public channel sync",
-                )
-            except Exception:
-                pass
-
-        try:
-            await self.channel.set_permissions(
-                self.guild.default_role,
-                view_channel=False,
-                send_messages=False,
-                read_message_history=False,
-                reason="Werewolf public channel lock",
-            )
-        except Exception:
-            pass
+                await self._refresh_day_vote_panel_if_changed(vote_announcement)
 
     async def sync_wolf_permissions(self, phase: str) -> None:
         if not self.wolf_channel:
