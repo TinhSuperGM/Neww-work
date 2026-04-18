@@ -1058,10 +1058,21 @@ class WerewolfSession:
     async def _notify_protector_shield_broken(self, protector_id):
         try:
             user = self.bot.get_user(int(protector_id))
+
+            # 🔥 fallback nếu không có trong cache
+            if user is None:
+                user = await self.bot.fetch_user(int(protector_id))
+
             if user:
-                await user.send("🛡️ Khiên của bạn đã bị phá! Bạn sẽ chết nếu tiếp tục bị tấn công.")
-        except Exception:
-            pass
+                await user.send(
+                    embed=discord.Embed(
+                        title="🛡️ Khiên bị phá",
+                        description="Khiên của bạn đã bị phá! Nếu bị tấn công lần nữa, bạn sẽ chết.",
+                        color=discord.Color.orange(),
+                    )
+                )
+        except Exception as e:
+            print(f"[DM ERROR] Cannot send to protector: {e}")
     async def resolve_kill_event(
         self,
         target_id: object,
