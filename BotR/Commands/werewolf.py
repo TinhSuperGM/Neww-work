@@ -4,6 +4,7 @@ import asyncio
 import json
 import random
 import re
+from sqlite3.dbapi2 import PARSE_COLNAMES
 import sys
 import tempfile
 import time
@@ -1044,7 +1045,23 @@ class WerewolfSession:
                 await self.wolf_channel.send(embed=embed)
             except Exception:
                 pass
-
+    async def _wolf_cannot_kill_embed(self) -> None:
+        e = discord.Embed(
+            title="🛡️ Mục tiêu không thể bị giết",
+            description="Người này không thể bị giết bởi ma sói.",
+            color=discord.Color.dark_red(),
+        )
+        try:
+            await self._notify_wolves(e)
+        except Exception:
+            pass
+    async def _notify_protector_shield_broken(self, protector_id):
+        try:
+            user = self.bot.get_user(int(protector_id))
+            if user:
+                await user.send("🛡️ Khiên của bạn đã bị phá! Bạn sẽ chết nếu tiếp tục bị tấn công.")
+        except Exception:
+            pass
     async def resolve_kill_event(
         self,
         target_id: object,
@@ -1065,20 +1082,15 @@ class WerewolfSession:
 
         # Nếu là serial_killer bị sói cắn thì miễn nhiễm
         if is_wolf_attack and victim_role == "serial_killer":
-            await self._notify_wolves(
-                discord.Embed(
-                    title="🛡️ Mục tiêu không thể bị giết",
-                    description=f"**{victim['name']}** không thể bị giết bởi Ma Sói.",
-                    color=discord.Color.blurple(),
-                )
-            )
+            await self._wolf_cannot_kill_embed()
             return False
 
         # Nếu target đang bị giam thì miễn toàn bộ sát thương từ bên ngoài (trừ Jailer bắn)
         if self.is_jailed(tid):
             if not (source_role_key == "jailer" and actor_id == self.jailer_id):
                 try:
-                    await self.channel.send(f"🔒 **{victim['name']}** đang bị giam, miễn nhiễm mọi sát thương bên ngoài.")
+                    if is_wolf_attack:
+                        await self._wolf_cannot_kill_embed()
                 except Exception:
                     pass
                 return False
@@ -1100,18 +1112,14 @@ class WerewolfSession:
                     # Nếu BV còn khiên: mất khiên, không chết
                     if not self.shield_used:
                         self.shield_used = True
+                        await self._notify_protector_shield_broken(self.protector_id)
                         try:
-                            await self.channel.send(f"🛡️ Khiên bảo vệ đã chặn sát thương cho **{bv['name']}**. Khiên đã bị phá!")
+                            if is_wolf_attack:
+                                await self._wolf_cannot_kill_embed()
                         except Exception:
                             pass
-                        if is_wolf_attack:
-                            await self._notify_wolves(
-                                discord.Embed(
-                                    title="🛡️ Mục tiêu không thể bị giết",
-                                    description=f"**{victim['name']}** không thể bị giết bởi Ma Sói.",
-                                    color=discord.Color.green(),
-                                )
-                            )
+                            if is_wolf_attack:
+                                await self._wolf_cannot_kill_embed()
                         return False
                     # Nếu BV đã mất khiên: BV chết luôn
                     else:
@@ -1124,22 +1132,34 @@ class WerewolfSession:
             # Nếu còn khiên: không chết, mất khiên
             if not self.shield_used:
                 self.shield_used = True
+                await self._notify_protector_shield_broken(self.protector_id)
                 try:
-                    await self.channel.send(f"🛡️ Khiên bảo vệ đã chặn sát thương cho **{victim['name']}**. Khiên đã bị phá!")
+                    if is_wolf_attack:
+                        await self._wolf_cannot_kill_embed()
                 except Exception:
                     pass
                 if is_wolf_attack:
-                    await self._notify_wolves(
-                        discord.Embed(
-                            title="🛡️ Khiên bảo vệ đã bị phá",
-                            description=f"**{victim['name']}** được bảo vệ bởi khiên và sống sót.",
-                            color=discord.Color.green(),
-                        )
-                    )
+                    if is_wolf_attack:
+                        await self._wolf_cannot_kill_embed()
                 return False
             # Nếu đã mất khiên: chết
             else:
-                await self.kill_player(tid, f"đã chết do {source_role_key or 'một đòn tấn công'} (khiên đã mất).", cause=source_role_key)
+                bv_name = bv["name"]
+                target_name = victim["name"]
+
+                await self.channel.send(
+                    embed=discord.Embed(
+                        title="💀 Bảo vệ đã chết",
+                        description=f"**{bv_name}** đã chết khi cố bảo vệ **{target_name}**.",
+                        color=discord.Color.orange(),
+                    )
+                )
+
+                await self.kill_player(
+                    self.protector_id,
+                    f"đã chết khi bảo vệ **{victim['name']}** (khiên đã mất).",
+                    cause=source_role_key
+                )
                 # Khi BV chết, xóa trạng thái bảo vệ
                 self.protector_target_id = None
                 return True
