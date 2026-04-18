@@ -70,7 +70,7 @@ ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
     "protector": {
         "name": "🛡️ Bảo vệ",
         "team": TEAM_VILLAGE,
-        "description": "Mỗi đêm chọn 1 người để bảo vệ. Lần đầu bị tấn công sẽ sống, lần sau nếu cùng mục tiêu bị tấn công thì Bảo vệ chết thay.",
+        "description": "Mỗi đêm chọn 1 người để bảo vệ. Nếu còn khiên, đòn đánh vào Bảo vệ hoặc người được bảo vệ sẽ bị chặn; hết khiên, Bảo vệ sẽ chết thay.",
         "skills": [
             {
                 "key": "protect",
@@ -875,11 +875,11 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
 
         if a_type == "protect":
             if target_id_str is not None:
-                # Chỉ tạo shield cho bản thân Protector (không tạo shield cho target)
+                # Lưu đúng quan hệ: Protector bảo vệ target đã chọn
                 plan["protects"].append(
                     {
                         "protector_id": str(actor_id) if actor_id is not None else None,
-                        "target_id": str(actor_id),
+                        "target_id": target_id_str,
                     }
                 )
             continue
@@ -941,7 +941,7 @@ async def apply_action_plan(game, plan: dict[str, Any]) -> None:
         game.wolf_shaman_cover_round = getattr(game, "round_no", 1)
 
     if plan.get("jail_target_id") is not None:
-        game.jailer_target_id = plan["jail_target_id"]
+        game.jail_target_id = plan["jail_target_id"]
 
     if plan.get("nightmare_token_target_id") is not None:
         game.nightmare_token_target_id = plan["nightmare_token_target_id"]

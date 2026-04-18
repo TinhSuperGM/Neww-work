@@ -1,9 +1,14 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import random
+import re
+import sys
+import tempfile
 import time
 from collections import Counter
+from pathlib import Path
 from typing import Any, Optional
 
 
@@ -84,6 +89,56 @@ DAY_VOTE_SECONDS = 30
 NIGHT_VOTE_SECONDS = 60
 
 GAME: dict[int, "WerewolfSession"] = {}
+
+_AGENT_LOG_PATHS = (
+    Path(__file__).resolve().parent.parent / "debug-8e1d58.log",
+    Path.cwd() / "debug-8e1d58.log",
+    Path(tempfile.gettempdir()) / "botr-werewolf-debug-8e1d58.log",
+)
+
+
+def _skill_agent_log(hypothesis_id: str, message: str, data: dict[str, Any]) -> None:
+    #region agent log
+    line = (
+        json.dumps(
+            {
+                "sessionId": "8e1d58",
+                "hypothesisId": hypothesis_id,
+                "message": message,
+                "data": data,
+                "timestamp": int(time.time() * 1000),
+            },
+            ensure_ascii=False,
+        )
+        + "\n"
+    )
+    try:
+        sys.stderr.write(f"[botr-werewolf] {hypothesis_id} {message}\n")
+    except Exception:
+        pass
+    for path in _AGENT_LOG_PATHS:
+        try:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with open(path, "a", encoding="utf-8") as f:
+                f.write(line)
+                f.flush()
+        except Exception:
+            continue
+    #endregion
+
+
+def _slug_text_channel_name(name: str, max_len: int = 96) -> str:
+    """Tên kênh Discord: chữ thường, [a-z0-9_-], tối đa max_len."""
+    s = name.lower().strip()
+    s = re.sub(r"[^a-z0-9_-]+", "-", s)
+    s = re.sub(r"-+", "-", s).strip("-")
+    return (s or "room")[:max_len]
+
+
+def _prefixed_channel_name(prefix: str, base_name: str) -> str:
+    """prefix + slug, tổng độ dài tối đa 100 (giới hạn Discord)."""
+    max_body = max(1, 100 - len(prefix))
+    return prefix + _slug_text_channel_name(base_name, max_len=max_body)
 
 
 def _parse_id(token: object | None) -> Optional[int]:
@@ -435,7 +490,8 @@ class WerewolfSession:
         return bool(p and p.get("alive") and self.role_team(p.get("role", DEFAULT_ROLE_KEY)) == TEAM_WOLF)
 
     def is_jailed(self, uid: object) -> bool:
-        if self.phase != "night" or self.jail_channel is None:
+        # Không phụ thuộc jail_channel: nếu tạo kênh thất bại, jail_target_id/jailer_id vẫn có hiệu lực luật.
+        if self.phase != "night":
             return False
         try:
             check = str(int(uid))
@@ -720,7 +776,7 @@ class WerewolfSession:
                 wolves.append(member)
 
         ch = await self.ensure_private_channel(
-            name=f"wolves-{self.base_name}",
+            name=_prefixed_channel_name("wolves-", self.base_name),
             members=wolves,
             category=self.base_category,
             topic="Phòng riêng của bầy sói",
@@ -802,7 +858,16 @@ class WerewolfSession:
         self.jail_target_id = None
 
     async def open_jail_room(self) -> None:
-        await self.close_jail_room()
+        # Chỉ gỡ kênh giam cũ; không gọi close_jail_room() — hàm đó xóa jail_target_id
+        # mà apply_action_plan vừa gán, khiến phòng giam không mở và is_jailed sai.
+        if self.jail_channel:
+            try:
+                await self.jail_channel.delete(reason="Werewolf: replace jail room")
+            except Exception:
+                pass
+            self.jail_channel = None
+        self.jailer_id = None
+
         if self.jail_target_id is None:
             return
 
@@ -834,7 +899,7 @@ class WerewolfSession:
             return
 
         self.jail_channel = await self.ensure_private_channel(
-            name=f"jail-{self.base_name}",
+            name=_prefixed_channel_name("jail-", self.base_name),
             members=members,
             category=self.base_category,
             topic="Phòng giam riêng cho quản ngục và tù nhân",
@@ -964,7 +1029,7 @@ class WerewolfSession:
                         pass
 
         try:
-            await self.channel.send(f"✨ **{p['name']}** đã được hồi sinh bởi **{self.role_label(source_role_key or 'medium')}**.")
+            await self.channel.send(f"✨ **{p['name']}** đã được hồi sinh bởi Thầy Đồng.")
         except Exception:
             pass
 
@@ -1042,8 +1107,8 @@ class WerewolfSession:
                         if is_wolf_attack:
                             await self._notify_wolves(
                                 discord.Embed(
-                                    title="🛡️ Khiên bảo vệ đã bị phá",
-                                    description=f"**{bv['name']}** được bảo vệ bởi khiên và sống sót.",
+                                    title="🛡️ Mục tiêu không thể bị giết",
+                                    description=f"**{victim['name']}** không thể bị giết bởi Ma Sói.",
                                     color=discord.Color.green(),
                                 )
                             )
@@ -1202,9 +1267,6 @@ class WerewolfSession:
         if wolves == 0 and villagers == 0:
             if solo_survivor is not None:
                 asyncio.create_task(self._end_game(f"🏆 **{self.players[solo_survivor]['name']}** (Solo) đã thắng!"))
-                return True
-            if jester_alive:
-                asyncio.create_task(self._end_game("🎭 **Thằng ngố** đã sống tới cuối nhưng thua vì chưa bị treo cổ."))
                 return True
             asyncio.create_task(self._end_game("🏆 Ván đấu kết thúc."))
             return True
@@ -1650,6 +1712,7 @@ class SkillTargetSelect(Select):
         )
 
     async def callback(self, interaction: discord.Interaction):
+        _skill_agent_log("H-enter", "SkillTargetSelect.callback", {"skill": self.skill_key})
         uid = str(interaction.user.id)
         player = self.session.get_player(uid)
         if not player or not player.get("alive"):
@@ -1667,9 +1730,68 @@ class SkillTargetSelect(Select):
         if action is None:
             return await interaction.response.send_message("❌ Không dùng được kỹ năng này.", ephemeral=True)
 
-        plan = resolve_actions(self.session, [action]) if callable(resolve_actions) else None
-        if plan and callable(apply_action_plan):
-            await apply_action_plan(self.session, plan)
+        loading_embed = discord.Embed(
+            title="⏳ Đang xử lý...",
+            description="Vui lòng chờ giây lát.",
+            color=discord.Color.light_grey(),
+        )
+        # Phải ack trong ~3s: ưu tiên edit tin có Select; nếu API từ chối (ephemeral/edge) thì defer.
+        ack_mode: str | None = None
+        try:
+            await interaction.response.edit_message(embed=loading_embed, view=None)
+            ack_mode = "edit_message"
+        except Exception as e:
+            _skill_agent_log("H-ack", "edit_message_failed", {"exc_type": type(e).__name__})
+            try:
+                await interaction.response.defer()
+                ack_mode = "defer"
+            except Exception as e2:
+                _skill_agent_log("H-ack", "defer_also_failed", {"exc_type": type(e2).__name__})
+                role_obj.clear_selection()
+                try:
+                    await interaction.response.send_message(
+                        "❌ Không phản hồi được tương tác. Hãy thử lại.",
+                        ephemeral=True,
+                    )
+                except Exception:
+                    pass
+                return
+        _skill_agent_log("H-ack", "skill_interaction_acked", {"mode": ack_mode, "skill": self.skill_key})
+
+        try:
+            plan = resolve_actions(self.session, [action]) if callable(resolve_actions) else None
+            if plan and callable(apply_action_plan):
+                await apply_action_plan(self.session, plan)
+            _skill_agent_log("H-plan", "apply_action_plan_ok", {"has_plan": plan is not None})
+        except Exception as e:
+            _skill_agent_log(
+                "H-plan",
+                "apply_action_plan_failed",
+                {"exc_type": type(e).__name__, "detail": str(e)[:200]},
+            )
+            role_obj.clear_selection()
+            err_embed = discord.Embed(
+                title="❌ Lỗi",
+                description="Xử lý kỹ năng thất bại. Hãy báo admin nếu lặp lại.",
+                color=discord.Color.red(),
+            )
+            try:
+                await interaction.edit_original_response(embed=err_embed, view=None)
+            except Exception:
+                if interaction.message is not None:
+                    try:
+                        await interaction.message.edit(embed=err_embed, view=None)
+                    except Exception:
+                        try:
+                            await interaction.followup.send(embed=err_embed, ephemeral=True)
+                        except Exception:
+                            pass
+                else:
+                    try:
+                        await interaction.followup.send(embed=err_embed, ephemeral=True)
+                    except Exception:
+                        pass
+            return
 
         target = self.session.players.get(target_id)
         target_role_name = self.session.role_label(target["role"]) if target else "Unknown"
@@ -1700,7 +1822,30 @@ class SkillTargetSelect(Select):
             )
 
         role_obj.clear_selection()
-        await interaction.response.edit_message(embed=result_embed, view=None)
+        edited = False
+        edit_route = None
+        try:
+            await interaction.edit_original_response(embed=result_embed, view=None)
+            edited = True
+            edit_route = "edit_original_response"
+        except Exception as e:
+            _skill_agent_log("H-result", "edit_original_failed", {"exc_type": type(e).__name__})
+        if not edited and interaction.message is not None:
+            try:
+                await interaction.message.edit(embed=result_embed, view=None)
+                edited = True
+                edit_route = "message.edit"
+            except Exception as e:
+                _skill_agent_log("H-result", "message_edit_failed", {"exc_type": type(e).__name__})
+        if not edited:
+            try:
+                await interaction.followup.send(embed=result_embed, ephemeral=True)
+                edited = True
+                edit_route = "followup.send"
+            except Exception as e:
+                _skill_agent_log("H-result", "followup_failed", {"exc_type": type(e).__name__})
+        if edit_route:
+            _skill_agent_log("H-result", "result_shown", {"route": edit_route, "skill": self.skill_key})
 
 
 class SkillTargetView(View):
