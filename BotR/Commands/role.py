@@ -411,7 +411,11 @@ class Role:
         if self.role_key in {"wolf_seer", "wolf_shaman", "nightmare_wolf"}:
             return [uid for uid, pdata in game.players.items() if pdata.get("alive") and uid != my_id]
         if self.role_key == "protector":
-            return [uid for uid, pdata in game.players.items() if pdata.get("alive")]
+            return [
+               uid
+                for uid, pdata in game.players.items()
+                if pdata.get("alive") and uid != my_id
+            ]
         if self.role_key in {"guard", "jailer", "serial_killer"}:
             return [uid for uid, pdata in game.players.items() if pdata.get("alive") and uid != my_id]
         if self.role_key == "medium" and skill_key == "revive":
@@ -526,6 +530,7 @@ class Role:
     async def on_night_start(self, game):
         self.clear_selection()
         self.reset_uses_for_phase("night")
+        await self._clear_nightmare_lock(game)
 
         if self.role_key == "seer":
             await self.send("🌙 Đêm bắt đầu. Bấm **Skill** để soi 1 người.")
@@ -579,17 +584,20 @@ class Role:
             return
 
         pdata["nightmare_locked"] = True
+
         try:
             member = game.guild.get_member(int(tid))
             if member is None:
                 member = await game.guild.fetch_member(int(tid))
             if member:
-                await member.send(
-                    "🌑 Bạn đã chìm vào **cơn ác mộng**. Tối nay kỹ năng của bạn sẽ không dùng được cho đến sáng hôm sau."
+                embed = discord.Embed(
+                    title="🌑 Cơn ác mộng",
+                    description="Bạn đã chìm vào **cơn ác mộng**. Tối nay kỹ năng của bạn sẽ không dùng được cho đến sáng hôm sau.",
+                    color=discord.Color.dark_purple(),
                 )
+                await member.send(embed=embed)
         except Exception:
             pass
-
     async def _clear_nightmare_lock(self, game):
         if game is None:
             return
@@ -814,8 +822,8 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
         "inspect_results": [],
         "protects": [],
         "revives": [],
-        "jail_target_id": None,
         "wolf_shaman_cover_target_id": None,
+        "jail_target_id": None,
         "nightmare_token_target_id": None,
     }
 
@@ -863,14 +871,21 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
                 }
             )
             # Guard inspect: nếu dân làng chỉ DM cho Guard, nếu không phải dân làng thì Guard biết role thật, target nhận DM báo ai đã soi họ
-            if a_type == "inspect_guard":
-                if game.role_team(target_role_key) == TEAM_VILLAGE:
-                    plan["private_dms"].append((str(actor_id), f"🔎 {target_name} là **{target_role_label}**."))
-                else:
-                    plan["private_dms"].append((str(actor_id), f"🔎 {target_name} là **{target_role_label}**."))
-                    plan["private_dms"].append((target_id_str, f"🕵️ Bạn đã bị **{_safe_name(actor)}** soi."))
-            else:
-                plan["private_dms"].append((str(actor_id), f"🔎 {target_name} là **{target_role_label}**."))
+        if a_type == "inspect_guard":
+            actor_embed = discord.Embed(
+                title="🔍 Kết quả soi",
+                description=f"{target_name} là **{target_role_label}**.",
+                color=discord.Color.blurple(),
+            )
+            plan["private_dms"].append((str(actor_id), actor_embed))
+
+            if game.role_team(target_role_key) != TEAM_VILLAGE:
+                target_embed = discord.Embed(
+                title="🕵️ Bạn đã bị soi",
+                description=f"Bạn đã bị **{_safe_name(actor)}** soi.",
+                color=discord.Color.orange(),
+                )
+                plan["private_dms"].append((target_id_str, target_embed))
             continue
 
         if a_type == "protect":
@@ -894,9 +909,6 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
                 plan["jail_target_id"] = int(target_id_str)
                 if target_id_str in game.players:
                     target = game.players[target_id_str]
-                    plan["public_messages"].append(
-                        f"🔒 **{target.get('name', 'Unknown')}** đã bị **Quản ngục** giam trong đêm nay."
-                    )
             continue
 
         if a_type == "revive":
@@ -948,13 +960,16 @@ async def apply_action_plan(game, plan: dict[str, Any]) -> None:
 
 
 
-    for uid, msg in plan.get("private_dms", []):
+    for uid, payload in plan.get("private_dms", []):
         try:
             member = game.guild.get_member(int(uid))
             if member is None:
                 member = await game.guild.fetch_member(int(uid))
             if member:
-                await member.send(msg)
+                if isinstance(payload, discord.Embed):
+                    await member.send(embed=payload)
+                else:
+                    await member.send(payload)
         except Exception:
             pass
 
