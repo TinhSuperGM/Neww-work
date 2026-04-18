@@ -862,34 +862,26 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
                     "role_key": target_role_key,
                 }
             )
-            plan["private_dms"].append((str(actor_id), f"🔎 {target_name} là **{target_role_label}**."))
-            if a_type == "inspect_guard" and game.role_team(target_role_key) == TEAM_WOLF:
-                plan["private_dms"].append((target_id_str, f"🕵️ Bạn đã bị **{_safe_name(actor)}** soi."))
+            # Guard inspect: nếu dân làng chỉ DM cho Guard, nếu không phải dân làng thì Guard biết role thật, target nhận DM báo ai đã soi họ
+            if a_type == "inspect_guard":
+                if game.role_team(target_role_key) == TEAM_VILLAGE:
+                    plan["private_dms"].append((str(actor_id), f"🔎 {target_name} là **{target_role_label}**."))
+                else:
+                    plan["private_dms"].append((str(actor_id), f"🔎 {target_name} là **{target_role_label}**."))
+                    plan["private_dms"].append((target_id_str, f"🕵️ Bạn đã bị **{_safe_name(actor)}** soi."))
+            else:
+                plan["private_dms"].append((str(actor_id), f"🔎 {target_name} là **{target_role_label}**."))
             continue
 
         if a_type == "protect":
             if target_id_str is not None:
-                # Bảo vệ cả bản thân và người được chọn
-                if str(actor_id) != target_id_str:
-                    plan["protects"].append(
-                        {
-                            "protector_id": str(actor_id) if actor_id is not None else None,
-                            "target_id": target_id_str,
-                        }
-                    )
-                    plan["protects"].append(
-                        {
-                            "protector_id": str(actor_id) if actor_id is not None else None,
-                            "target_id": str(actor_id),
-                        }
-                    )
-                else:
-                    plan["protects"].append(
-                        {
-                            "protector_id": str(actor_id) if actor_id is not None else None,
-                            "target_id": target_id_str,
-                        }
-                    )
+                # Chỉ tạo shield cho bản thân Protector (không tạo shield cho target)
+                plan["protects"].append(
+                    {
+                        "protector_id": str(actor_id) if actor_id is not None else None,
+                        "target_id": str(actor_id),
+                    }
+                )
             continue
 
         if a_type == "mark_blind":
@@ -932,10 +924,11 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
                         "source_type": a_type,
                     }
                 )
+            # Guard shoot: public message ghi rõ ai bắn, ai bị bắn, và role thật của người bị bắn
             if a_type == "shoot" and target_id_str is not None and target_id_str in game.players:
                 target = game.players[target_id_str]
                 plan["public_messages"].append(
-                    f"🔫 **{_safe_name(actor)}** đã nổ súng vào **{target.get('name', 'Unknown')}** và lộ vai trò của mình: **{_role_label(action.get('role_key', 'guard'))}**."
+                    f"🔫 **{_safe_name(actor)}** đã nổ súng vào **{target.get('name', 'Unknown')}** (vai trò: **{_role_label(target.get('role', DEFAULT_ROLE_KEY))}**) và lộ vai trò của mình: **{_role_label(action.get('role_key', 'guard'))}**."
                 )
             continue
 
@@ -953,10 +946,7 @@ async def apply_action_plan(game, plan: dict[str, Any]) -> None:
     if plan.get("nightmare_token_target_id") is not None:
         game.nightmare_token_target_id = plan["nightmare_token_target_id"]
 
-    if not hasattr(game, "active_protections"):
-        game.active_protections = {}
-    else:
-        game.active_protections.clear()
+
 
     for uid, msg in plan.get("private_dms", []):
         try:
@@ -980,12 +970,14 @@ async def apply_action_plan(game, plan: dict[str, Any]) -> None:
         except Exception:
             pass
 
+    # Protector: cập nhật state mới
     if plan.get("protects"):
         for item in plan["protects"]:
             protector_id = item.get("protector_id")
             target_id = item.get("target_id")
             if protector_id and target_id:
-                game.active_protections[str(target_id)] = str(protector_id)
+                game.protector_id = str(protector_id)
+                game.protector_target_id = str(target_id)
 
     for kill in plan.get("kills", []):
         try:

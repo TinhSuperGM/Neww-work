@@ -6,8 +6,51 @@ import time
 from collections import Counter
 from typing import Any, Optional
 
+
+
 import discord
 from discord.ui import Button, Modal, Select, TextInput, View
+
+class MediumAnonymousModal(Modal):
+    def __init__(self, session: "WerewolfSession"):
+        super().__init__(title="Nhắn ẩn danh tới kênh người chết")
+        self.session = session
+        self.text = TextInput(label="Nội dung", style=discord.TextStyle.paragraph, max_length=1500)
+        self.add_item(self.text)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        my_id = interaction.user.id
+        if not self.session.is_alive(my_id):
+            return await interaction.response.send_message("❌ Chỉ Thầy đồng còn sống mới gửi được.", ephemeral=True)
+        pdata = self.session.players.get(str(my_id), {})
+        if pdata.get("role") != "medium" or self.session.phase != "night" or self.session.round_no < 2:
+            return await interaction.response.send_message("❌ Chỉ Thầy đồng, đêm 2 trở đi.", ephemeral=True)
+        ch = await self.session.ensure_dead_channel()
+        if not ch:
+            return await interaction.response.send_message("❌ Không tìm thấy kênh người chết.", ephemeral=True)
+        msg = str(self.text.value).strip()
+        if not msg:
+            return await interaction.response.send_message("❌ Tin nhắn trống.", ephemeral=True)
+        try:
+            await ch.send(f"🔮 **Thầy đồng:** {msg}")
+            await interaction.response.send_message("✅ Đã gửi.", ephemeral=True)
+        except Exception:
+            await interaction.response.send_message("❌ Không gửi được.", ephemeral=True)
+
+class MediumAnonymousView(View):
+    def __init__(self, session: "WerewolfSession"):
+        super().__init__(timeout=180)
+        self.session = session
+
+    @discord.ui.button(label="Nhắn tới người chết", style=discord.ButtonStyle.primary, emoji="🔮")
+    async def medium_anon_button(self, interaction: discord.Interaction, button: Button):
+        my_id = interaction.user.id
+        if not self.session.is_alive(my_id):
+            return await interaction.response.send_message("❌ Chỉ Thầy đồng còn sống mới gửi được.", ephemeral=True)
+        pdata = self.session.players.get(str(my_id), {})
+        if pdata.get("role") != "medium" or self.session.phase != "night" or self.session.round_no < 2:
+            return await interaction.response.send_message("❌ Chỉ Thầy đồng, đêm 2 trở đi.", ephemeral=True)
+        await interaction.response.send_modal(MediumAnonymousModal(self.session))
 
 try:
     from Commands.role import (
@@ -180,8 +223,91 @@ class JailAnonymousView(View):
             return await interaction.response.send_message("❌ Chỉ quản ngục mới dùng được nút này.", ephemeral=True)
         await interaction.response.send_modal(JailAnonymousModal(self.session))
 
+    @discord.ui.button(label="Bắn", style=discord.ButtonStyle.danger, emoji="🔫")
+    async def shoot_button(self, interaction: discord.Interaction, button: Button):
+        # Chỉ Jailer được bấm, chỉ dùng 1 lần/ván
+        if self.session.jailer_id is None or interaction.user.id != self.session.jailer_id:
+            return await interaction.response.send_message("❌ Chỉ quản ngục mới dùng được nút này.", ephemeral=True)
+        if getattr(self.session, "jail_shot_used", False):
+            return await interaction.response.send_message("❌ Bạn chỉ được bắn 1 lần/ván.", ephemeral=True)
+        prisoner_id = self.session.jail_target_id
+        if not prisoner_id:
+            return await interaction.response.send_message("❌ Không có tù nhân để bắn.", ephemeral=True)
+        prisoner = self.session.players.get(str(prisoner_id))
+        if not prisoner or not prisoner.get("alive"):
+            return await interaction.response.send_message("❌ Tù nhân đã chết hoặc không hợp lệ.", ephemeral=True)
+        # Đánh dấu đã bắn
+        self.session.jail_shot_used = True
+        # Giết tù nhân, public announce
+        await self.session.kill_player(str(prisoner_id), "bị Quản ngục xử bắn trong phòng giam!", cause="jailer_shoot")
+        await self.session.channel.send(f"🔫 **{prisoner['name']}** đã bị **Quản ngục** xử bắn trong phòng giam!")
+        await interaction.response.send_message("✅ Đã bắn tù nhân.", ephemeral=True)
+
 
 class WerewolfSession:
+
+    # --- UI ẩn danh cho Medium gửi vào kênh người chết ---
+    class MediumAnonymousModal(Modal):
+        def __init__(self, session: "WerewolfSession"):
+            super().__init__(title="Nhắn ẩn danh tới kênh người chết")
+            self.session = session
+            self.text = TextInput(label="Nội dung", style=discord.TextStyle.paragraph, max_length=1500)
+            self.add_item(self.text)
+
+        async def on_submit(self, interaction: discord.Interaction):
+            my_id = interaction.user.id
+            if not self.session.is_alive(my_id):
+                return await interaction.response.send_message("❌ Chỉ Thầy đồng còn sống mới gửi được.", ephemeral=True)
+            pdata = self.session.players.get(str(my_id), {})
+            if pdata.get("role") != "medium" or self.session.phase != "night" or self.session.round_no < 2:
+                return await interaction.response.send_message("❌ Chỉ Thầy đồng, đêm 2 trở đi.", ephemeral=True)
+            ch = await self.session.ensure_dead_channel()
+            if not ch:
+                return await interaction.response.send_message("❌ Không tìm thấy kênh người chết.", ephemeral=True)
+            msg = str(self.text.value).strip()
+            if not msg:
+                return await interaction.response.send_message("❌ Tin nhắn trống.", ephemeral=True)
+            try:
+                await ch.send(f"🔮 **Thầy đồng:** {msg}")
+                await interaction.response.send_message("✅ Đã gửi.", ephemeral=True)
+            except Exception:
+                await interaction.response.send_message("❌ Không gửi được.", ephemeral=True)
+
+    class MediumAnonymousView(View):
+        def __init__(self, session: "WerewolfSession"):
+            super().__init__(timeout=180)
+            self.session = session
+
+        @discord.ui.button(label="Nhắn tới người chết", style=discord.ButtonStyle.primary, emoji="🔮")
+        async def medium_anon_button(self, interaction: discord.Interaction, button: Button):
+            my_id = interaction.user.id
+            if not self.session.is_alive(my_id):
+                return await interaction.response.send_message("❌ Chỉ Thầy đồng còn sống mới gửi được.", ephemeral=True)
+            pdata = self.session.players.get(str(my_id), {})
+            if pdata.get("role") != "medium" or self.session.phase != "night" or self.session.round_no < 2:
+                return await interaction.response.send_message("❌ Chỉ Thầy đồng, đêm 2 trở đi.", ephemeral=True)
+            await interaction.response.send_modal(MediumAnonymousModal(self.session))
+
+    async def show_medium_view(session: "WerewolfSession"):
+        # Gửi view cho Medium vào dead channel vào đêm 2+
+        if session.phase != "night" or session.round_no < 2:
+            return
+        ch = await session.ensure_dead_channel()
+        if not ch:
+            return
+        for uid, pdata in session.players.items():
+            if pdata.get("role") == "medium" and pdata.get("alive"):
+                member = session.guild.get_member(int(uid))
+                if member is None:
+                    try:
+                        member = await session.guild.fetch_member(int(uid))
+                    except Exception:
+                        member = None
+                if member:
+                    try:
+                        await ch.send(content=f"🔮 **Thầy đồng** có thể nhắn ẩn danh:", view=MediumAnonymousView(session))
+                    except Exception:
+                        pass
     def __init__(
         self,
         bot: discord.Client,
@@ -227,8 +353,9 @@ class WerewolfSession:
         self.wolf_shaman_cover_target_id: Optional[int] = None
         self.wolf_shaman_cover_round: Optional[int] = None
 
-        self.active_protections: dict[str, str] = {}
-        self.protection_memory: dict[str, int] = {}
+        self.protector_id: Optional[str] = None  # ai là BV
+        self.protector_target_id: Optional[str] = None  # BV đang protect ai
+        self.shield_used: bool = False  # Khiên BV
 
         self.jailer_id: Optional[int] = None
         self.jail_target_id: Optional[int] = None
@@ -415,6 +542,20 @@ class WerewolfSession:
             value="\n".join(player_lines) if player_lines else "Chưa có ai.",
             inline=False,
         )
+        # Thống kê role và số người sở hữu
+        from collections import Counter
+        role_counts = Counter(p.get("role", DEFAULT_ROLE_KEY) for p in self.players.values())
+        role_lines = []
+        for rk, cnt in role_counts.items():
+            if rk in ROLE_DEFINITIONS:
+                role_lines.append(f"{ROLE_DEFINITIONS[rk]['name']}: {cnt}")
+            else:
+                role_lines.append(f"{rk}: {cnt}")
+        embed.add_field(
+            name="Phân bố vai trò",
+            value="\n".join(role_lines) if role_lines else "Chưa chia vai trò.",
+            inline=False,
+        )
         embed.add_field(
             name="Chủ phòng",
             value=self.players[self.host_id]["name"] if self.host_id and self.host_id in self.players else "Chưa có",
@@ -452,7 +593,8 @@ class WerewolfSession:
     def render_phase_embed(self, phase: str, announcement: str) -> discord.Embed:
         if phase == "night":
             e = discord.Embed(title=f"🌙 Đêm {self.round_no}", description=announcement, color=discord.Color.dark_red())
-            e.add_field(name="Vote hiện tại", value=self._vote_summary(self.night_votes, phase), inline=False)
+            # Không public vote sói ở kênh chính
+            e.add_field(name="Vote hiện tại", value="(Chỉ hiện trong kênh sói)", inline=False)
             e.add_field(name="Kết thúc", value=_fmt_ts(self.night_deadline_at), inline=True)
             e.set_footer(text="Ban đêm • vote sói + kỹ năng")
         else:
@@ -461,6 +603,19 @@ class WerewolfSession:
             e.add_field(name="Kết thúc", value=_fmt_ts(self.vote_deadline_at), inline=True)
             e.set_footer(text="Ban ngày • thảo luận + vote + kỹ năng")
 
+        # Danh sách sống/chết, hiện vai trò nếu đã chết
+        alive_lines = []
+        dead_lines = []
+        for uid, pdata in self.players.items():
+            if pdata.get("alive"):
+                alive_lines.append(f"🟢 {pdata['name']}")
+            else:
+                role = pdata.get("role", DEFAULT_ROLE_KEY)
+                role_label = self.role_label(role)
+                dead_lines.append(f"⚰️ {pdata['name']} ({role_label})")
+        e.add_field(name="Còn sống", value="\n".join(alive_lines) if alive_lines else "Không còn ai.", inline=False)
+        if dead_lines:
+            e.add_field(name="Đã chết", value="\n".join(dead_lines), inline=False)
         e.add_field(name="Tình hình", value=self._panel_counts_text(), inline=True)
         e.add_field(name="Kênh sói", value=self.wolf_channel.mention if self.wolf_channel else "Đang tạo...", inline=True)
         if self.jail_channel:
@@ -475,7 +630,8 @@ class WerewolfSession:
         for target_id, amount in c.most_common():
             target = self.players.get(target_id)
             if target:
-                out.append(f"• **{target['name']}** — {amount} phiếu")
+                voters = [self.players[uid]["name"] for uid, t in votes.items() if t == target_id and uid in self.players]
+                out.append(f"• **{target['name']}** — {amount} phiếu (bởi: {', '.join(voters)})")
         return "\n".join(out)
 
     async def replace_phase_message(self, phase: str, announcement: str) -> None:
@@ -484,12 +640,24 @@ class WerewolfSession:
             embed=self.render_phase_embed(phase, announcement),
             view=GameActionView(self, phase),
         )
+        # Nếu là ban đêm, gửi vote sói vào kênh sói (nếu có)
+        if phase == "night" and self.wolf_channel:
+            await self.wolf_channel.send(embed=self._wolf_vote_embed())
+
+    def _wolf_vote_embed(self) -> discord.Embed:
+        # Embed riêng cho kênh sói, hiện vote sói chi tiết
+        e = discord.Embed(title=f"🐺 Vote sói - Đêm {self.round_no}", color=discord.Color.dark_red())
+        e.add_field(name="Vote hiện tại", value=self._vote_summary(self.night_votes, "night"), inline=False)
+        return e
 
     async def refresh_phase_message(self, phase: str, announcement: str) -> None:
         if self.phase_message is None:
             await self.replace_phase_message(phase, announcement)
             return
         await safe_edit(self.phase_message, embed=self.render_phase_embed(phase, announcement), view=GameActionView(self, phase))
+        # Nếu là ban đêm, update vote sói ở kênh sói
+        if phase == "night" and self.wolf_channel:
+            await self.wolf_channel.send(embed=self._wolf_vote_embed())
 
     async def ensure_private_channel(
         self,
@@ -752,7 +920,7 @@ class WerewolfSession:
 
         p["alive"] = False
         p["nightmare_locked"] = False
-        self.active_protections.pop(uid, None)
+        # self.active_protections.pop(uid, None)
         await self.apply_dead_role(uid)
 
         ro = p.get("role_obj")
@@ -775,9 +943,7 @@ class WerewolfSession:
         p = self.players.get(str(uid))
         if not p or p.get("alive"):
             return False
-        if self.role_team(p.get("role", DEFAULT_ROLE_KEY)) != TEAM_VILLAGE:
-            return False
-
+        # Bỏ giới hạn chỉ revive phe village
         p["alive"] = True
         p["nightmare_locked"] = False
         p["revealed_role"] = False
@@ -832,6 +998,7 @@ class WerewolfSession:
         victim_role = victim.get("role", DEFAULT_ROLE_KEY)
         is_wolf_attack = source_role_key in {"wolf", "wolf_vote", "wolf_attack"}
 
+        # Nếu là serial_killer bị sói cắn thì miễn nhiễm
         if is_wolf_attack and victim_role == "serial_killer":
             await self._notify_wolves(
                 discord.Embed(
@@ -842,92 +1009,81 @@ class WerewolfSession:
             )
             return False
 
+        # Nếu target đang bị giam thì miễn toàn bộ sát thương từ bên ngoài (trừ Jailer bắn)
+        if self.is_jailed(tid):
+            if not (source_role_key == "jailer" and actor_id == self.jailer_id):
+                try:
+                    await self.channel.send(f"🔒 **{victim['name']}** đang bị giam, miễn nhiễm mọi sát thương bên ngoài.")
+                except Exception:
+                    pass
+                return False
 
 
-
-        protector_id = self.active_protections.get(tid)
-        # Wolvesville logic
-        # 1. Nếu có bảo vệ bảo vệ victim (protector_id != None)
-        # 2. Nếu victim là bảo vệ và đang bảo vệ người khác, ưu tiên khiên bản thân
-        # 3. Nếu victim là người được bảo vệ, khiên bảo vệ sẽ đỡ đòn, nếu hết khiên bảo vệ chết thay
-        # 4. Nếu victim là bảo vệ và không bảo vệ ai, dùng khiên bản thân
-
-        # 1. Nếu victim là bảo vệ và đang bảo vệ ai đó (protector_id == tid và có active_protections)
-        if victim and victim.get("role") == "protector" and victim.get("alive"):
-            # Nếu bảo vệ đang bảo vệ ai đó (có active_protections mapping tới người khác)
-            is_protecting_someone = any(pid == tid and tid != target for target, pid in self.active_protections.items())
-            attacked_self_before = self.protection_memory.get(tid, 0) > 0
-            if is_protecting_someone or protector_id == tid:
-                if not attacked_self_before:
-                    self.protection_memory[tid] = self.protection_memory.get(tid, 0) + 1
-                    try:
-                        await self.channel.send(f"🛡️ **{victim['name']}** đã dùng khiên cá nhân để sống sót khi bị tấn công.")
-                    except Exception:
-                        pass
-                    if is_wolf_attack:
-                        await self._notify_wolves(
-                            discord.Embed(
-                                title="🛡️ Bảo vệ được miễn tử",
-                                description=f"**{victim['name']}** đã dùng khiên cá nhân để sống sót khi bị tấn công.",
-                                color=discord.Color.green(),
+        # --- Protector redirect logic ---
+        # Nếu có BV còn sống và đang bảo vệ ai đó
+        if self.protector_id and self.protector_target_id:
+            bv = self.players.get(self.protector_id)
+            bv_alive = bv and bv.get("alive")
+            # Nếu target là người được bảo vệ và BV còn sống
+            if tid == self.protector_target_id and bv_alive:
+                # Nếu cùng đêm BV cũng bị tấn công: BV chỉ tự cứu mình, target không được redirect
+                if hasattr(self, "_attacked_this_night") and self._attacked_this_night.get(self.protector_id):
+                    # Không redirect, target vẫn chết bình thường
+                    pass
+                else:
+                    # Redirect damage về BV
+                    # Nếu BV còn khiên: mất khiên, không chết
+                    if not self.shield_used:
+                        self.shield_used = True
+                        try:
+                            await self.channel.send(f"🛡️ Khiên bảo vệ đã chặn sát thương cho **{bv['name']}**. Khiên đã bị phá!")
+                        except Exception:
+                            pass
+                        if is_wolf_attack:
+                            await self._notify_wolves(
+                                discord.Embed(
+                                    title="🛡️ Khiên bảo vệ đã bị phá",
+                                    description=f"**{bv['name']}** được bảo vệ bởi khiên và sống sót.",
+                                    color=discord.Color.green(),
+                                )
                             )
-                        )
-                    return False
-                # Hết khiên, bảo vệ chết
-                await self.kill_player(tid, f"đã chết khi bị tấn công không còn khiên.", cause="protection")
+                        return False
+                    # Nếu BV đã mất khiên: BV chết luôn
+                    else:
+                        await self.kill_player(self.protector_id, f"đã chết khi bảo vệ **{victim['name']}** (khiên đã mất).", cause=source_role_key)
+                        self.protector_target_id = None
+                        return True
+
+        # Nếu target là BV
+        if self.protector_id and tid == self.protector_id:
+            # Nếu còn khiên: không chết, mất khiên
+            if not self.shield_used:
+                self.shield_used = True
                 try:
-                    await self.channel.send(f"🛡️ **{victim['name']}** đã chết khi bị tấn công không còn khiên.")
+                    await self.channel.send(f"🛡️ Khiên bảo vệ đã chặn sát thương cho **{victim['name']}**. Khiên đã bị phá!")
                 except Exception:
                     pass
                 if is_wolf_attack:
                     await self._notify_wolves(
                         discord.Embed(
-                            title="🛡️ Miễn tử thất bại",
-                            description=f"**{victim['name']}** đã chết khi bị tấn công không còn khiên.",
+                            title="🛡️ Khiên bảo vệ đã bị phá",
+                            description=f"**{victim['name']}** được bảo vệ bởi khiên và sống sót.",
                             color=discord.Color.green(),
                         )
                     )
                 return False
+            # Nếu đã mất khiên: chết
+            else:
+                await self.kill_player(tid, f"đã chết do {source_role_key or 'một đòn tấn công'} (khiên đã mất).", cause=source_role_key)
+                # Khi BV chết, xóa trạng thái bảo vệ
+                self.protector_target_id = None
+                return True
 
-        # 2. Nếu victim là người được bảo vệ
-        if protector_id is not None and self.players.get(protector_id, {}).get("alive"):
-            protector = self.players.get(protector_id)
-            attacked_before = self.protection_memory.get(tid, 0) > 0
-            if not attacked_before:
-                self.protection_memory[tid] = self.protection_memory.get(tid, 0) + 1
-                self.active_protections.pop(tid, None)
-                try:
-                    await self.channel.send(f"🛡️ **{victim['name']}** đã được bảo vệ và không chết trong đêm này.")
-                except Exception:
-                    pass
-                if is_wolf_attack:
-                    await self._notify_wolves(
-                        discord.Embed(
-                            title="🛡️ Mục tiêu được bảo vệ",
-                            description=f"**{victim['name']}** đã được Bảo vệ chặn lại.",
-                            color=discord.Color.green(),
-                        )
-                    )
-                return False
-            # Nếu đã hết khiên, bảo vệ chết thay
-            self.active_protections.pop(tid, None)
-            protector_name = protector["name"] if protector else "Bảo vệ"
-            await self.kill_player(protector_id, f"chết thay cho **{victim['name']}**.", cause="protection")
-            try:
-                await self.channel.send(f"🛡️ **{protector_name}** đã chết thay cho **{victim['name']}**.")
-            except Exception:
-                pass
-            if is_wolf_attack:
-                await self._notify_wolves(
-                    discord.Embed(
-                        title="🛡️ Mục tiêu đã phản đòn",
-                        description=f"**{victim['name']}** không chết; **Bảo vệ** đã chết thay.",
-                        color=discord.Color.green(),
-                    )
-                )
-            return False
-
+        # Nếu không dính các trường hợp trên, xử lý giết bình thường
         await self.kill_player(tid, f"đã chết do {source_role_key or 'một đòn tấn công'}.", cause=source_role_key)
+        # Nếu BV chết, xóa trạng thái bảo vệ
+        if self.protector_id and tid == self.protector_id:
+            self.protector_target_id = None
         return True
 
     def _resolve_wolf_vote(self) -> Optional[str]:
@@ -966,6 +1122,12 @@ class WerewolfSession:
             "wolf_shaman_cover_target_id": None,
             "nightmare_token_target_id": None,
         }
+
+        # --- Protector: xác định ai bị attack trong đêm ---
+        self._attacked_this_night = {}
+        for kill in plan.get("kills", []):
+            tid = str(kill.get("target_id"))
+            self._attacked_this_night[tid] = True
 
         if callable(apply_action_plan):
             await apply_action_plan(self, plan)
@@ -1171,7 +1333,6 @@ class WerewolfSession:
         await self.run_game_loop()
 
     async def _sync_day_start(self) -> None:
-        self.active_protections.clear()
         await self.close_jail_room()
         await self.sync_public_permissions("day")
         await self.sync_wolf_permissions("day")
@@ -1179,7 +1340,6 @@ class WerewolfSession:
         await self._call_phase_hook("on_day_start")
 
     async def _sync_night_start(self) -> None:
-        self.active_protections.clear()
         await self.sync_public_permissions("night")
         await self.sync_wolf_permissions("night")
         await self.sync_dead_channel("night")
