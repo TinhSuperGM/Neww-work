@@ -264,6 +264,8 @@ class WerewolfSession:
             "alive": True,
             "revealed_role": False,
             "nightmare_locked": False,
+            "guard_day_skill_round": None,
+            "guard_day_skill_key": None,
         }
         if self.host_id is None:
             self.host_id = uid
@@ -840,11 +842,57 @@ class WerewolfSession:
             )
             return False
 
+
+
+
         protector_id = self.active_protections.get(tid)
+        # Wolvesville logic
+        # 1. Nếu có bảo vệ bảo vệ victim (protector_id != None)
+        # 2. Nếu victim là bảo vệ và đang bảo vệ người khác, ưu tiên khiên bản thân
+        # 3. Nếu victim là người được bảo vệ, khiên bảo vệ sẽ đỡ đòn, nếu hết khiên bảo vệ chết thay
+        # 4. Nếu victim là bảo vệ và không bảo vệ ai, dùng khiên bản thân
+
+        # 1. Nếu victim là bảo vệ và đang bảo vệ ai đó (protector_id == tid và có active_protections)
+        if victim and victim.get("role") == "protector" and victim.get("alive"):
+            # Nếu bảo vệ đang bảo vệ ai đó (có active_protections mapping tới người khác)
+            is_protecting_someone = any(pid == tid and tid != target for target, pid in self.active_protections.items())
+            attacked_self_before = self.protection_memory.get(tid, 0) > 0
+            if is_protecting_someone or protector_id == tid:
+                if not attacked_self_before:
+                    self.protection_memory[tid] = self.protection_memory.get(tid, 0) + 1
+                    try:
+                        await self.channel.send(f"🛡️ **{victim['name']}** đã dùng khiên cá nhân để sống sót khi bị tấn công.")
+                    except Exception:
+                        pass
+                    if is_wolf_attack:
+                        await self._notify_wolves(
+                            discord.Embed(
+                                title="🛡️ Bảo vệ được miễn tử",
+                                description=f"**{victim['name']}** đã dùng khiên cá nhân để sống sót khi bị tấn công.",
+                                color=discord.Color.green(),
+                            )
+                        )
+                    return False
+                # Hết khiên, bảo vệ chết
+                await self.kill_player(tid, f"đã chết khi bị tấn công không còn khiên.", cause="protection")
+                try:
+                    await self.channel.send(f"🛡️ **{victim['name']}** đã chết khi bị tấn công không còn khiên.")
+                except Exception:
+                    pass
+                if is_wolf_attack:
+                    await self._notify_wolves(
+                        discord.Embed(
+                            title="🛡️ Miễn tử thất bại",
+                            description=f"**{victim['name']}** đã chết khi bị tấn công không còn khiên.",
+                            color=discord.Color.green(),
+                        )
+                    )
+                return False
+
+        # 2. Nếu victim là người được bảo vệ
         if protector_id is not None and self.players.get(protector_id, {}).get("alive"):
             protector = self.players.get(protector_id)
             attacked_before = self.protection_memory.get(tid, 0) > 0
-
             if not attacked_before:
                 self.protection_memory[tid] = self.protection_memory.get(tid, 0) + 1
                 self.active_protections.pop(tid, None)
@@ -861,24 +909,23 @@ class WerewolfSession:
                         )
                     )
                 return False
-
+            # Nếu đã hết khiên, bảo vệ chết thay
             self.active_protections.pop(tid, None)
-            if protector_id != tid:
-                protector_name = protector["name"] if protector else "Bảo vệ"
-                await self.kill_player(protector_id, f"chết thay cho **{victim['name']}**.", cause="protection")
-                try:
-                    await self.channel.send(f"🛡️ **{protector_name}** đã chết thay cho **{victim['name']}**.")
-                except Exception:
-                    pass
-                if is_wolf_attack:
-                    await self._notify_wolves(
-                        discord.Embed(
-                            title="🛡️ Mục tiêu đã phản đòn",
-                            description=f"**{victim['name']}** không chết; **Bảo vệ** đã chết thay.",
-                            color=discord.Color.green(),
-                        )
+            protector_name = protector["name"] if protector else "Bảo vệ"
+            await self.kill_player(protector_id, f"chết thay cho **{victim['name']}**.", cause="protection")
+            try:
+                await self.channel.send(f"🛡️ **{protector_name}** đã chết thay cho **{victim['name']}**.")
+            except Exception:
+                pass
+            if is_wolf_attack:
+                await self._notify_wolves(
+                    discord.Embed(
+                        title="🛡️ Mục tiêu đã phản đòn",
+                        description=f"**{victim['name']}** không chết; **Bảo vệ** đã chết thay.",
+                        color=discord.Color.green(),
                     )
-                return False
+                )
+            return False
 
         await self.kill_player(tid, f"đã chết do {source_role_key or 'một đòn tấn công'}.", cause=source_role_key)
         return True
@@ -995,7 +1042,7 @@ class WerewolfSession:
                 asyncio.create_task(self._end_game(f"🏆 **{self.players[solo_survivor]['name']}** (Solo) đã thắng!"))
                 return True
             if jester_alive:
-                asyncio.create_task(self._end_game("🎭 **Thằng ngố** sống tới cuối và thắng!"))
+                asyncio.create_task(self._end_game("🎭 **Thằng ngố** đã sống tới cuối nhưng thua vì chưa bị treo cổ."))
                 return True
             asyncio.create_task(self._end_game("🏆 Ván đấu kết thúc."))
             return True
@@ -1582,7 +1629,8 @@ class GameActionView(View):
             return await interaction.response.send_message("❌ Không có kỹ năng.", ephemeral=True)
 
         options = role_obj.skill_options(self.phase, game=self.session)
-        if not options:
+        # Nếu không có options hoặc options rỗng, không gửi view, tránh lỗi Discord
+        if not options or (isinstance(options, list) and len(options) == 0):
             return await interaction.response.send_message("❌ Vai trò này không có kỹ năng ở pha hiện tại.", ephemeral=True)
 
         if len(options) == 1:
@@ -1599,13 +1647,19 @@ class GameActionView(View):
             )
             return
 
+        # Nếu options có nhiều hơn 1 lựa chọn, kiểm tra lại SkillChoiceView có options hợp lệ không
+        # Nếu SkillChoiceView không có options, không gửi view
+        view = SkillChoiceView(self.session, self.phase, role_obj)
+        if not hasattr(view, 'children') or not any(getattr(child, 'options', None) for child in view.children if isinstance(child, Select)):
+            return await interaction.response.send_message("❌ Không có kỹ năng hợp lệ để chọn.", ephemeral=True)
+
         await interaction.response.send_message(
             embed=discord.Embed(
                 title=f"✨ Dùng kỹ năng — {role_obj.name}",
                 description="Chọn kỹ năng bạn muốn dùng.",
                 color=discord.Color.gold(),
             ),
-            view=SkillChoiceView(self.session, self.phase, role_obj),
+            view=view,
             ephemeral=True,
         )
 
