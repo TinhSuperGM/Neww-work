@@ -610,7 +610,7 @@ class WerewolfSession:
             self.players[uid]["role_obj"] = create_role(role_key, member or self.bot.get_user(int(uid))) if create_role else None
 
     async def call_role_start_hooks(self) -> None:
-        for pdata in self.players.values():
+        for pdata in list(self.players.values()):
             role_obj = pdata.get("role_obj")
             if role_obj is None:
                 continue
@@ -620,7 +620,7 @@ class WerewolfSession:
                 pass
 
     async def _call_phase_hook(self, method_name: str) -> None:
-        for pdata in self.players.values():
+        for pdata in list(self.players.values()):
             role_obj = pdata.get("role_obj")
             if role_obj is None:
                 continue
@@ -778,6 +778,35 @@ class WerewolfSession:
 
         self._last_day_vote_state = current_state
         await self.refresh_phase_message("day", announcement)
+
+    async def _refresh_wolf_vote_panel(self, fresh: bool = False) -> None:
+        if not self.wolf_channel:
+            return
+
+        embed = self._wolf_vote_embed()
+
+        # Nếu chưa có message hoặc yêu cầu tạo mới
+        if fresh or self.wolf_vote_message is None:
+            try:
+                if self.wolf_vote_message:
+                    await self.wolf_vote_message.delete()
+            except Exception:
+                pass
+
+            try:
+                self.wolf_vote_message = await self.wolf_channel.send(embed=embed)
+            except Exception:
+                self.wolf_vote_message = None
+            return
+
+        # Nếu đã có thì edit
+        try:
+            await self.wolf_vote_message.edit(embed=embed)
+        except Exception:
+            try:
+                self.wolf_vote_message = await self.wolf_channel.send(embed=embed)
+            except Exception:
+                self.wolf_vote_message = None
     async def replace_phase_message(self, phase: str, announcement: str) -> None:
         await safe_delete(self.phase_message)
         self.phase_message = await self.channel.send(
@@ -1612,6 +1641,49 @@ class WerewolfSession:
                 await asyncio.sleep(1)
                 await self._refresh_day_vote_panel_if_changed(vote_announcement)
 
+            # 🔥 QUAN TRỌNG NHẤT
+            await self.resolve_day()
+
+            self.day_votes.clear()
+
+            if self.check_win() or not self.active:
+                break
+
+            self.round_no += 1
+    async def sync_public_permissions(self, phase: str) -> None:
+        # 1. Default role (mọi người)
+        try:
+         await self.channel.set_permissions(
+                self.guild.default_role,
+                view_channel=True,                  # vẫn thấy channel
+                send_messages=False,                # không cho chat mặc định
+                read_message_history=True,
+                reason="Werewolf public base lock",
+            )
+        except Exception:
+            pass
+
+        # 2. Player override
+        for uid, pdata in self.players.items():
+            member = self.guild.get_member(int(uid))
+            if member is None:
+                try:
+                    member = await self.guild.fetch_member(int(uid))
+                except Exception:
+                    continue
+
+            alive = pdata.get("alive", False)
+
+            try:
+                await self.channel.set_permissions(
+                    member,
+                    view_channel=True,
+                    send_messages=(phase == "day" and alive),
+                    read_message_history=True,
+                    reason="Werewolf player override",
+                )
+            except Exception:
+                pass
     async def sync_wolf_permissions(self, phase: str) -> None:
         if not self.wolf_channel:
             return
