@@ -233,6 +233,22 @@ def _role_team(role_key: str) -> str:
     return _meta(role_key)["team"]
 
 
+def role_name(role_key: str) -> str:
+    return _meta(normalize_role_key(role_key))["name"]
+
+
+def role_description(role_key: str) -> str:
+    return _meta(normalize_role_key(role_key))["description"]
+
+
+def role_team(role_key: str) -> str:
+    return _meta(normalize_role_key(role_key))["team"]
+
+
+def team_label(team: str) -> str:
+    return {TEAM_WOLF: "Ma Sói", TEAM_SOLO: "Solo"}.get(team, "Dân làng")
+
+
 class Role:
     def __init__(self, player: discord.abc.User | None, role_key: str):
         self.player = player
@@ -907,8 +923,6 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
         if a_type == "jail":
             if target_id_str is not None:
                 plan["jail_target_id"] = int(target_id_str)
-                if target_id_str in game.players:
-                    target = game.players[target_id_str]
             continue
 
         if a_type == "revive":

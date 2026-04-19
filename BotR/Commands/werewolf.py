@@ -65,6 +65,10 @@ try:
         TEAM_VILLAGE,
         ROLE_DEFINITIONS,
         DEFAULT_ROLE_KEY,
+        role_name as _role_name,
+        role_description as _role_desc,
+        role_team as _role_team,
+        team_label as _team_label,
         create_role,
         build_role_assignments,
         build_night_actions,
@@ -77,6 +81,14 @@ except Exception:
     TEAM_VILLAGE = "village"
     DEFAULT_ROLE_KEY = "civilian"
     ROLE_DEFINITIONS = {}
+    def _role_name(role_key: str) -> str:
+        return role_key
+    def _role_desc(role_key: str) -> str:
+        return "Không có mô tả."
+    def _role_team(role_key: str) -> str:
+        return TEAM_VILLAGE
+    def _team_label(team: str) -> str:
+        return {TEAM_WOLF: "Ma Sói", TEAM_SOLO: "Solo"}.get(team, "Dân làng")
     create_role = None
     build_role_assignments = None
     build_night_actions = None
@@ -196,22 +208,6 @@ def _fmt_ts(ts: int | float | None, style: str = "R") -> str:
 
 def _tally(votes: dict[str, str]) -> Counter:
     return Counter(votes.values()) if votes else Counter()
-
-
-def _role_name(role_key: str) -> str:
-    return ROLE_DEFINITIONS.get(role_key, {}).get("name", role_key)
-
-
-def _role_desc(role_key: str) -> str:
-    return ROLE_DEFINITIONS.get(role_key, {}).get("description", "Không có mô tả.")
-
-
-def _role_team(role_key: str) -> str:
-    return ROLE_DEFINITIONS.get(role_key, {}).get("team", TEAM_VILLAGE)
-
-
-def _team_label(team: str) -> str:
-    return {TEAM_WOLF: "Ma Sói", TEAM_SOLO: "Solo"}.get(team, "Dân làng")
 
 
 async def send(ctx, *args, **kwargs):
@@ -564,33 +560,104 @@ class WerewolfSession:
         )
 
     async def notify_host_join(self, joiner: discord.abc.User) -> None:
-        return
 
-        host = self.guild.get_member(int(self.host_id))
-        if host is None:
+        host = self.guild.get_member(int(self.host_id)) if self.host_id is not None else None
+
+        if host is None and self.host_id is not None:
+
             try:
+
                 host = await self.guild.fetch_member(int(self.host_id))
+
             except Exception:
+
                 host = None
 
-        if host is not None:
-            try:
-                await host.send(
-                    f"📣 **{_display_name(joiner)}** vừa tham gia phòng **#{self.base_name}**.\n"
-                    f"Hiện có **{len(self.players)}** người."
-                )
-            except Exception:
-                try:
-                    await self.channel.send(f"📣 <@{host.id}>, **{_display_name(joiner)}** vừa tham gia phòng.")
-                except Exception:
-                    pass
+
+        if host is None:
+
+            return
+
+
+        try:
+
+            await host.send(
+
+                f"📣 **{_display_name(joiner)}** vừa tham gia phòng của bạn ở channels **#{self.base_name}**.\n\n"
+
+                f"Phòng này hiện có **{len(self.players)}** người tham gia."
+
+            )
+
+            return
+
+        except Exception:
+
+            pass
+
+
+        try:
+
+            await self.channel.send(
+
+                f"📣 <@{host.id}>, **{_display_name(joiner)}** vừa tham gia phòng."
+
+            )
+
+        except Exception:
+
+            pass
+
 
     async def refresh_lobby_panel(self) -> None:
-        if self.lobby_message:
+
+
+        embed = self.render_lobby_embed()
+
+
+        view = LobbyView(self)
+
+
+
+        if self.lobby_message is None:
+
+
             try:
-                await self.lobby_message.edit(embed=self.render_lobby_embed(), view=LobbyView(self))
+
+
+                self.lobby_message = await self.channel.send(embed=embed, view=view)
+
+
             except Exception:
+
+
+                self.lobby_message = None
+
+
+            return
+
+
+
+        try:
+
+
+            await self.lobby_message.edit(embed=embed, view=view)
+
+
+        except Exception:
+
+
+            try:
+
+
+                self.lobby_message = await self.channel.send(embed=embed, view=view)
+
+
+            except Exception:
+
+
                 pass
+
 
     async def assign_roles(self):
         ids = list(self.players.keys())
@@ -1297,7 +1364,7 @@ class WerewolfSession:
                         return False
                     # Nếu BV đã mất khiên: BV chết luôn
                     else:
-                        await self.kill_player(self.protector_id, f"đã chết khi bảo vệ **{victim['name']}** (khiên đã mất).", cause=source_role_key)
+                        await self.kill_player(self.protector_id, f"đã chết khi bảo vệ **{victim['name']}**.", cause=source_role_key)
                         self.protector_target_id = None
                         return True
 
@@ -1331,7 +1398,7 @@ class WerewolfSession:
 
                 await self.kill_player(
                     self.protector_id,
-                    f"đã chết khi bảo vệ **{victim['name']}** (khiên đã mất).",
+                    f"đã chết khi bảo vệ **{victim['name']}**.",
                     cause=source_role_key
                 )
                 # Khi BV chết, xóa trạng thái bảo vệ
@@ -1443,116 +1510,397 @@ class WerewolfSession:
         return None
 
     def check_win(self) -> bool:
+
         if self.finished:
+
             return True
+
 
         wolves = len(self.alive_wolves())
-        villagers = len(self.alive_villagers())
-        sk_alive = any(
-            p.get("alive") and p.get("role") == "serial_killer"
-            for p in self.players.values()
-        )
-        jester_alive = any(
-            p.get("alive") and p.get("role") == "jester"
-            for p in self.players.values()
-        )
-        solo_survivor = self._solo_survivor()
 
-        if wolves == 0 and villagers == 0:
-            if solo_survivor is not None:
-                asyncio.create_task(self._end_game(f"🏆 **{self.players[solo_survivor]['name']}** (Solo) đã thắng!"))
-                return True
-            asyncio.create_task(self._end_game("🏆 Ván đấu kết thúc."))
+        villagers = len(self.alive_villagers())
+
+        serial_killer_alive = any(
+
+            p.get("alive") and p.get("role") == "serial_killer"
+
+            for p in self.players.values()
+
+        )
+
+        alive_players = self.alive_players()
+
+
+        # Chỉ còn 1 người sống thì chốt luôn kết quả.
+
+        if len(alive_players) == 1:
+
+            only_uid = alive_players[0]
+
+            only_role = self.players.get(only_uid, {}).get("role")
+
+            if only_role == "serial_killer":
+
+                asyncio.create_task(
+
+                    self._end_game(f"🏆 **{self.players[only_uid]['name']}** (Phe Solo) đã thắng!")
+
+                )
+
+            elif self.role_team(only_role) == TEAM_WOLF:
+
+                asyncio.create_task(self._end_game("🐺 **Ma Sói thắng!**"))
+
+            else:
+
+                asyncio.create_task(self._end_game("🏆 **Dân làng thắng!**"))
+
             return True
 
-        if not sk_alive:
-            if wolves == 0:
+
+        # Hết sói
+
+        if wolves == 0:
+
+            if serial_killer_alive:
+
+                # Solo vẫn còn sống cùng người khác thì để game tiếp tục.
+
+                if villagers == 0:
+
+                    solo_survivor = self._solo_survivor()
+
+                    if solo_survivor is not None:
+
+                        asyncio.create_task(
+
+                            self._end_game(f"🏆 **{self.players[solo_survivor]['name']}** (Solo) đã thắng!")
+
+                        )
+
+                    else:
+
+                        asyncio.create_task(self._end_game("🏆 Ván đấu kết thúc."))
+
+                    return True
+
+                return False
+
+
+            if villagers > 0:
+
                 asyncio.create_task(self._end_game("🏆 **Dân làng thắng!**"))
+
                 return True
-            if wolves >= villagers and villagers > 0:
-                asyncio.create_task(self._end_game("🐺 **Ma Sói thắng!**"))
-                return True
+
+
+            asyncio.create_task(self._end_game("🏆 Ván đấu kết thúc."))
+
+            return True
+
+
+        # Hết dân làng
+
+        if villagers == 0:
+
+            if serial_killer_alive:
+
+                return False
+
+            asyncio.create_task(self._end_game("🐺 **Ma Sói thắng!**"))
+
+            return True
+
+
+        # Sói đạt áp đảo
+
+        if wolves >= villagers:
+
+            asyncio.create_task(self._end_game("🐺 **Ma Sói thắng!**"))
+
+            return True
+
 
         return False
 
+
     async def _end_game(self, message: str) -> None:
+
+
         if self.finished:
+
+
             return
+
+
         self.finished = True
+
+
         self.active = False
+
+
         try:
+
+
             await self.channel.send(message)
+
+
         except Exception:
+
+
             pass
+
+
+
+        try:
+
+
+            await self.end_and_restart_lobby()
+
+
+        except Exception:
+
+
+            pass
+
 
     async def end_and_restart_lobby(self) -> None:
+
+
         self.active = False
 
+
+
         try:
+
+
             await self.clear_dead_role()
+
+
         except Exception:
+
+
             pass
+
+
         try:
+
+
             await self.close_jail_room()
+
+
         except Exception:
+
+
             pass
+
+
 
         old_channel = self.channel
 
-        if self.wolf_channel:
+
+        old_dead_channel = self.dead_channel
+
+
+        old_wolf_channel = self.wolf_channel
+
+
+
+        self.wolf_channel = None
+
+
+        self.dead_channel = None
+
+
+        self.wolf_vote_message = None
+
+
+        self.lobby_message = None
+
+
+
+        if old_wolf_channel:
+
+
             try:
-                await self.wolf_channel.delete(reason="Werewolf: cleanup wolf channel")
+
+
+                await old_wolf_channel.delete(reason="Werewolf: cleanup wolf channel")
+
+
             except Exception:
+
+
                 pass
+
+
+
+        if old_dead_channel and old_dead_channel != old_channel:
+
+
+            try:
+
+
+                await old_dead_channel.delete(reason="Werewolf: cleanup dead channel")
+
+
+            except Exception:
+
+
+                pass
+
+
 
         new_channel = None
+
+
         try:
+
+
             new_channel = await self.guild.create_text_channel(
+
+
                 name=self.base_name,
+
+
                 category=self.base_category,
+
+
                 topic=self.base_topic,
+
+
                 slowmode_delay=self.base_slowmode,
+
+
                 nsfw=self.base_nsfw,
+
+
                 overwrites=self.base_overwrites,
+
+
                 reason="Werewolf: recreate lobby channel cleanly",
+
+
             )
+
+
             if self.base_position is not None:
+
+
                 try:
+
+
                     await new_channel.edit(position=self.base_position)
+
+
                 except Exception:
+
+
                     pass
+
+
         except Exception:
+
+
             new_channel = None
 
-        if old_channel:
+
+
+        if old_channel and old_channel != new_channel:
+
+
             try:
+
+
                 await old_channel.delete(reason="Werewolf: nuke old lobby channel")
+
+
             except Exception:
+
+
                 pass
+
+
 
         if new_channel is None:
+
+
             return
 
+
+
         bot_member = _bot_member(self.guild, self.bot)
+
+
         if bot_member:
+
+
             try:
+
+
                 await new_channel.set_permissions(
+
+
                     bot_member,
+
+
                     view_channel=True,
+
+
                     send_messages=True,
+
+
                     read_message_history=True,
+
+
                     embed_links=True,
+
+
                     attach_files=True,
+
+
                     add_reactions=True,
+
+
                     reason="Werewolf: ensure bot access",
+
+
                 )
+
+
             except Exception:
+
+
                 pass
 
+
+
         fresh = WerewolfSession(self.bot, self.guild, new_channel, self.dead_role_id)
+
+
+        if old_channel is not None:
+
+
+            GAME.pop(old_channel.id, None)
+
+
         GAME[new_channel.id] = fresh
+
+
         await fresh.post_lobby_panel()
-        await new_channel.send("🧼 Phòng đã được làm mới để bắt đầu ván mới.")
+
+
+        try:
+
+
+            await new_channel.send("🧼 Phòng đã được làm mới để bắt đầu ván mới.")
+
+
+        except Exception:
+
+
+            pass
+
 
     async def post_lobby_panel(self, ctx=None) -> None:
         if ctx is None:
@@ -1857,7 +2205,7 @@ class VoteSelect(Select):
             return await interaction.response.send_message("❌ Bạn đã chết rồi.", ephemeral=True)
 
         if self.phase == "night" and not self.session.is_alive_wolf(uid):
-            return await interaction.response.send_message("❌ Chỉ sói còn sống mới được vote vào ban đêm.", ephemeral=True)
+            return await interaction.response.send_message("❌ Chỉ sói mới được vote vào ban đêm.", ephemeral=True)
 
         target_id = self.values[0]
         target = self.session.players.get(target_id)
