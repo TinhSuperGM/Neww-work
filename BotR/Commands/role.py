@@ -212,6 +212,37 @@ ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
             }
         ],
     },
+    "witch": {
+        "name": "Phù thủy",
+        "team": TEAM_VILLAGE,
+        "description": "Có 2 bình thuốc dùng một lần trong cả ván: 1 bình hồi sinh để chặn 1 đòn giết, và 1 bình độc để giết chết 1 người vào ban đêm.",
+        "skills": [
+            {
+                "key": "save_potion",
+                "label": "Thuốc hồi sinh",
+                "description": "Bảo vệ 1 người; nếu họ bị tấn công trong đêm đó thì không chết. Dùng 1 lần/ván.",
+                "phase": "night",
+                "kind": "witch_save",
+                "uses": 1,
+                "reset": None,
+                "priority": 0,
+                "target_state": "alive",
+                "allow_self": True,
+            },
+            {
+                "key": "poison_potion",
+                "label": "Thuốc độc",
+                "description": "Đầu độc 1 người để họ chết ngay lập tức, bỏ qua mọi lớp bảo vệ. Dùng 1 lần/ván.",
+                "phase": "night",
+                "kind": "witch_poison",
+                "uses": 1,
+                "reset": None,
+                "priority": 5,
+                "target_state": "alive",
+                "allow_self": False,
+            },
+        ],
+    },
 }
 
 
@@ -718,6 +749,9 @@ class SerialKiller(Role):
     def __init__(self, player):
         super().__init__(player, "serial_killer")
 
+class Witch(Role):
+    def __init__(self, player):
+        super().__init__(player, "witch")
 
 ROLE_MAP = {
     "civilian": Civilian,
@@ -732,6 +766,7 @@ ROLE_MAP = {
     "jailer": Jailer,
     "jester": Jester,
     "serial_killer": SerialKiller,
+    "witch": Witch,
 }
 
 ROLE_ALIASES = {
@@ -762,6 +797,9 @@ ROLE_ALIASES = {
     "thằng_ngố": "jester",
     "serial_killer": "serial_killer",
     "kẻ_giết_người_hàng_loạt": "serial_killer",
+    "phu_thuy": "witch",
+    "phù_thủy": "witch",
+    "witch": "witch",
 }
 
 
