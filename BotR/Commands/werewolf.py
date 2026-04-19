@@ -277,25 +277,31 @@ class JailAnonymousView(View):
 
     @discord.ui.button(label="Bắn", style=discord.ButtonStyle.danger, emoji="🔫")
     async def shoot_button(self, interaction: discord.Interaction, button: Button):
-        # Chỉ Jailer được bấm, chỉ dùng 1 lần/ván
+
+        # ACK ngay lập tức
+        await interaction.response.defer(ephemeral=True)
+
+        # Chỉ Jailer được bấm
         if self.session.jailer_id is None or interaction.user.id != self.session.jailer_id:
-            return await interaction.response.send_message("❌ Chỉ quản ngục mới dùng được nút này.", ephemeral=True)
+            return await interaction.followup.send("❌ Chỉ quản ngục mới dùng được nút này.", ephemeral=True)
+
         if getattr(self.session, "jail_shot_used", False):
-            return await interaction.response.send_message("❌ Bạn chỉ được bắn 1 lần/ván.", ephemeral=True)
+            return await interaction.followup.send("❌ Bạn chỉ được bắn 1 lần/ván.", ephemeral=True)
+
         prisoner_id = self.session.jail_target_id
         if not prisoner_id:
-            return await interaction.response.send_message("❌ Không có tù nhân để bắn.", ephemeral=True)
+            return await interaction.followup.send("❌ Không có tù nhân để bắn.", ephemeral=True)
+
         prisoner = self.session.players.get(str(prisoner_id))
         if not prisoner or not prisoner.get("alive"):
-            return await interaction.response.send_message("❌ Tù nhân đã chết hoặc không hợp lệ.", ephemeral=True)
+            return await interaction.followup.send("❌ Tù nhân đã chết hoặc không hợp lệ.", ephemeral=True)
+
         # Đánh dấu đã bắn
         self.session.jail_shot_used = True
 
         member = self.session.guild.get_member(int(prisoner_id))
 
-        # =========================
-        #1 ) DM cho người bị bắn
-        # =========================
+        # DM
         try:
             if member:
                 await member.send(
@@ -305,43 +311,35 @@ class JailAnonymousView(View):
                         color=discord.Color.dark_red(),
                     )
                 )
-        except Exception:
+        except:
             pass
 
-
-        # =========================
-        # 2) Gửi thông báo public
-        # =========================
+        # Public
         try:
             if self.session.public_channel:
                 await self.session.public_channel.send(
                     embed=discord.Embed(
                         title="⚖️ Hành quyết",
-                        description=f"Quản ngục đã hành quyết **{prisoner['name']}** và tiễn họ về thế giới bên kia.",
+                        description=f"Quản ngục đã hành quyết **{prisoner['name']}**.",
                         color=discord.Color.dark_red(),
                     )
                 )
-        except Exception:
+        except:
             pass
 
-
-        # =========================
-        # 3) Kill logic
-        # =========================
+        # Kill
         await self.session.kill_player(
             str(prisoner_id),
             "bị Quản ngục xử bắn trong phòng giam!",
             cause="jailer_shoot",
         )
 
-
-        # =========================
-        # 4) Ephemeral cho quản ngục
-        # =========================
-        await interaction.response.send_message(
+        # Reply cho jailer
+        await interaction.followup.send(
             f"✅ Đã bắn tù nhân **{prisoner['name']}**.",
             ephemeral=True
         )
+
 class WerewolfSession:
 
     # --- UI ẩn danh cho Medium gửi vào kênh người chết ---
@@ -534,19 +532,23 @@ class WerewolfSession:
         return bool(p and p.get("alive") and self.role_team(p.get("role", DEFAULT_ROLE_KEY)) == TEAM_WOLF)
 
     def is_jailed(self, uid: object) -> bool:
-        # Không phụ thuộc jail_channel: nếu tạo kênh thất bại, jail_target_id/jailer_id vẫn có hiệu lực luật.
         if self.phase != "night":
             return False
+
         try:
             check = str(int(uid))
         except Exception:
             return False
-        if not self.players.get(check, {}).get("alive"):
-            return False
-        return check in {
-            str(self.jailer_id) if self.jailer_id is not None else "",
-            str(self.jail_target_id) if self.jail_target_id is not None else "",
-        }
+
+        ids = set()
+
+        if self.jailer_id is not None:
+            ids.add(str(self.jailer_id))
+
+        if self.jail_target_id is not None:
+            ids.add(str(self.jail_target_id))
+
+        return check in ids
 
     def can_start(self) -> bool:
         return MIN_PLAYERS <= len(self.players) <= MAX_PLAYERS
@@ -583,7 +585,7 @@ class WerewolfSession:
 
             await host.send(
 
-                f"📣 **{_display_name(joiner)}** vừa tham gia phòng của bạn ở channels **#{self.base_name}**.\n\n"
+                f"📣 **{_display_name(joiner)}** vừa tham gia phòng của bạn ở channels **#{self.base_name}**.\n"
 
                 f"Phòng này hiện có **{len(self.players)}** người tham gia."
 
@@ -910,8 +912,15 @@ class WerewolfSession:
         if phase == "night":
             await self.sync_dead_channel(phase)
             await self._refresh_wolf_vote_panel(fresh=False)
+
+            # 🔥 MỞ PHÒNG GIAM TẠI ĐÂY
+            if self.jailer_id is not None and self.jail_target_id is not None:
+                await self.open_jail_room()
+
         else:
-            await self.close_jail_room()
+            # ❌ KHÔNG reset state
+            await self.close_jail_room(clear_state=False)
+
             await safe_delete(self.wolf_vote_message)
             self.wolf_vote_message = None
     async def ensure_private_channel(
@@ -1082,15 +1091,18 @@ class WerewolfSession:
                 except Exception:
                     pass
 
-    async def close_jail_room(self) -> None:
+    async def close_jail_room(self, clear_state: bool = True):
         if self.jail_channel:
             try:
                 await self.jail_channel.delete(reason="Werewolf: close jail room")
             except Exception:
                 pass
+
         self.jail_channel = None
-        self.jailer_id = None
-        self.jail_target_id = None
+
+        if clear_state:
+            self.jailer_id = None
+            self.jail_target_id = None
 
     async def open_jail_room(self) -> None:
         # Chỉ gỡ kênh giam cũ; không gọi close_jail_room() — hàm đó xóa jail_target_id
@@ -1325,17 +1337,11 @@ class WerewolfSession:
         if is_wolf_attack and victim_role == "serial_killer":
             await self._wolf_cannot_kill_embed()
             return False
-
-        # Nếu target đang bị giam thì miễn toàn bộ sát thương từ bên ngoài (trừ Jailer bắn)
-        if self.is_jailed(tid):
-            if not (source_role_key == "jailer" and actor_id == self.jailer_id):
-                try:
-                    if is_wolf_attack:
-                        await self._wolf_cannot_kill_embed()
-                except Exception:
-                    pass
-                return False
-
+        
+        # 🔒 Nếu đang bị giam → miễn nhiễm với kill bên ngoài
+        if self.is_jailed(target_id):
+            if source_role_key != "jailer":
+                return
 
         # --- Protector redirect logic ---
         # Nếu có BV còn sống và đang bảo vệ ai đó
@@ -2398,50 +2404,53 @@ class SkillTargetView(View):
 
 
 class SkillChoiceSelect(Select):
-    def __init__(self, session: WerewolfSession, phase: str, role_obj):
+    def __init__(self, session, phase, role_obj, options):
         self.session = session
         self.phase = phase
         self.role_obj = role_obj
 
-        options = []
-        for skill in role_obj.skill_options(phase, game=session):
-            options.append(
-                discord.SelectOption(
-                    label=skill["label"],
-                    value=skill["key"],
-                    description=skill["description"][:100],
-                )
+        select_options = [
+            discord.SelectOption(
+                label=opt["label"],
+                description=opt["description"],
+                value=opt["key"]
             )
+            for opt in options
+        ]
 
         super().__init__(
-            placeholder=f"Chọn kỹ năng của {role_obj.name}",
+            placeholder="Chọn kỹ năng...",
             min_values=1,
             max_values=1,
-            options=options,
+            options=select_options
         )
-
     async def callback(self, interaction: discord.Interaction):
         skill_key = self.values[0]
-        if not self.role_obj.set_skill(skill_key):
-            return await interaction.response.send_message("❌ Kỹ năng không hợp lệ.", ephemeral=True)
 
-        embed = discord.Embed(
-            title=f"✨ Dùng kỹ năng — {self.role_obj.name}",
-            description=f"Đã chọn **{skill_key}**. Bây giờ hãy chọn mục tiêu.",
-            color=discord.Color.gold(),
-        )
+        targets = self.role_obj.skill_targets(self.session, self.phase, skill_key)
+
+        if not targets:
+            return await interaction.response.send_message(
+                "❌ Không có mục tiêu hợp lệ.",
+                ephemeral=True
+            )
+
+        self.role_obj.set_skill(skill_key)
+
         await interaction.response.send_message(
-            embed=embed,
+            embed=discord.Embed(
+                title=f"✨ {self.role_obj.name}",
+                description="Chọn mục tiêu.",
+                color=discord.Color.gold(),
+            ),
             view=SkillTargetView(self.session, self.phase, self.role_obj, skill_key),
-            ephemeral=True,
+            ephemeral=True
         )
-
 
 class SkillChoiceView(View):
-    def __init__(self, session: WerewolfSession, phase: str, role_obj):
+    def __init__(self, session: WerewolfSession, phase: str, role_obj, options):
         super().__init__(timeout=120)
-        self.add_item(SkillChoiceSelect(session, phase, role_obj))
-
+        self.add_item(SkillChoiceSelect(session, phase, role_obj, options))
 
 class GameActionView(View):
     def __init__(self, session: WerewolfSession, phase: str):
@@ -2469,25 +2478,61 @@ class GameActionView(View):
     @discord.ui.button(label="Skill", style=discord.ButtonStyle.primary, emoji="✨")
     async def skill_button(self, interaction: discord.Interaction, button: Button):
         player = self.session.get_player(interaction.user.id)
+
+        # ❌ chết
         if not player or not player.get("alive"):
-            return await interaction.response.send_message("❌ Bạn đã chết rồi.", ephemeral=True)
+            return await interaction.response.send_message(
+                "❌ Bạn đã chết rồi.",
+                ephemeral=True
+            )
 
         role_obj = player.get("role_obj")
+
+        # ❌ không có role
         if role_obj is None:
-            return await interaction.response.send_message("❌ Không có kỹ năng.", ephemeral=True)
+            return await interaction.response.send_message(
+                "❌ Không có kỹ năng.",
+                ephemeral=True
+            )
 
+        # 🔹 lấy skill hợp lệ theo phase
         options = role_obj.skill_options(self.phase, game=self.session)
-        # Nếu không có options hoặc options rỗng, không gửi view, tránh lỗi Discord
-        if not options or (isinstance(options, list) and len(options) == 0):
-            return await interaction.response.send_message("❌ Vai trò này không có kỹ năng ở pha hiện tại.", ephemeral=True)
 
-        if len(options) == 1:
-            skill_key = options[0]["key"]
+        if not options:
+            return await interaction.response.send_message(
+                "❌ Vai trò này không có kỹ năng ở pha hiện tại.",
+                ephemeral=True
+            )
+
+        # 🔥 FILTER skill có target hợp lệ
+        valid_options = []
+        for opt in options:
+            skill_key = opt["key"]
+            targets = role_obj.skill_targets(self.session, self.phase, skill_key)
+
+            if targets:
+                valid_options.append(opt)
+
+        # ❌ không có skill nào dùng được
+        if not valid_options:
+            return await interaction.response.send_message(
+                "❌ Hiện tại không có kỹ năng nào có thể dùng (có thể do không có mục tiêu, bị khóa, hoặc điều kiện chưa thỏa).",
+                ephemeral=True
+            )
+
+        # =========================
+        # ✅ CHỈ CÓ 1 SKILL
+        # =========================
+        if len(valid_options) == 1:
+            skill = valid_options[0]
+            skill_key = skill["key"]
+
             role_obj.set_skill(skill_key)
+
             await interaction.response.send_message(
                 embed=discord.Embed(
                     title=f"✨ Dùng kỹ năng — {role_obj.name}",
-                    description=f"Chọn mục tiêu cho **{options[0]['label']}**.",
+                    description=f"Chọn mục tiêu cho **{skill['label']}**.",
                     color=discord.Color.gold(),
                 ),
                 view=SkillTargetView(self.session, self.phase, role_obj, skill_key),
@@ -2495,11 +2540,24 @@ class GameActionView(View):
             )
             return
 
-        # Nếu options có nhiều hơn 1 lựa chọn, kiểm tra lại SkillChoiceView có options hợp lệ không
-        # Nếu SkillChoiceView không có options, không gửi view
-        view = SkillChoiceView(self.session, self.phase, role_obj)
-        if not hasattr(view, 'children') or not any(getattr(child, 'options', None) for child in view.children if isinstance(child, Select)):
-            return await interaction.response.send_message("❌ Không có kỹ năng hợp lệ để chọn.", ephemeral=True)
+        # =========================
+        # ✅ NHIỀU SKILL
+        # =========================
+
+        # custom view để truyền valid_options vào
+        view = SkillChoiceView(self.session, self.phase, role_obj, valid_options)
+
+        # ❌ double check tránh crash
+        has_select = any(
+            isinstance(child, Select) and getattr(child, "options", None)
+            for child in view.children
+        )
+
+        if not has_select:
+            return await interaction.response.send_message(
+                "❌ Không có kỹ năng hợp lệ để chọn.",
+                ephemeral=True
+            )
 
         await interaction.response.send_message(
             embed=discord.Embed(
@@ -2510,7 +2568,6 @@ class GameActionView(View):
             view=view,
             ephemeral=True,
         )
-
 
 async def werewolf_logic(ctx, channel_id, role_dead=None):
     guild = getattr(ctx, "guild", None)

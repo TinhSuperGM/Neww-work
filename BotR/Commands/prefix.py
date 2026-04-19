@@ -39,6 +39,7 @@ from Commands.fight import fight_logic
 from Commands.team import team_logic
 from Commands.lock import lock_logic
 from Commands.zombie import zombie_logic
+from Commands.werewolf import werewolf_logic
 
 
 def _normalize_name(name: str) -> str:
@@ -526,6 +527,10 @@ async def setup(bot):
                 return
             if cmd == "fight":
                 target = await _smart_target(bot, message, args, fallback_author=False)
+
+                if not target:
+                    return await reply("❌ Cú pháp: .fight @user")
+
                 return await fight_logic(ctx, target)
             if cmd == "team":
                 if not args:
@@ -535,15 +540,19 @@ async def setup(bot):
                 waifu_id = args[1] if len(args) >= 2 else None
 
                 return await team_logic(ctx, action, waifu_id)
+            
             if cmd == "lock":
                 state = args[0] if args else None
                 return await lock_logic(ctx, state)
+            
             if cmd == "zombie":
                 return await zombie_logic(ctx)
+            
             if cmd == "werewolf":
                 if len(args) < 2:
                     return await reply("❌ Cú pháp: .werewolf <channel_id> <role_dead>")
                 return await werewolf_logic(ctx, args[0], args[1])
+            
         except ValueError:
             return await reply("❌ Tham số số không hợp lệ.")
         except Exception as exc:

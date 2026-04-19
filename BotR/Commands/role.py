@@ -386,9 +386,6 @@ class Role:
         if skill is None or skill.get("phase") != phase:
             return False
 
-        if self.role_key == "medium" and phase == "night" and game is not None and getattr(game, "round_no", 1) < 2:
-            return False
-
         uses = self.uses_left.get(skill_key)
         if uses is not None and uses <= 0:
             return False
@@ -465,12 +462,20 @@ class Role:
             ]
         if self.role_key in {"guard", "jailer", "serial_killer"}:
             return [uid for uid, pdata in game.players.items() if pdata.get("alive") and uid != my_id]
-        if self.role_key == "medium" and skill_key == "revive":
-            return [
-                uid
-                for uid, pdata in game.players.items()
-                if not pdata.get("alive") and game.role_team(pdata.get("role", DEFAULT_ROLE_KEY)) == TEAM_VILLAGE
-            ]
+        if self.role_key == "medium" and phase == "night" and game is not None:
+            # Đêm 1 không cho dùng
+            if getattr(game, "round_no", 1) < 2:
+                return False
+
+            # Không có người chết phe dân → không cho dùng
+            has_valid_target = any(
+                (not pdata.get("alive"))
+                and game.role_team(pdata.get("role", DEFAULT_ROLE_KEY)) == TEAM_VILLAGE
+                for pdata in game.players.values()
+            )
+
+            if not has_valid_target:
+                return False
         return []
 
     def can_target(self, game, target_id: object, phase: str, skill_key: Optional[str] = None) -> bool:
@@ -621,7 +626,7 @@ class Role:
         return bool(pdata.get("nightmare_locked"))
 
     async def _apply_nightmare_lock(self, game):
-        target_id = getattr(game, "nightmare_token_target_id", None)
+        target_id = game.nightmare_token_target_id
         if target_id is None:
             return
 
@@ -722,8 +727,8 @@ class NightmareWolf(Role):
         return self.build_action()
 
     async def on_night_start(self, game):
-        await super().on_night_start(game)
         await self._apply_nightmare_lock(game)
+        await super().on_night_start(game)
 
     async def on_day_start(self, game):
         await super().on_day_start(game)
@@ -891,7 +896,7 @@ def build_role_assignments(player_ids: list[str], players: dict[str, dict]) -> d
             "medium": 1,
             "protector": 1,
             "civilian": 1,
-            "which": 1,
+            "witch": 1,
         },
         12: {
             "seer": 1,
@@ -968,6 +973,13 @@ def build_role_assignments(player_ids: list[str], players: dict[str, dict]) -> d
         roles = expand(role_table[16])
         if n > 16:
             roles.extend(["civilian"] * (n - 16))
+    
+    if len(roles) != n:
+        print(f"[WARN] Role count mismatch: expected {n}, got {len(roles)}")
+        if len(roles) > n:
+            roles = roles[:n]
+        else:
+            roles.extend(["civilian"] * (n - len(roles)))
 
     random.shuffle(roles)
 
@@ -1086,6 +1098,7 @@ def resolve_actions(game, actions: list[dict[str, Any]]) -> dict[str, Any]:
         if a_type == "jail":
             if target_id_str is not None:
                 plan["jail_target_id"] = int(target_id_str)
+                plan["jailer_id"] = int(actor_id)
             continue
 
         if a_type == "revive":
@@ -1180,13 +1193,6 @@ async def apply_action_plan(game, plan: dict[str, Any]) -> None:
             )
         except Exception:
             pass
-
-    if plan.get("jail_target_id") is not None:
-        try:
-            await game.open_jail_room()
-        except Exception:
-            pass
-
 
 def build_day_actions(game) -> list[dict[str, Any]]:
     return build_night_actions(game)

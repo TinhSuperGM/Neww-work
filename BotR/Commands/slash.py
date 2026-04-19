@@ -277,8 +277,8 @@ async def setup(bot):
         ctx = interaction
         await prayer_logic(ctx)
     @bot.tree.command(name="fight", description="Đấu với người khác")
-    @app_commands.describe(user="Người bạn muốn đấu (để trống để random trong team.json)")
-    async def fight_cmd(interaction: discord.Interaction, user: Optional[discord.Member] = None):
+    @app_commands.describe(user="Người bạn muốn đấu")
+    async def fight_cmd(interaction: discord.Interaction, user: discord.Member):
         await fight_logic(interaction, user)
     @bot.tree.command(name="team", description="Quản lý team waifu")
     @app_commands.describe(

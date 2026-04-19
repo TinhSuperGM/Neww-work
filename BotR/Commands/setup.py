@@ -570,12 +570,12 @@ ITEM_META = {
     },
     "health_potion": {
         "label": "Health Potion",
-        "price": 1000,
+        "price": 600,
         "desc": "Heal 10~20% max HP",
     },
     "damage_potion": {
         "label": "Damage Potion",
-        "price": 1500,
+        "price": 600,
         "desc": "+10~20% damage for 1 battle",
     },
 }
@@ -712,8 +712,8 @@ async def send_shop_embed_logic(interaction, channel_id: str):
             "> Soup | 100 gold\n"
             "> Pizza | 200 gold\n"
             "> Drug | 300 gold\n"
-            "> Health Potion | 1000 gold\n"
-            "> Damage Potion | 1500 gold"
+            "> Health Potion | 600 gold\n"
+            "> Damage Potion | 600 gold"
         ),
         color=discord.Color.purple(),
     )
