@@ -213,7 +213,7 @@ ROLE_DEFINITIONS: dict[str, dict[str, Any]] = {
         ],
     },
     "witch": {
-        "name": "Phù thủy",
+        "name": "💫  Phù thủy",
         "team": TEAM_VILLAGE,
         "description": "Có 2 bình thuốc dùng một lần trong cả ván: 1 bình hồi sinh để chặn 1 đòn giết, và 1 bình độc để giết chết 1 người vào ban đêm.",
         "skills": [
@@ -817,39 +817,164 @@ def create_role(role_key: str, player):
 def build_role_assignments(player_ids: list[str], players: dict[str, dict]) -> dict[str, str]:
     ids = list(player_ids)
     random.shuffle(ids)
+
     n = len(ids)
     result: dict[str, str] = {}
 
     if n == 0:
         return result
 
-    specials: list[str] = []
-    if n >= 5:
-        specials.append("seer")
-    if n >= 6:
-        specials.append("protector")
-    if n >= 7:
-        specials.append(random.choice(["wolf_seer", "wolf_shaman"]))
-    if n >= 8:
-        specials.append(random.choice(["jester", "serial_killer", "medium", "jailer"]))
-    if n >= 9:
-        specials.append("nightmare_wolf")
+    role_table: dict[int, dict[str, int]] = {
+        5: {
+            "guard": 1,
+            "wolf": 1,
+            "nightmare_wolf": 1,
+            "jailer": 1,
+            "protector": 1,
+        },
+        6: {
+            "guard": 1,
+            "wolf": 1,
+            "nightmare_wolf": 1,
+            "jailer": 1,
+            "protector": 1,
+            "civilian": 1,
+        },
+        7: {
+            "seer": 1,
+            "wolf_shaman": 1,
+            "nightmare_wolf": 1,
+            "jailer": 1,
+            "protector": 1,
+            "civilian": 2,
+        },
+        8: {
+            "seer": 1,
+            "wolf_shaman": 1,
+            "nightmare_wolf": 1,
+            "wolf": 1,
+            "jailer": 1,
+            "guard": 1,
+            "medium": 1,
+            "protector": 1,
+        },
+        9: {
+            "seer": 1,
+            "wolf_shaman": 1,
+            "nightmare_wolf": 1,
+            "wolf": 1,
+            "jailer": 1,
+            "guard": 1,
+            "medium": 1,
+            "protector": 1,
+            "jester": 1,
+        },
+        10: {
+            "seer": 1,
+            "wolf_shaman": 1,
+            "nightmare_wolf": 1,
+            "wolf": 1,
+            "jailer": 1,
+            "guard": 1,
+            "medium": 1,
+            "protector": 1,
+            "jester": 1,
+            "civilian": 1,
+        },
+        11: {
+            "seer": 1,
+            "wolf_shaman": 1,
+            "nightmare_wolf": 1,
+            "wolf": 2,
+            "jailer": 1,
+            "guard": 1,
+            "medium": 1,
+            "protector": 1,
+            "civilian": 1,
+            "which": 1,
+        },
+        12: {
+            "seer": 1,
+            "wolf_shaman": 2,
+            "nightmare_wolf": 1,
+            "wolf": 2,
+            "jailer": 1,
+            "guard": 1,
+            "medium": 1,
+            "protector": 1,
+            "civilian": 2,
+        },
+        13: {
+            "seer": 1,
+            "wolf_shaman": 1,
+            "nightmare_wolf": 1,
+            "wolf": 2,
+            "jailer": 1,
+            "guard": 1,
+            "medium": 1,
+            "protector": 1,
+            "civilian": 2,
+            "serial_killer": 1,
+        },
+        14: {
+            "seer": 1,
+            "wolf_shaman": 1,
+            "nightmare_wolf": 1,
+            "wolf": 2,
+            "jailer": 1,
+            "guard": 1,
+            "medium": 1,
+            "protector": 2,
+            "civilian": 3,
+            "serial_killer": 1,
+        },
+        15: {
+            "seer": 1,
+            "wolf_shaman": 2,
+            "nightmare_wolf": 1,
+            "wolf": 2,
+            "jailer": 1,
+            "guard": 1,
+            "medium": 1,
+            "protector": 2,
+            "civilian": 3,
+            "serial_killer": 1,
+        },
+        16: {
+            "seer": 1,
+            "wolf_shaman": 2,
+            "nightmare_wolf": 1,
+            "wolf": 2,
+            "jailer": 1,
+            "guard": 1,
+            "medium": 1,
+            "protector": 2,
+            "civilian": 4,
+            "serial_killer": 1,
+        },
+    }
 
-    for uid, role_key in zip(ids, specials):
+    def expand(counts: dict[str, int]) -> list[str]:
+        roles: list[str] = []
+        for role_key, amount in counts.items():
+            roles.extend([role_key] * amount)
+        return roles
+
+    if n < 5:
+        roles = ["civilian"] * n
+    elif n in role_table:
+        roles = expand(role_table[n])
+    else:
+        roles = expand(role_table[16])
+        if n > 16:
+            roles.extend(["civilian"] * (n - 16))
+
+    random.shuffle(roles)
+
+    for uid, role_key in zip(ids, roles):
         result[uid] = role_key
 
-    remaining = ids[len(specials) :]
-    wolf_count = max(1, n // 4)
-    wolf_count = min(wolf_count, len(remaining))
-
-    for uid in remaining[:wolf_count]:
-        result[uid] = "wolf"
-
-    for uid in remaining[wolf_count:]:
-        result[uid] = "civilian"
-
     return result
-
 
 def build_night_actions(game) -> list[dict[str, Any]]:
     actions: list[dict[str, Any]] = []
